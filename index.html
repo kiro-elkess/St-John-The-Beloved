@@ -417,21 +417,19 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
 /* ============================================================
    1. FIREBASE CONFIG — Loaded from firebase-config.js
    ============================================================ */
-const defaultFirebaseConfig = {
-  apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
-  authDomain: "st-john-the-beloved.firebaseapp.com",
-  projectId: "st-john-the-beloved",
-  storageBucket: "st-john-the-beloved.firebasestorage.app",
-  messagingSenderId: "716900964750",
-  appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
-  measurementId: "G-PTHE3NCBNK"
-};
+const _cfg = (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey)
+  ? window.FIREBASE_CONFIG
+  : {
+      apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
+      authDomain: "st-john-the-beloved.firebaseapp.com",
+      projectId: "st-john-the-beloved",
+      storageBucket: "st-john-the-beloved.firebasestorage.app",
+      messagingSenderId: "716900964750",
+      appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
+      measurementId: "G-PTHE3NCBNK"
+    };
 
-const activeConfig = (typeof firebaseConfig !== 'undefined' && firebaseConfig && firebaseConfig.apiKey)
-  ? firebaseConfig
-  : defaultFirebaseConfig;
-
-firebase.initializeApp(activeConfig);
+if (!firebase.apps.length) firebase.initializeApp(_cfg);
 const db = firebase.firestore();
 const FV = firebase.firestore.FieldValue;
 const ROOT = db.collection("james").doc("app");

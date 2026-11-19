@@ -1259,19 +1259,22 @@
 
   <script>
     /* ============================================================
-       1. FIREBASE CONFIG
+       1. FIREBASE INIT (config loaded from firebase-config.js)
        ============================================================ */
-    const firebaseConfig = window.FIREBASE_CONFIG || {
-      apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
-      authDomain: "st-john-the-beloved.firebaseapp.com",
-      projectId: "st-john-the-beloved",
-      storageBucket: "st-john-the-beloved.firebasestorage.app",
-      messagingSenderId: "716900964750",
-      appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
-      measurementId: "G-PTHE3NCBNK"
-    };
+    // firebaseConfig is declared in firebase-config.js — no redeclaration here
+    const _adminCfg = (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey)
+      ? window.FIREBASE_CONFIG
+      : {
+          apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
+          authDomain: "st-john-the-beloved.firebaseapp.com",
+          projectId: "st-john-the-beloved",
+          storageBucket: "st-john-the-beloved.firebasestorage.app",
+          messagingSenderId: "716900964750",
+          appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
+          measurementId: "G-PTHE3NCBNK"
+        };
 
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(_adminCfg);
     const db = firebase.firestore();
     const FV = firebase.firestore.FieldValue;
     const ROOT = db.collection("james").doc("app");
