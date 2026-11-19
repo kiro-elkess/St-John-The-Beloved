@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "st-john-the-beloved",
     "public": ".",
     "cleanUrls": true,
     "ignore": [
