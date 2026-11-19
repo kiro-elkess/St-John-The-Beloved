@@ -165,7 +165,7 @@
       background: linear-gradient(180deg, #0d1a40, #08122e);
       border-top: 3px solid #24408a;
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(9, 1fr);
       gap: 2px;
     }
 
@@ -1215,8 +1215,8 @@
         <div id="chalList"></div>
       </section>
 
-      <!-- 10. SHOP -->
-      <section class="page" id="p-shop">
+      <!-- 10. SHOP (DISABLED TEMPORARILY: remove style="display:none;" on page & nav button to re-enable) -->
+      <section class="page" id="p-shop" style="display:none;">
         <h2>Gift <span>Shop 🎁</span></h2>
         <div class="card">
           <input type="file" id="gFile" accept="image/*" hidden onchange="loadGiftPhoto(this)">
@@ -1248,7 +1248,8 @@
       <button data-p="news"><span class="ic">📅</span>Events</button>
       <button data-p="notifs"><span class="ic">🔔</span>Alerts</button>
       <button data-p="chal"><span class="ic">⚔️</span>Chall.</button>
-      <button data-p="shop"><span class="ic">🎁</span>Shop</button>
+      <!-- Shop is disabled temporarily. To re-enable: remove style="display:none;" and set nav grid to repeat(10, 1fr) -->
+      <button data-p="shop" style="display:none;"><span class="ic">🎁</span>Shop</button>
     </nav>
   </div>
 
