@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>St. John the Beloved Class | أسرة يوحنا الحبيب</title>
+<title>St. John the Beloved Class</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1b3a8f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
@@ -19,51 +19,51 @@
 
 <style>
 :root{
-  --bg1:#0b1536; --bg2:#162c6d; --bg3:#2246ad;
-  --panel:#101d44; --panel2:#182b63;
+  --bg1:#0f1e4a; --bg2:#1b3a8f; --bg3:#2a5bd7;
+  --panel:#12224f; --panel2:#1a3070;
   --gold:#ffcc33; --gold2:#ff9a1f; --gold3:#a85f00;
   --blue:#3aa0ff; --blue2:#1b6be0;
   --green:#5bd35b; --green2:#2f9f2f;
   --red:#ff5a5a; --red2:#c62828;
   --purple:#b46bff; --purple2:#7b2fd6;
-  --text:#fff; --muted:#9db4e6; --border:#09122c;
+  --text:#fff; --muted:#9db4e6; --border:#0a1436;
   --shadow:0 6px 0 var(--border), 0 12px 20px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{font-family:'Cairo','Nunito',sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 50% -10%,var(--bg3),var(--bg1) 60%);background-attachment:fixed;overflow:hidden}
+body{font-family:'Nunito',sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 50% -10%,var(--bg3),var(--bg1) 60%);background-attachment:fixed;overflow:hidden}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.06) 1.5px,transparent 1.5px);background-size:26px 26px;animation:drift 40s linear infinite}
 @keyframes drift{to{background-position:260px 260px}}
-h1,h2,h3{font-family:'Cairo','Lilita One',cursive;letter-spacing:.5px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+h1,h2,h3{font-family:'Lilita One',cursive;letter-spacing:.5px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
 button{font-family:inherit;cursor:pointer;border:none;color:inherit}
 img{display:block}
 #app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
-header{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 8px) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,rgba(11,21,54,.96),rgba(11,21,54,.7) 80%,transparent)}
+header{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,rgba(15,30,74,.95),rgba(15,30,74,.6) 80%,transparent)}
 .logo{display:flex;align-items:center;gap:10px;min-width:0}
-.logo .crest-img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2.5px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.5);animation:bob 3.5s ease-in-out infinite;flex-shrink:0}
+.logo .crest-img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.4);animation:bob 3.5s ease-in-out infinite;flex-shrink:0}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
-.logo h1{font-size:18px;color:var(--gold);line-height:1.2}
-.logo small{display:block;font-size:10.5px;color:var(--muted);letter-spacing:1px;text-shadow:none}
-.mechip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;background:linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:0 4px 0 var(--border);border:1.5px solid #28448f;flex-shrink:0;cursor:pointer}
-.mechip .av{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--bg3);border:2px solid var(--gold);flex-shrink:0}
+.logo h1{font-size:20px;color:var(--gold);line-height:1}
+.logo small{display:block;font-family:'Nunito';font-weight:800;font-size:10px;color:var(--muted);letter-spacing:2px;text-shadow:none;margin-top:2px}
+.mechip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:0 4px 0 var(--border);border:1.5px solid #28448f;flex-shrink:0;cursor:pointer}
+.mechip .av{width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--bg3);border:2px solid var(--gold);flex-shrink:0}
 .mechip .av img{width:100%;height:100%;object-fit:cover}
-.mechip .nm{font-weight:900;font-size:13px;line-height:1.1;max-width:105px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mechip .kr{font-weight:900;color:var(--gold);font-size:12px;display:flex;align-items:center;gap:4px}
+.mechip .nm{font-weight:900;font-size:13px;line-height:1.1;max-width:95px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mechip .kr{font-weight:900;color:var(--gold);font-size:12px}
 main{flex:1;overflow:hidden;position:relative}
-.page{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 14px calc(95px + env(safe-area-inset-bottom));opacity:0;transform:translateX(-30px) scale(.98);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,.9,.3,1.2)}
+.page{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 14px calc(100px + env(safe-area-inset-bottom));opacity:0;transform:translateX(40px) scale(.98);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,.9,.3,1.2)}
 .page.active{opacity:1;transform:none;pointer-events:auto}
 .page-title{display:flex;align-items:center;justify-content:space-between;margin:8px 0 14px}
-.page-title h2{font-size:26px;color:#fff}.page-title h2 span{color:var(--gold)}
-.sub{color:var(--muted);font-weight:800;font-size:12.5px}
-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0a1330,#060c20);border-top:3px solid #1e387c;display:grid;grid-template-columns:repeat(9,1fr);gap:2px;box-shadow:0 -10px 30px rgba(0,0,0,.5)}
-nav button{background:transparent;border-radius:12px;padding:6px 1px;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:8.5px;white-space:nowrap;color:var(--muted);transition:.2s}
-nav button .ic{font-size:20px;transition:transform .3s cubic-bezier(.2,1.6,.4,1);filter:grayscale(.5)}
-nav button.on{color:var(--gold);background:linear-gradient(180deg,#243e8a,#182d66);box-shadow:0 3px 0 var(--border)}
-nav button.on .ic{transform:translateY(-3px) scale(1.2);filter:none}
+.page-title h2{font-size:30px;color:#fff}.page-title h2 span{color:var(--gold)}
+.sub{color:var(--muted);font-weight:800;font-size:13px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0d1a40,#08122e);border-top:3px solid #24408a;display:grid;grid-template-columns:repeat(9,1fr);gap:3px;box-shadow:0 -10px 30px rgba(0,0,0,.5)}
+nav button{background:transparent;border-radius:14px;padding:6px 1px;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:900;font-size:8.5px;white-space:nowrap;color:var(--muted);transition:.2s}
+nav button .ic{font-size:22px;transition:transform .3s cubic-bezier(.2,1.6,.4,1);filter:grayscale(.6)}
+nav button.on{color:var(--gold);background:linear-gradient(180deg,#26449a,#1b3270);box-shadow:0 3px 0 var(--border)}
+nav button.on .ic{transform:translateY(-4px) scale(1.25);filter:none}
 nav button:active .ic{transform:scale(.85)}
-.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:18px;padding:14px;box-shadow:var(--shadow);border:2px solid #28448f;position:relative;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
-@keyframes pop{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:16px;text-shadow:0 2px 0 rgba(0,0,0,.3);background:linear-gradient(180deg,var(--blue),var(--blue2));box-shadow:0 5px 0 #0d3f8f,0 8px 12px rgba(0,0,0,.35);transition:transform .1s,box-shadow .1s;user-select:none}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:18px;padding:14px;box-shadow:var(--shadow);border:2px solid #2d4da3;position:relative;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(10px)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:14px;font-family:'Lilita One';font-size:18px;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,.3);background:linear-gradient(180deg,var(--blue),var(--blue2));box-shadow:0 5px 0 #0d3f8f,0 8px 12px rgba(0,0,0,.35);transition:transform .1s,box-shadow .1s;user-select:none}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0d3f8f}
 .btn.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));box-shadow:0 5px 0 var(--gold3),0 8px 12px rgba(0,0,0,.35);color:#4a2a00;text-shadow:0 1px 0 rgba(255,255,255,.4)}
 .btn.gold:active{box-shadow:0 1px 0 var(--gold3)}
@@ -77,70 +77,76 @@ nav button:active .ic{transform:scale(.85)}
 .pill.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00}
 
 /* RANK BOARD */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .scard{padding:0;overflow:hidden;cursor:pointer;transition:transform .15s}
 .scard:active{transform:scale(.95)}
-.scard .img{aspect-ratio:1;background:linear-gradient(160deg,#24439c,#122357);position:relative;overflow:hidden}
+.scard .img{aspect-ratio:1;background:linear-gradient(160deg,#2b4fb0,#152a66);position:relative;overflow:hidden}
 .scard .img img,.detail .big img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
-.init{position:absolute;inset:0;display:grid;place-items:center;font-family:'Cairo','Lilita One';font-size:52px;font-weight:900;color:rgba(255,255,255,.7)}
-.scard .img::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 60%,rgba(8,16,42,.92))}
-.scard .info{padding:10px 10px 12px;text-align:right}
-.scard .nm{font-family:'Cairo','Lilita One';font-size:15.5px;font-weight:900;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.init{position:absolute;inset:0;display:grid;place-items:center;font-family:'Lilita One';font-size:56px;color:rgba(255,255,255,.7)}
+.scard .img::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 60%,rgba(10,20,54,.9))}
+.scard .info{padding:10px 10px 12px}
+.scard .nm{font-family:'Lilita One';font-size:17px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .scard .ar{font-size:11px;color:var(--muted);font-weight:900;margin:3px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .scard.me{border-color:var(--gold);box-shadow:0 6px 0 var(--gold3),0 0 22px rgba(255,204,51,.35)}
-.scard.me::before{content:"أنت";position:absolute;top:8px;right:8px;z-index:3;font-family:'Cairo';font-weight:900;font-size:11px;padding:2px 8px;border-radius:8px;background:var(--gold);color:#4a2a00}
-.scard .cake{position:absolute;bottom:6px;left:8px;z-index:3;font-size:24px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.4));animation:bob 2s ease-in-out infinite}
+.scard.me::before{content:"YOU";position:absolute;top:8px;right:8px;z-index:3;font-family:'Lilita One';font-size:11px;padding:2px 7px;border-radius:8px;background:var(--gold);color:#4a2a00}
+.scard .cake{position:absolute;bottom:6px;right:8px;z-index:3;font-size:26px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.4));animation:bob 2s ease-in-out infinite}
 .scard.bday{border-color:#ff6bb5}
-.scard .rk{position:absolute;top:8px;left:8px;z-index:3;font-family:'Cairo','Lilita One';font-size:13px;font-weight:900;line-height:1;padding:4px 8px;border-radius:10px;background:rgba(6,12,32,.85);border:2px solid #3a5fc4;box-shadow:0 3px 0 var(--border)}
-.scard .rk.top{font-size:14px;color:#4a2a00;border-color:#fff3}
+.scard .rk{position:absolute;top:8px;left:8px;z-index:3;font-family:'Lilita One';font-size:15px;line-height:1;padding:5px 9px;border-radius:10px;background:rgba(8,16,44,.82);border:2px solid #3a5fc4;box-shadow:0 3px 0 var(--border)}
+.scard .rk.top{font-size:17px;color:#4a2a00;border-color:#fff3;box-shadow:0 3px 0 rgba(0,0,0,.45)}
 .scard .rk.r1{background:linear-gradient(180deg,#ffe066,#ffb300)}
 .scard .rk.r2{background:linear-gradient(180deg,#f2f5fa,#aab4c4)}
 .scard .rk.r3{background:linear-gradient(180deg,#f0b27a,#c2743a)}
 
-/* BADGES ROW IN LEADERBOARD */
+/* BADGES STRIP IN RANK BOARD */
 .b-strip{display:flex;gap:4px;margin-top:6px;align-items:center}
-.b-mini-ic{width:22px;height:22px;border-radius:50%;border:1.5px solid #28448f;background:rgba(0,0,0,.3);display:grid;place-items:center;font-size:11px;filter:grayscale(1);opacity:.45}
-.b-mini-ic.on{filter:none;opacity:1;border-color:var(--gold);background:linear-gradient(135deg,#ffe066,#d98a00);color:#4a2a00;box-shadow:0 0 6px rgba(255,204,51,.6)}
+.b-mini-ic{width:24px;height:24px;border-radius:50%;border:1.5px solid #28448f;background:rgba(0,0,0,.35);display:grid;place-items:center;font-size:12px;filter:grayscale(1);opacity:.4}
+.b-mini-ic.on{filter:none;opacity:1;border-color:var(--gold);background:linear-gradient(135deg,#ffe066,#d98a00);color:#4a2a00;box-shadow:0 0 8px rgba(255,204,51,.6)}
 
 /* BADGES STORE / WINDOW */
 .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 .badge-item{text-align:center;padding:16px 12px;border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid #28448f;position:relative;cursor:pointer;transition:.2s}
-.badge-item:hover{transform:translateY(-2px)}
+.badge-item:active{transform:scale(.97)}
 .badge-item.owned{border-color:var(--gold);box-shadow:0 6px 0 var(--gold3),0 0 18px rgba(255,204,51,.25)}
 .badge-item.ready{border-color:var(--green);box-shadow:0 0 16px rgba(91,211,91,.4);animation:pulseReady 2s infinite}
 @keyframes pulseReady{0%,100%{box-shadow:0 0 14px rgba(91,211,91,.4)}50%{box-shadow:0 0 24px rgba(91,211,91,.8)}}
 .badge-item.locked{filter:grayscale(.8) brightness(.7)}
-.b-preview{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;object-fit:cover;box-shadow:0 6px 12px rgba(0,0,0,.4);border:3px solid transparent}
+.b-preview{width:80px;height:80px;border-radius:50%;margin:0 auto 10px;object-fit:cover;box-shadow:0 6px 12px rgba(0,0,0,.4);border:3px solid transparent}
 .badge-item.owned .b-preview{border-color:var(--gold)}
-.badge-item .bname{font-family:'Cairo';font-weight:900;font-size:15px;color:#fff;margin-bottom:4px}
-.badge-item .bcost{font-size:12px;font-weight:900;color:var(--gold)}
+.badge-item .bname{font-family:'Lilita One';font-size:16px;color:#fff;margin-bottom:4px}
+.badge-item .barabic{font-size:12px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.badge-item .bcost{font-size:13px;font-weight:900;color:var(--gold)}
 .badge-item .bstat{font-size:11px;font-weight:900;margin-top:6px;padding:3px 8px;border-radius:8px;background:rgba(0,0,0,.35)}
 .badge-item.owned .bstat{background:var(--gold);color:#4a2a00}
 .badge-item.ready .bstat{background:var(--green);color:#fff}
 
-/* PROGRESS BAR */
-.progress{height:16px;border-radius:999px;background:rgba(0,0,0,.45);overflow:hidden;border:2px solid var(--border);margin-top:8px}
+/* ARENA */
+.arena-path{display:flex;flex-direction:column;gap:14px;padding:6px 0}
+.arena{padding:16px;display:flex;align-items:center;gap:14px;transition:.3s;background:linear-gradient(135deg,var(--c1),var(--c2));border-color:rgba(255,255,255,.35)}
+.arena .em{font-size:46px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
+.arena h3{font-size:22px}.arena .req{font-weight:900;font-size:13px;opacity:.9}
+.arena.locked{filter:grayscale(1) brightness(.45);border-color:#2d4da3}.arena.locked .em{animation:none}
+.arena.current{transform:scale(1.03);box-shadow:0 6px 0 var(--border),0 0 30px rgba(255,204,51,.55);border-color:var(--gold)}
+.arena .tag{margin-left:auto;font-family:'Lilita One';font-size:13px;padding:4px 10px;border-radius:10px;background:rgba(0,0,0,.35);text-align:center}
+.arena.current .tag{background:var(--gold);color:#4a2a00}
+.progress{height:16px;border-radius:999px;background:rgba(0,0,0,.4);overflow:hidden;border:2px solid var(--border);margin-top:8px}
 .progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold2),var(--gold));box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);transition:width 1s cubic-bezier(.2,1,.3,1);width:0}
-
-/* JOKEN COIN */
-.jk{display:inline-grid;place-items:center;width:1.3em;height:1.3em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a0,#ffc21a 55%,#d98a00);border:.12em solid #8a5200;color:#5a3200;font-family:'Lilita One',cursive;font-size:.85em;line-height:1;font-style:normal;font-weight:400;text-shadow:0 1px 0 rgba(255,255,255,.5);vertical-align:-.22em;box-shadow:inset 0 -.12em 0 rgba(0,0,0,.2)}
 
 /* SPIRITUALS */
 .daystrip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
-.daybtn{padding:8px 2px;border-radius:14px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid #28448f;box-shadow:0 4px 0 var(--border);text-align:center;font-weight:900;transition:.15s}
-.daybtn .wd{font-size:9.5px;color:var(--muted);letter-spacing:.5px}
+.daybtn{padding:8px 2px;border-radius:14px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid #2d4da3;box-shadow:0 4px 0 var(--border);text-align:center;font-weight:900;transition:.15s}
+.daybtn .wd{font-size:10px;color:var(--muted);letter-spacing:.5px}
 .daybtn .dn{font-family:'Lilita One';font-size:20px;line-height:1.1}
 .daybtn .dots{display:flex;gap:2px;justify-content:center;margin-top:4px}
 .daybtn .dots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45)}
 .daybtn .dots i.on{background:var(--green);box-shadow:0 0 6px var(--green)}
-.daybtn.sel{border-color:var(--gold);background:linear-gradient(180deg,#243e8a,#182d66);transform:translateY(-3px)}
+.daybtn.sel{border-color:var(--gold);background:linear-gradient(180deg,#26449a,#1b3270);transform:translateY(-3px)}
 .daybtn.sel .dn{color:var(--gold)}
-.sprow{display:flex;align-items:center;gap:12px;width:100%;text-align:right;padding:12px;margin-top:10px;border-radius:16px;background:rgba(0,0,0,.28);border:2px solid transparent;transition:.15s}
+.sprow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;margin-top:10px;border-radius:16px;background:rgba(0,0,0,.28);border:2px solid transparent;transition:.15s}
 .sprow:active{transform:scale(.97)}
 .sprow .em{font-size:32px;width:40px;text-align:center;flex-shrink:0}
 .sprow .tx{flex:1;min-width:0}
-.sprow .tx b{display:block;font-size:16px;font-weight:900}
-.sprow .tx span{font-size:11.5px;font-weight:700;color:var(--muted)}
+.sprow .tx b{display:block;font-family:'Lilita One';font-size:19px;font-weight:400}
+.sprow .tx span{font-size:12px;font-weight:800;color:var(--muted)}
 .sprow .box{width:38px;height:38px;border-radius:12px;border:3px solid #3a5fc4;background:#0c1a44;display:grid;place-items:center;font-family:'Lilita One';font-size:22px;flex-shrink:0;transition:.2s cubic-bezier(.2,1.6,.4,1)}
 .sprow.on{border-color:var(--green);background:rgba(91,211,91,.14)}
 .sprow.on .box{background:linear-gradient(180deg,var(--green),var(--green2));border-color:var(--green);transform:scale(1.1)}
@@ -149,28 +155,19 @@ nav button:active .ic{transform:scale(.85)}
 .spstat{display:flex;align-items:center;gap:10px;margin-top:10px;font-weight:900;font-size:13px}
 .spstat .lb{width:138px;flex-shrink:0;white-space:nowrap}
 .spstat .progress{flex:1;margin-top:0;height:14px}
-.spstat .ct{width:44px;text-align:left;color:var(--gold);flex-shrink:0}
+.spstat .ct{width:44px;text-align:right;color:var(--gold);flex-shrink:0}
+.jk{display:inline-grid;place-items:center;width:1.3em;height:1.3em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a0,#ffc21a 55%,#d98a00);border:.12em solid #8a5200;color:#5a3200;font-family:'Lilita One',cursive;font-size:.85em;line-height:1;font-style:normal;font-weight:400;text-shadow:0 1px 0 rgba(255,255,255,.5);vertical-align:-.22em;box-shadow:inset 0 -.12em 0 rgba(0,0,0,.2)}
 
-/* ARENA */
-.arena-path{display:flex;flex-direction:column;gap:14px;padding:6px 0}
-.arena{padding:16px;display:flex;align-items:center;gap:14px;transition:.3s;background:linear-gradient(135deg,var(--c1),var(--c2));border-color:rgba(255,255,255,.35)}
-.arena .em{font-size:44px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
-.arena h3{font-size:20px}.arena .req{font-weight:900;font-size:13px;opacity:.9}
-.arena.locked{filter:grayscale(1) brightness(.45);border-color:#28448f}.arena.locked .em{animation:none}
-.arena.current{transform:scale(1.03);box-shadow:0 6px 0 var(--border),0 0 30px rgba(255,204,51,.55);border-color:var(--gold)}
-.arena .tag{margin-right:auto;font-family:'Cairo';font-weight:900;font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(0,0,0,.35);text-align:center}
-.arena.current .tag{background:var(--gold);color:#4a2a00}
-
-/* STREAKS & MY PROGRESS */
-.bigct{font-family:'Lilita One';font-size:52px;color:var(--gold);text-align:center;line-height:1.1;margin-top:6px;text-shadow:0 4px 0 rgba(0,0,0,.35)}
-.bigct small{font-size:26px;color:#fff}
+/* MY PROGRESS */
+.bigct{font-family:'Lilita One';font-size:56px;color:var(--gold);text-align:center;line-height:1.1;margin-top:6px;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.bigct small{font-size:30px;color:#fff}
 .stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
 .sttile{padding:10px 2px;border-radius:14px;background:rgba(0,0,0,.28);text-align:center;border:2px solid transparent;min-width:0}
 .sttile.on{border-color:var(--gold2);background:rgba(255,154,31,.14)}
 .sttile .em{font-size:24px}
-.sttile b{display:block;font-family:'Lilita One';font-size:18px;font-weight:400;color:var(--gold);white-space:nowrap}
+.sttile b{display:block;font-family:'Lilita One';font-size:19px;font-weight:400;color:var(--gold);white-space:nowrap}
 .sttile span{display:block;font-size:10px;font-weight:900;color:var(--muted);line-height:1.15;margin-top:2px}
-.hrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}
+.hrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
 .hrow:last-child{border:none}
 .hrow .grow{flex:1;min-width:0}
 .hrow b{display:block;font-size:14px;font-weight:900;overflow-wrap:anywhere}
@@ -179,86 +176,86 @@ nav button:active .ic{transform:scale(.85)}
 .hrow .amt.neg{color:var(--red)}
 
 /* MODAL */
-.overlay{position:fixed;inset:0;z-index:50;background:rgba(5,10,30,.8);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(5,10,30,.75);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
 .overlay.show{opacity:1;pointer-events:auto}
-.modal{position:relative;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#1c3378,#0b1536);border:3px solid #3354b0;border-bottom:none;transform:translateY(60px);transition:transform .35s cubic-bezier(.2,1.2,.3,1);text-align:right}
+.modal{position:relative;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#1f3a85,#0f1e4a);border:3px solid #3a5fc4;border-bottom:none;transform:translateY(60px);transition:transform .35s cubic-bezier(.2,1.2,.3,1)}
 .overlay.show .modal{transform:none}
-@media(min-width:600px){.overlay{align-items:center}.modal{border-radius:26px;border-bottom:3px solid #3354b0}}
-.modal .x{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:10px;background:var(--red);box-shadow:0 3px 0 #7a1010;font-family:'Lilita One';font-size:18px;z-index:5}
+@media(min-width:600px){.overlay{align-items:center}.modal{border-radius:26px;border-bottom:3px solid #3a5fc4}}
+.modal .x{position:absolute;top:12px;right:14px;width:34px;height:34px;border-radius:10px;background:var(--red);box-shadow:0 3px 0 #7a1010;font-family:'Lilita One';font-size:18px;z-index:5}
 .detail{text-align:center}
-.detail .big{width:140px;height:140px;border-radius:50%;margin:0 auto 12px;overflow:hidden;border:4px solid var(--gold);box-shadow:0 8px 0 var(--gold3);background:var(--bg3);position:relative}
-.detail .big .init{font-size:64px}
-.detail h2{font-size:26px}
+.detail .big{width:150px;height:150px;border-radius:50%;margin:0 auto 12px;overflow:hidden;border:4px solid var(--gold);box-shadow:0 8px 0 var(--gold3);background:var(--bg3);position:relative}
+.detail .big .init{font-size:70px}
+.detail h2{font-size:30px}
 .stats{display:flex;gap:10px;justify-content:center;margin:12px 0}
 .stat{flex:1;padding:10px;border-radius:14px;background:rgba(0,0,0,.3)}
-.stat b{display:block;font-family:'Lilita One';font-size:20px;color:var(--gold)}.stat span{font-size:10px;font-weight:900;color:var(--muted)}
+.stat b{display:block;font-family:'Lilita One';font-size:22px;color:var(--gold)}.stat span{font-size:11px;font-weight:900;color:var(--muted)}
 
 /* LOGIN */
 #login{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(800px 500px at 50% 0%,var(--bg3),var(--bg1) 70%)}
-#login .box{width:100%;max-width:390px;text-align:center}
-#login .crest-img{width:115px;height:115px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);box-shadow:0 10px 0 var(--gold3),0 20px 40px rgba(0,0,0,.5);margin:0 auto 14px;display:block;animation:bob 3s ease-in-out infinite}
-#login h1{font-size:28px;color:var(--gold);line-height:1.2}
-#login p{color:var(--muted);font-weight:800;margin:8px 0 16px;font-size:13.5px}
-input.inp,select.inp{width:100%;padding:14px;border-radius:14px;border:3px solid #3354b0;background:#091438;color:#fff;font-family:'Cairo','Nunito';font-weight:900;font-size:15px;text-align:center;outline:none;margin-bottom:12px}
+#login .box{width:100%;max-width:380px;text-align:center}
+#login .crest-img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);box-shadow:0 10px 0 var(--gold3),0 20px 40px rgba(0,0,0,.5);margin:0 auto 14px;display:block;animation:bob 3s ease-in-out infinite}
+#login h1{font-size:34px;color:var(--gold);line-height:1.1}
+#login p{color:var(--muted);font-weight:800;margin:10px 0 20px}
+input.inp,select.inp{width:100%;padding:14px;border-radius:14px;border:3px solid #3a5fc4;background:#0c1a44;color:#fff;font-family:'Nunito';font-weight:900;font-size:16px;text-align:center;outline:none;margin-bottom:12px}
 input.inp:focus,select.inp:focus{border-color:var(--gold)}
 .err{color:var(--red);font-weight:900;min-height:18px;font-size:13px;margin-bottom:8px}
-.empty{text-align:center;color:var(--muted);font-weight:800;padding:35px 10px}.empty .em{font-size:46px;margin-bottom:8px}
-
-#toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-30px);z-index:200;padding:12px 20px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:16px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00;box-shadow:0 5px 0 var(--gold3),0 10px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+.empty{text-align:center;color:var(--muted);font-weight:800;padding:40px 10px}.empty .em{font-size:50px;margin-bottom:8px}
+#toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-30px);z-index:200;padding:12px 20px;border-radius:14px;font-family:'Lilita One';font-size:17px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00;box-shadow:0 5px 0 var(--gold3),0 10px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #toast.bad{background:linear-gradient(180deg,var(--red),var(--red2));color:#fff;box-shadow:0 5px 0 #7a1010}
 .confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:300;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.7}}
 
-/* NOTIFICATION & PWA PROMPT BANNER */
+/* NOTIFICATION & PWA BANNER */
 .notify-banner{background:linear-gradient(135deg,#1b3d8f,#10245a);border:2px solid var(--gold);border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.notify-banner .txt{font-size:12px;font-weight:800;line-height:1.3;color:#e1ebff}
-.notify-banner .btn{padding:8px 12px;font-size:13px;border-radius:10px;flex-shrink:0}
+.notify-banner .txt{font-size:13px;font-weight:800;line-height:1.3;color:#e1ebff}
+.notify-banner .btn{padding:8px 14px;font-size:14px;border-radius:10px;flex-shrink:0}
 
 /* EVENTS / QUIZ / SHOP */
-.news h3{font-size:19px;margin-bottom:6px;color:var(--gold)}
-.news p{font-weight:600;font-size:13.5px;line-height:1.45;color:#dbe6ff;white-space:pre-line}
-.vote{display:flex;gap:8px;margin-top:12px}.vote .btn{flex:1;font-size:14px;padding:10px}
+.news h3{font-size:20px;margin-bottom:6px;color:var(--gold)}
+.news p{font-weight:600;font-size:14px;line-height:1.45;color:#dbe6ff;white-space:pre-line}
+.vote{display:flex;gap:8px;margin-top:12px}.vote .btn{flex:1;font-size:15px;padding:10px}
+.vote .btn.chosen{outline:3px solid #fff;outline-offset:2px}
 .vbar{display:flex;height:12px;border-radius:999px;overflow:hidden;margin-top:10px;background:rgba(0,0,0,.35)}
 .vbar i{display:block;height:100%;transition:width .6s}.vbar .g{background:var(--green)}.vbar .n{background:var(--red)}
-.vcount{display:flex;justify-content:space-between;font-size:11.5px;font-weight:900;margin-top:4px;color:var(--muted)}
+.vcount{display:flex;justify-content:space-between;font-size:12px;font-weight:900;margin-top:4px;color:var(--muted)}
 .chal{display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:12px}.chal:active{transform:scale(.97)}
-.chal .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(160deg,var(--purple),var(--purple2));box-shadow:0 4px 0 #4a1a8a;flex-shrink:0}
-.chal h3{font-size:17.5px}.chal p{color:var(--muted);font-size:12px;font-weight:700;margin-top:2px}
+.chal .ic{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(160deg,var(--purple),var(--purple2));box-shadow:0 4px 0 #4a1a8a;flex-shrink:0}
+.chal h3{font-size:19px}.chal p{color:var(--muted);font-size:13px;font-weight:700;margin-top:2px}
 .chal.done .ic{background:linear-gradient(160deg,var(--green),var(--green2));box-shadow:0 4px 0 #1b6b1b}
 .gift{text-align:center;padding:14px 10px;cursor:pointer}
-.gift .em{font-size:44px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
-.gift .ph{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;border:3px solid #28448f;box-shadow:0 4px 0 var(--border)}
-.gift .nm{font-family:'Cairo';font-weight:900;font-size:15px;margin:8px 0 6px}
+.gift .em{font-size:48px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+.gift .ph{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;border:3px solid #2d4da3;box-shadow:0 4px 0 var(--border)}
+.gift .nm{font-family:'Lilita One';font-size:16px;margin:8px 0 6px}
 .gift .qty{font-size:11px;font-weight:900;color:var(--muted);margin-top:6px}
 .q-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.q-text{font-family:'Cairo';font-weight:900;font-size:20px;line-height:1.3;margin-bottom:16px}
-.opt{display:block;width:100%;text-align:right;padding:13px;margin-bottom:10px;border-radius:14px;font-weight:800;font-size:14.5px;background:linear-gradient(180deg,#243e8a,#182d66);box-shadow:0 4px 0 var(--border);transition:.15s}
+.q-text{font-family:'Lilita One';font-size:22px;line-height:1.25;margin-bottom:16px}
+.opt{display:block;width:100%;text-align:left;padding:14px;margin-bottom:10px;border-radius:14px;font-weight:800;font-size:15px;background:linear-gradient(180deg,#2c4ea8,#1d3577);box-shadow:0 4px 0 var(--border);transition:.15s}
 .opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--border)}
 .opt.right{background:linear-gradient(180deg,var(--green),var(--green2));box-shadow:0 4px 0 #1b6b1b}
 .opt.wrong{background:linear-gradient(180deg,var(--red),var(--red2));box-shadow:0 4px 0 #7a1010;animation:shake .4s}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .result{text-align:center;padding:10px 0}
-.result .em{font-size:70px}
-.result h2{font-size:28px;color:var(--gold);margin:8px 0}
-.result .earn{font-family:'Lilita One';font-size:38px;color:#fff;text-shadow:0 0 20px var(--gold)}
+.result .em{font-size:80px}
+.result h2{font-size:34px;color:var(--gold);margin:8px 0}
+.result .earn{font-family:'Lilita One';font-size:44px;color:#fff;text-shadow:0 0 20px var(--gold)}
 </style>
 </head>
 <body>
 
 <div id="login">
   <div class="box">
-    <img src="images/logo.png" class="crest-img" alt="St. John the Beloved Class">
-    <h1>أسرة القديس يوحنا الحبيب</h1>
-    <p>اختر اسمك أو اكتب رقم كود الطالب للدخول للمسابقة ⚔️</p>
+    <img src="images/logo.png" class="crest-img" alt="St. John Class">
+    <h1>ST. JOHN CLASS</h1>
+    <p>Select your name or enter your Student ID</p>
     
     <select class="inp" id="loginSelect" onchange="if(this.value)$('loginId').value=this.value">
-      <option value="">-- اختر اسم الطالب من القائمة --</option>
+      <option value="">-- Choose student from list --</option>
     </select>
     
-    <input class="inp" id="loginId" placeholder="كود الطالب (Student ID)" autocomplete="off">
+    <input class="inp" id="loginId" placeholder="Student ID" autocomplete="off">
     <div class="err" id="loginErr"></div>
-    <button class="btn gold wide" onclick="doLogin()">دخول للميدان ⚔️</button>
+    <button class="btn gold wide" onclick="doLogin()">ENTER ⚔️</button>
   </div>
 </div>
 
@@ -266,17 +263,11 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
   <header>
     <div class="logo">
       <img src="images/logo.png" class="crest-img" alt="Logo">
-      <div>
-        <h1>يوحنا الحبيب</h1>
-        <small>ST. JOHN CLASS</small>
-      </div>
+      <div><h1>ST. JOHN</h1><small>BELOVED CLASS</small></div>
     </div>
     <div class="mechip" id="mechip" onclick="openStudent(me.id)">
       <div class="av"><img id="meImg" alt=""></div>
-      <div>
-        <div class="nm" id="meName">—</div>
-        <div class="kr"><span id="meJokens">0</span> <i class="jk">J</i></div>
-      </div>
+      <div><div class="nm" id="meName">—</div><div class="kr"><span id="meJokens">0</span> <i class="jk">J</i></div></div>
     </div>
   </header>
 
@@ -284,68 +275,62 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
     <!-- 1. RANK BOARD -->
     <section class="page active" id="p-rank">
       <div id="pwaBanner" class="notify-banner" style="display:none">
-        <div class="txt">📲 <b>تثبيت تطبيق الأسرة</b> على شاشة هاتفك لسهولة المتابعة اليومية!</div>
-        <button class="btn gold" onclick="installPWA()">تثبيت ➕</button>
-      </div>
-      
-      <div id="notifBanner" class="notify-banner">
-        <div class="txt">🔔 <b>فَعّل الإشعارات:</b> لتصلك تذكيرات صلاة باكر والنوتة الروحية وأعياد الميلاد!</div>
-        <button class="btn green" onclick="enablePushNotifications()">تفعيل 🔔</button>
+        <div class="txt">📲 <b>Install St. John App</b> on your phone home screen for quick access!</div>
+        <button class="btn gold" onclick="installPWA()">Install ➕</button>
       </div>
 
-      <div class="page-title">
-        <h2>لوحة <span>الفرسان</span></h2>
-        <span class="sub" id="rankCount"></span>
+      <div id="notifBanner" class="notify-banner">
+        <div class="txt">🔔 <b>Enable Push Notifications:</b> get daily morning & evening prayer reminders!</div>
+        <button class="btn green" onclick="enablePushNotifications()">Enable 🔔</button>
       </div>
+
+      <div class="page-title"><h2>Player <span>Board</span></h2><span class="sub" id="rankCount"></span></div>
       <div class="grid" id="rankGrid"></div>
     </section>
 
     <!-- 2. BADGES & UPCOMING PROGRESS -->
     <section class="page" id="p-badges">
-      <div class="page-title">
-        <h2>الأوسمة <span>والرتب</span></h2>
-        <span class="pill gold" id="badgeCoins">0 <i class="jk">J</i></span>
-      </div>
+      <div class="page-title"><h2>Badges <span>Shop</span></h2><span class="pill gold" id="badgeCoins">0 <i class="jk">J</i></span></div>
 
-      <!-- UPCOMING BADGE PROGRESS CARD -->
+      <!-- UPCOMING BADGE PROGRESS -->
       <div class="card" style="margin-bottom:16px;border-color:var(--gold);background:radial-gradient(ellipse at top,#22439a,#101e48)">
         <div style="display:flex;align-items:center;gap:12px">
           <img id="upBadgeImg" src="images/badge_seer.svg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.4)">
           <div style="flex:1;min-width:0">
-            <div class="sub">الوسام القادم في انتظارك 🎖️</div>
-            <h3 id="upBadgeName" style="font-size:18px;color:var(--gold)">يوحنا الرائي</h3>
-            <div id="upBadgeSub" style="font-size:12px;font-weight:800;color:#c2d3ff">الهدف: 150 نقطة</div>
+            <div class="sub">UPCOMING BADGE 🎖️</div>
+            <h3 id="upBadgeName" style="font-size:20px;color:var(--gold)">John the Seer</h3>
+            <div id="upBadgeSub" style="font-size:12px;font-weight:800;color:#c2d3ff">Target: 150 Jokens</div>
           </div>
         </div>
         <div class="progress" style="margin-top:12px"><i id="upBadgeBar"></i></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
           <span id="upBadgePct" style="font-size:12px;font-weight:900;color:var(--gold)">0%</span>
-          <span id="upBadgeRemain" class="sub">باقي 150 نقطة</span>
+          <span id="upBadgeRemain" class="sub">150 Jokens remaining</span>
         </div>
-        <button id="upBadgeBtn" class="btn gold wide" style="margin-top:12px;display:none" onclick="openBadgeBuyModal(nextBadgeObj.id)">فتح وشراء الوسام الآن 🎖️🎉</button>
+        <button id="upBadgeBtn" class="btn gold wide" style="margin-top:12px;display:none" onclick="openBadgeBuyModal(nextBadgeObj.id)">UNLOCK BADGE NOW 🎖️🎉</button>
       </div>
 
-      <div class="sub" style="margin:10px 0 8px">اضغط على أي وسام لعرض نافذة الشراء والتفاصيل:</div>
+      <div class="sub" style="margin:10px 0 8px">Tap any badge to view buying window and requirements:</div>
       <div class="bgrid" id="badgeGrid"></div>
     </section>
 
     <!-- 3. ARENA PATH -->
     <section class="page" id="p-arena">
-      <div class="page-title"><h2>طريق <span>الميدان</span></h2></div>
+      <div class="page-title"><h2>Arena <span>Path</span></h2></div>
       <div class="card" style="margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div class="sub">المستوى الحالي</div><h3 id="curArenaName" style="font-size:20px;color:var(--gold)">—</h3></div>
+          <div><div class="sub">CURRENT ARENA</div><h3 id="curArenaName" style="font-size:22px;color:var(--gold)">—</h3></div>
           <div class="pill gold" id="curEarned">0 <i class="jk">J</i></div>
         </div>
         <div class="progress"><i id="arenaBar"></i></div>
-        <div class="sub" id="arenaNext" style="margin-top:6px;text-align:left"></div>
+        <div class="sub" id="arenaNext" style="margin-top:6px;text-align:right"></div>
       </div>
       <div class="arena-path" id="arenaPath"></div>
     </section>
 
-    <!-- 4. SPIRITUALS (NOTA RO7YA) -->
+    <!-- 4. SPIRITUALS -->
     <section class="page" id="p-spirit">
-      <div class="page-title"><h2>النوتة <span>الروحية</span></h2><span class="sub" id="spToday"></span></div>
+      <div class="page-title"><h2>Spirit<span>uals</span></h2><span class="sub" id="spToday"></span></div>
       <div class="daystrip" id="spDays"></div>
       <div class="card" style="margin-bottom:14px">
         <div class="sub" id="spDayLbl"></div>
@@ -356,48 +341,48 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
         <div id="spE3traf"></div>
       </div>
       <div class="card">
-        <div class="sub">إحصائية هذا الشهر 🙏</div>
+        <div class="sub">THIS MONTH SO FAR</div>
         <div id="spStats"></div>
       </div>
     </section>
 
     <!-- 5. MY PROGRESS & HISTORY -->
     <section class="page" id="p-me">
-      <div class="page-title"><h2>سجلي <span>ونقاطي</span></h2></div>
+      <div class="page-title"><h2>My <span>Progress</span></h2></div>
       <div class="card" style="margin-bottom:14px">
-        <div class="sub">⛪ حضور القداسات</div>
+        <div class="sub">⛪ ODAS ATTENDANCE</div>
         <div id="meOdas"></div>
       </div>
       <div class="card" style="margin-bottom:14px">
-        <div class="sub">🔥 شعلة حضور الاجتماعات والأنشطة</div>
+        <div class="sub">🔥 ATTENDANCE STREAKS — weeks in a row</div>
         <div class="stgrid" id="meAttStreak"></div>
       </div>
       <div class="card" style="margin-bottom:14px">
-        <div class="sub">🙏 شعلة النوتة الروحية — أيام متتالية</div>
+        <div class="sub">🔥 SPIRITUAL STREAKS — days in a row</div>
         <div class="stgrid" id="meSpStreak"></div>
       </div>
       <div class="card">
-        <div class="sub">📜 سجل النقاط التفصيلي (History)</div>
+        <div class="sub">JOKEN HISTORY (All Earned Points)</div>
         <div id="meHist"></div>
       </div>
     </section>
 
-    <!-- 6. PSALM REQUESTS -->
+    <!-- 6. PSALMS -->
     <section class="page" id="p-psalm">
-      <div class="page-title"><h2>تسميع <span>مزمور 📜</span></h2><span class="sub">+10 <i class="jk">J</i> عند الاعتماد</span></div>
+      <div class="page-title"><h2>Psalm <span>📜</span></h2><span class="sub">+10 <i class="jk">J</i> when approved</span></div>
       <div class="card" style="margin-bottom:14px">
-        <div class="sub" style="margin-bottom:10px">حفظت مزمور جديد؟ اكتب اسم المزمور لإرساله لأستاذك:</div>
-        <input class="inp" id="psText" placeholder="اكتب المزمور (مثال: مزمور 23 الرب راعي)" maxlength="80" autocomplete="off">
-        <button class="btn gold wide" onclick="sendPsalm()">إرسال الطلب 📜</button>
+        <div class="sub" style="margin-bottom:10px">Memorized a psalm? Send it to your teacher!</div>
+        <input class="inp" id="psText" placeholder="Which psalm? (e.g. Psalm 23)" maxlength="80" dir="auto" autocomplete="off">
+        <button class="btn gold wide" onclick="sendPsalm()">SEND REQUEST 📜</button>
       </div>
       <div id="psList" style="display:flex;flex-direction:column;gap:12px"></div>
     </section>
 
     <!-- 7. EVENTS & BIRTHDAYS -->
     <section class="page" id="p-news">
-      <div class="page-title"><h2>المناسبات <span>والأحداث</span></h2></div>
+      <div class="page-title"><h2>Events & <span>Birthdays</span></h2></div>
       <div id="bdayMonthCard" class="card" style="margin-bottom:14px;border-color:#ff6bb5;display:none">
-        <h3 style="font-size:18px;color:#ff8ecd;margin-bottom:6px">🎂 أعياد ميلاد هذا الشهر! 🎉</h3>
+        <h3 style="font-size:18px;color:#ff8ecd;margin-bottom:6px">🎂 Birthdays This Month! 🎉</h3>
         <div id="bdayMonthList" style="font-size:13.5px;font-weight:800;line-height:1.6"></div>
       </div>
       <div id="newsList" style="display:flex;flex-direction:column;gap:12px"></div>
@@ -405,27 +390,27 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
 
     <!-- 8. CHALLENGES -->
     <section class="page" id="p-chal">
-      <div class="page-title"><h2>التحديات <span>والمسابقات</span></h2><span class="sub">اكسب 5 / 7 / 10 <i class="jk">J</i></span></div>
+      <div class="page-title"><h2>Challenges</h2><span class="sub">Earn 5 / 7 / 10 <i class="jk">J</i></span></div>
       <div id="chalList"></div>
     </section>
 
     <!-- 9. SHOP -->
     <section class="page" id="p-shop">
-      <div class="page-title"><h2>متجر <span>الهدايا</span></h2><span class="pill gold" id="shopBal">0 <i class="jk">J</i></span></div>
+      <div class="page-title"><h2>Gift <span>Shop</span></h2><span class="pill gold" id="shopBal">0 <i class="jk">J</i></span></div>
       <div class="grid" id="shopGrid"></div>
     </section>
   </main>
 
   <nav id="nav">
-    <button data-p="rank" class="on"><span class="ic">🏆</span>الترتيب</button>
-    <button data-p="badges"><span class="ic">🎖️</span>الأوسمة</button>
-    <button data-p="spirit"><span class="ic">🙏</span>النوتة</button>
-    <button data-p="me"><span class="ic">🔥</span>سجلي</button>
-    <button data-p="arena"><span class="ic">🏟️</span>الميدان</button>
-    <button data-p="psalm"><span class="ic">📜</span>مزمور</button>
-    <button data-p="news"><span class="ic">📅</span>المناسبات</button>
-    <button data-p="chal"><span class="ic">⚔️</span>التحدي</button>
-    <button data-p="shop"><span class="ic">🎁</span>المتجر</button>
+    <button data-p="rank" class="on"><span class="ic">🏆</span>Rank</button>
+    <button data-p="badges"><span class="ic">🎖️</span>Badges</button>
+    <button data-p="arena"><span class="ic">🏟️</span>Arena</button>
+    <button data-p="spirit"><span class="ic">🙏</span>Spirit.</button>
+    <button data-p="me"><span class="ic">🔥</span>Me</button>
+    <button data-p="psalm"><span class="ic">📜</span>Psalm</button>
+    <button data-p="news"><span class="ic">📅</span>Events</button>
+    <button data-p="chal"><span class="ic">⚔️</span>Chall.</button>
+    <button data-p="shop"><span class="ic">🎁</span>Shop</button>
   </nav>
 </div>
 
@@ -457,7 +442,7 @@ const ROOT = db.collection("james").doc("app");
 const col = name => ROOT.collection(name);
 
 /* ============================================================
-   2. ROSTER OF 33 STUDENTS & BIRTHDAYS
+   2. 33 STUDENTS & BIRTHDAYS
    ============================================================ */
 const INITIAL_STUDENTS = [
   { name: "Adam Ragy", birthday: "2015-05-14" },
@@ -497,7 +482,6 @@ const INITIAL_STUDENTS = [
 
 const slug = n => n.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 
-/* Populate login select */
 const lsel = $("loginSelect");
 INITIAL_STUDENTS.forEach(s => {
   const opt = document.createElement("option");
@@ -516,42 +500,42 @@ const BADGES = [
   {
     id: "john_seer",
     level: 1,
-    name: "يوحنا الرائي",
-    nameEn: "John the Seer",
+    name: "John the Seer",
+    arabic: "يوحنا الرائي",
     cost: 150,
     em: "🦅",
     img: "images/badge_seer.svg",
-    desc: "الوسام الأول — يوحنا الرائي كاشف أسرار الرؤيا ومجد السماء (يتطلب 150 نقطة)"
+    desc: "1st Badge: Revealer of Heavenly Mysteries (150 Jokens)"
   },
   {
     id: "john_apostle",
     level: 2,
-    name: "يوحنا الرسولي",
-    nameEn: "John the Apostle",
+    name: "John the Apostle",
+    arabic: "يوحنا الرسولي",
     cost: 200,
     em: "📜",
     img: "images/badge_apostle.svg",
-    desc: "الوسام الثاني — يوحنا الرسولي الشاهد الأمين والمكرز بالكلمة (يتطلب 200 نقطة)"
+    desc: "2nd Badge: The Faithful Witness and Shepherd (200 Jokens)"
   },
   {
     id: "john_evangelist",
     level: 3,
-    name: "يوحنا الإنجيلي",
-    nameEn: "John the Evangelist",
+    name: "John the Evangelist",
+    arabic: "يوحنا الإنجيلي",
     cost: 400,
     em: "✨",
     img: "images/badge_evangelist.svg",
-    desc: "الوسام الثالث — يوحنا الإنجيلي اللاهوتي ناطق الإلهيات (يتطلب 400 نقطة)"
+    desc: "3rd Badge: The Theologian and Gospel Proclaimer (400 Jokens)"
   },
   {
     id: "john_beloved",
     level: 4,
-    name: "يوحنا الحبيب",
-    nameEn: "John the Beloved",
+    name: "John the Beloved",
+    arabic: "يوحنا الحبيب",
     cost: 550,
     em: "👑",
     img: "images/badge_beloved.svg",
-    desc: "الوسام الرابع والأعلى — يوحنا الحبيب المتكئ على صدر الرب يسوع (يتطلب 550 نقطة)"
+    desc: "4th Badge: Highest Honor — Reclining on the Lord's Bosom (550 Jokens)"
   }
 ];
 
@@ -567,10 +551,10 @@ const ARENAS = [
 ];
 
 const SPIRIT = [
-  {k:"mp",    em:"🌅", name:"صلاة باكر",     sub:"ابدأ يومك مع الرب يسوع"},
-  {k:"np",    em:"🌙", name:"صلاة النوم",     sub:"شكر وتوبة قبل أن تنام"},
-  {k:"bible", em:"📖", name:"قراءة الإنجيل", sub:"كلمة ربنا نور لسبيلك"},
-  {k:"som",   em:"🌾", name:"الصوم",          sub:"الأربعاء والجمعة", days:[3,5]},
+  {k:"mp",    em:"🌅", name:"Morning Prayer", sub:"Start the day with God"},
+  {k:"np",    em:"🌙", name:"Night Prayer",   sub:"Thank God before you sleep"},
+  {k:"bible", em:"📖", name:"Bible",          sub:"Read your Bible today"},
+  {k:"som",   em:"🌾", name:"Som",            sub:"Fasting day — Wednesday & Friday", days:[3,5]},
 ];
 
 const kdate = k => new Date(+k.slice(0,4), +k.slice(5,7)-1, +k.slice(8,10));
@@ -633,7 +617,6 @@ async function doLogin(){
   try {
     let snap = await col("students").doc(id).get();
     if(!snap.exists){
-      // Check if matches any of the initial student names
       const match = INITIAL_STUDENTS.find(s => slug(s.name) === id);
       if(match){
         await col("students").doc(id).set({
@@ -648,14 +631,14 @@ async function doLogin(){
         });
         snap = await col("students").doc(id).get();
       } else {
-        $("loginErr").textContent = "كود الطالب غير موجود، اختر اسمك من القائمة!";
+        $("loginErr").textContent = "Student ID not found. Select your name from the list!";
         return;
       }
     }
     localStorage.setItem("stjohn_id", id);
     startApp(id);
   } catch(e) {
-    $("loginErr").textContent = "خطأ في الاتصال بقاعدة البيانات.";
+    $("loginErr").textContent = "Connection error. Check Firebase connection.";
     console.error(e);
   }
 }
@@ -665,7 +648,7 @@ const savedId = localStorage.getItem("stjohn_id") || localStorage.getItem("james
 if(savedId){ $("loginId").value = savedId; doLogin(); }
 
 /* ============================================================
-   5. REALTIME FIREBASE LISTENERS
+   5. REALTIME LISTENERS
    ============================================================ */
 function startApp(id){
   $("login").style.display = "none";
@@ -673,13 +656,13 @@ function startApp(id){
   col("students").onSnapshot(s => {
     students = s.docs.map(d => ({id: d.id, ...d.data()}));
     students.forEach(x => {
-      x.earned = x.earned || 0;       // Lifetime accumulated score for leaderboard order
-      x.coins = x.coins || 0;         // Current active score for upcoming badge / shop
+      x.earned = x.earned || 0;       // Lifetime accumulated score for ranking
+      x.coins = x.coins || 0;         // Current active score for next badge / shop
       x.badges = x.badges || [];
       x.done = x.done || {};
     });
 
-    // 1. Order by accumulated score
+    // Order strictly by accumulated earned score
     students.sort((a,b) => (b.earned - a.earned) || a.name.localeCompare(b.name));
     students.forEach((x,i) => {
       x.rank = i && students[i-1].earned === x.earned ? students[i-1].rank : i+1;
@@ -740,7 +723,6 @@ function startApp(id){
     renderPsalm();
   });
 
-  // Setup Push Notifications check
   initPushNotifications();
 }
 
@@ -753,19 +735,18 @@ function computeNextBadge(){
   nextBadgeObj = BADGES.find(b => !myBadges.has(b.id)) || null;
 
   if(!nextBadgeObj){
-    // All 4 badges earned!
-    $("upBadgeName").textContent = "مبارك! حصلت على كل الأوسمة 👑";
-    $("upBadgeSub").textContent = "وصلت لأعلى رتبة في أسرة يوحنا الحبيب!";
+    $("upBadgeName").textContent = "Congratulations! All Badges Unlocked 👑";
+    $("upBadgeSub").textContent = "You reached the highest rank in St. John Class!";
     $("upBadgeImg").src = BADGES[3].img;
     $("upBadgeBar").style.width = "100%";
     $("upBadgePct").textContent = "100%";
-    $("upBadgeRemain").textContent = "أعلى مستوى 👑";
+    $("upBadgeRemain").textContent = "MAX RANK 👑";
     $("upBadgeBtn").style.display = "none";
     return;
   }
 
-  $("upBadgeName").textContent = nextBadgeObj.name;
-  $("upBadgeSub").textContent = `الهدف: ${nextBadgeObj.cost} نقطة — ${nextBadgeObj.desc}`;
+  $("upBadgeName").textContent = `${nextBadgeObj.name} (${nextBadgeObj.arabic})`;
+  $("upBadgeSub").textContent = `Target: ${nextBadgeObj.cost} Jokens — ${nextBadgeObj.desc}`;
   $("upBadgeImg").src = nextBadgeObj.img;
 
   const cur = me.coins || 0;
@@ -776,11 +757,11 @@ function computeNextBadge(){
   $("upBadgePct").textContent = pct + "%";
 
   if(cur >= target){
-    $("upBadgeRemain").textContent = "جاهز للشراء الآن! 🎉";
+    $("upBadgeRemain").textContent = "Ready to Unlock! 🎉";
     $("upBadgeBtn").style.display = "block";
-    $("upBadgeBtn").textContent = `شراء وسام ${nextBadgeObj.name} (${target} J) 🎉`;
+    $("upBadgeBtn").textContent = `UNLOCK ${nextBadgeObj.name.toUpperCase()} (${target} J) 🎉`;
   } else {
-    $("upBadgeRemain").textContent = `باقي ${target - cur} نقطة`;
+    $("upBadgeRemain").textContent = `${target - cur} Jokens remaining`;
     $("upBadgeBtn").style.display = "none";
   }
 }
@@ -795,28 +776,29 @@ function openBadgeBuyModal(badgeId){
 
   let actionHtml = '';
   if(isOwned){
-    actionHtml = `<div class="pill gold" style="font-size:15px;padding:8px 16px;margin-top:14px">✅ الوسام بحوزتك ومسجل باسمك</div>`;
+    actionHtml = `<div class="pill gold" style="font-size:15px;padding:8px 16px;margin-top:14px">✅ Already Earned & Owned</div>`;
   } else if(canBuy){
     actionHtml = `
       <div style="margin-top:14px">
-        <p class="sub" style="margin-bottom:10px;color:var(--gold)">لديك ${cur} نقطة، وسيتم إعادة تعيين/خصم النقاط للوسام القادم مع الحفاظ على ترتيبك في لوحة المتصدرين!</p>
-        <button class="btn gold wide" onclick="confirmBuyBadge('${b.id}')">تأكيد شراء الوسام الآن (${b.cost} J) 🎖️</button>
+        <p class="sub" style="margin-bottom:10px;color:var(--gold)">You have ${cur} Jokens. Your active score will reset for the next badge, while keeping your high leaderboard rank!</p>
+        <button class="btn gold wide" onclick="confirmBuyBadge('${b.id}')">BUY BADGE (${b.cost} ${COIN}) 🎖️</button>
       </div>`;
   } else if(isNext){
     actionHtml = `
       <div style="margin-top:14px">
         <div class="progress"><i style="width:${Math.min(100,(cur/b.cost)*100)}%"></i></div>
-        <div class="sub" style="margin-top:6px;text-align:center">معك ${cur} من أصل ${b.cost} نقطة (متبقي ${b.cost - cur} J)</div>
+        <div class="sub" style="margin-top:6px;text-align:center">${cur} / ${b.cost} Jokens (${b.cost - cur} remaining)</div>
       </div>`;
   } else {
-    actionHtml = `<div class="sub" style="margin-top:14px;color:#ff8a8a">يجب الحصول على الأوسمة بالترتيب أولاً 🔒</div>`;
+    actionHtml = `<div class="sub" style="margin-top:14px;color:#ff8a8a">Unlock previous badges first 🔒</div>`;
   }
 
   openModal(`
     <div class="detail">
       <img src="${b.img}" style="width:120px;height:120px;border-radius:50%;margin:0 auto 12px;border:3px solid var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.5);object-fit:cover">
       <h2>${esc(b.name)}</h2>
-      <div class="pill gold" style="margin:6px 0">${b.cost} ${COIN}</div>
+      <div class="sub" style="font-size:16px;color:var(--gold);margin-top:2px">${esc(b.arabic)}</div>
+      <div class="pill gold" style="margin:8px 0">${b.cost} ${COIN}</div>
       <p style="font-weight:700;font-size:14px;color:#d8e4ff;line-height:1.5;margin:10px 0">${esc(b.desc)}</p>
       ${actionHtml}
     </div>
@@ -835,10 +817,9 @@ async function confirmBuyBadge(badgeId){
       const currentCoins = data.coins || 0;
       const currentBadges = data.badges || [];
 
-      if(currentBadges.includes(b.id)) throw new Error("الوسام بحوزتك بالفعل!");
-      if(currentCoins < b.cost) throw new Error("نقاطك لا تكفي لشراء هذا الوسام!");
+      if(currentBadges.includes(b.id)) throw new Error("Badge already unlocked!");
+      if(currentCoins < b.cost) throw new Error("Not enough Jokens!");
 
-      // Reset / deduct badge cycle score
       const newCoins = Math.max(0, currentCoins - b.cost);
 
       t.update(ref, {
@@ -846,20 +827,19 @@ async function confirmBuyBadge(badgeId){
         badges: FV.arrayUnion(b.id)
       });
 
-      // Record in history
       t.set(col("history").doc(), {
         sid: me.id,
         amt: -b.cost,
-        reason: `شراء وسام: ${b.name} 🎖️`,
+        reason: `Unlocked Badge: ${b.name} (${b.arabic}) 🎖️`,
         at: Date.now()
       });
     });
 
     closeModal();
     confetti();
-    toast(`مبروك! حصلت على وسام ${b.name} 🎉`);
+    toast(`Congratulations! You unlocked ${b.name}! 🎉`);
   } catch(e) {
-    toast(e.message || "حدث خطأ أثناء الشراء", true);
+    toast(e.message || "Failed to purchase badge", true);
   }
 }
 
@@ -874,15 +854,14 @@ function renderMe(){
   $("badgeCoins").innerHTML = me.coins + " " + COIN;
 }
 
-/* LEADERBOARD (Ordered by accumulated earned score, but NOT displaying exact accumulated score!) */
+/* LEADERBOARD: Ordered by accumulated earned score, but NOT showing exact accumulated score! */
 function renderRank(){
-  $("rankCount").textContent = students.length + " بطل";
+  $("rankCount").textContent = students.length + " players";
   
   $("rankGrid").innerHTML = students.map((s,i) => {
     const sBadges = new Set(s.badges || []);
-    // Badge mini icons for each of the 4 badges
     const badgeIconsHtml = BADGES.map(b => `
-      <div class="b-mini-ic ${sBadges.has(b.id) ? "on" : ""}" title="${esc(b.name)}">${b.em}</div>
+      <div class="b-mini-ic ${sBadges.has(b.id) ? "on" : ""}" title="${esc(b.name)} (${esc(b.arabic)})">${b.em}</div>
     `).join("");
 
     return `
@@ -890,7 +869,7 @@ function renderRank(){
       <div class="rk ${s.rank <= 3 ? "top r" + s.rank : ""}">${s.rank <= 3 ? ["🥇","🥈","🥉"][s.rank-1] + " " : ""}#${s.rank}</div>
       <div class="img">
         ${imgOf(s)}
-        ${isBdayMonth(s) ? `<div class="cake" title="عيد ميلاده هذا الشهر!">🎂</div>` : ""}
+        ${isBdayMonth(s) ? `<div class="cake" title="Birthday this month!">🎂</div>` : ""}
       </div>
       <div class="info">
         <div class="nm">${esc(s.name)}</div>
@@ -902,7 +881,7 @@ function renderRank(){
         <!-- Showing current active balance, NOT accumulated lifetime score! -->
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
           <span class="pill gold" style="font-size:11px">${s.coins || 0} ${COIN}</span>
-          <span style="font-size:10px;font-weight:900;color:var(--muted)">${(s.badges||[]).length} أوسمة</span>
+          <span style="font-size:11px;font-weight:900;color:var(--muted)">${(s.badges||[]).length} / 4</span>
         </div>
       </div>
     </div>`;
@@ -915,33 +894,32 @@ function openStudent(id){
   const a = arenaOf(s.earned);
   const sBadges = new Set(s.badges || []);
 
-  // Fetch score history for this student
   col("history").where("sid","==",id).get().then(snap => {
     const sHist = snap.docs.map(d => d.data()).sort((a,b) => (b.at||0) - (a.at||0));
     
-    const histHtml = sHist.length ? sHist.slice(0,25).map(h => `
+    const histHtml = sHist.length ? sHist.slice(0,30).map(h => `
       <div class="hrow">
         <div class="grow">
-          <b>${esc(h.reason || "نقاط")}</b>
-          <span>${new Date(h.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
+          <b>${esc(h.reason || "Jokens")}</b>
+          <span>${new Date(h.at).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
         </div>
         <span class="amt ${h.amt<0?"neg":""}">${h.amt>0?"+":""}${h.amt} ${COIN}</span>
       </div>
-    `).join("") : `<div class="empty" style="padding:12px">لا يوجد سجل نقاط حتى الآن</div>`;
+    `).join("") : `<div class="empty" style="padding:12px">No history yet</div>`;
 
     openModal(`
       <div class="detail">
         <div class="big">${imgOf(s)}</div>
         <h2>${esc(s.name)} ${isBdayMonth(s)?"🎂":""}</h2>
-        <div class="sub">المركز #${s.rank} • ${a.em} ${esc(a.name)} ${isBdayToday(s)?"🎉 عيد ميلاده اليوم!":isBdayMonth(s)?"• عيد ميلاده هذا الشهر!":""}</div>
+        <div class="sub">Rank #${s.rank} • ${a.em} ${esc(a.name)} ${isBdayToday(s)?"🎉 Birthday Today!":isBdayMonth(s)?"• Birthday this month!":""}</div>
         
         <div class="stats">
-          <div class="stat"><b>${s.coins || 0}</b><span>الرصيد الحالي ${COIN}</span></div>
-          <div class="stat"><b>${(s.badges || []).length} / 4</b><span>الأوسمة</span></div>
-          <div class="stat"><b>${Object.keys(s.done || {}).length}</b><span>تحديات</span></div>
+          <div class="stat"><b>${s.coins || 0}</b><span>WALLET ${COIN}</span></div>
+          <div class="stat"><b>${(s.badges || []).length} / 4</b><span>BADGES</span></div>
+          <div class="stat"><b>${Object.keys(s.done || {}).length}</b><span>CHALLENGES</span></div>
         </div>
 
-        <h3 style="font-size:17px;margin:14px 0 8px;text-align:right">الأوسمة والرتب:</h3>
+        <h3 style="font-size:18px;margin:14px 0 8px;text-align:left">Earned Badges:</h3>
         <div class="bgrid" style="grid-template-columns:repeat(4,1fr);gap:6px">
           ${BADGES.map(b => `
             <div class="badge-item ${sBadges.has(b.id) ? "owned" : "locked"}" style="padding:8px 4px" onclick="openBadgeBuyModal('${b.id}')">
@@ -951,14 +929,14 @@ function openStudent(id){
           `).join("")}
         </div>
 
-        <h3 style="font-size:17px;margin:16px 0 8px;text-align:right">سجل النقاط المكتسبة (History):</h3>
+        <h3 style="font-size:18px;margin:16px 0 8px;text-align:left">Score History:</h3>
         <div class="card" style="max-height:220px;overflow-y:auto;padding:8px 12px;background:rgba(0,0,0,.3)">
           ${histHtml}
         </div>
       </div>
     `);
   }).catch(() => {
-    toast("تعذر تحميل السجل", true);
+    toast("Could not load history", true);
   });
 }
 
@@ -977,9 +955,10 @@ function renderBadges(){
       <div class="badge-item ${isOwned ? "owned" : isReady ? "ready" : isLocked ? "locked" : ""}" style="animation-delay:${i*40}ms" onclick="openBadgeBuyModal('${b.id}')">
         <img class="b-preview" src="${b.img}" alt="${esc(b.name)}">
         <div class="bname">${esc(b.name)}</div>
+        <div class="barabic">${esc(b.arabic)}</div>
         <div class="bcost">${b.cost} ${COIN}</div>
         <div class="bstat">
-          ${isOwned ? "✅ ممتلك" : isReady ? "🎉 جاهز للشراء!" : isLocked ? "🔒 مقفل" : "⏳ قيد التقدم"}
+          ${isOwned ? "✅ OWNED" : isReady ? "🎉 READY TO BUY!" : isLocked ? "🔒 LOCKED" : "⏳ IN PROGRESS"}
         </div>
       </div>`;
   }).join("");
@@ -991,7 +970,7 @@ function renderArena(){
   $("curEarned").innerHTML = me.earned + " " + COIN;
   const pct = n ? Math.min(100, ((me.earned - a.min)/(n.min - a.min))*100) : 100;
   requestAnimationFrame(() => $("arenaBar").style.width = pct + "%");
-  $("arenaNext").innerHTML = n ? `باقي ${n.min - me.earned} نقطة للوصول إلى ${n.name}` : "وصلت للقمة وميدان تاج الحياة! 👑";
+  $("arenaNext").innerHTML = n ? `${n.min - me.earned} ${COIN} to ${n.name}` : "You reached the top! 👑";
   
   $("arenaPath").innerHTML = [...ARENAS].reverse().map((x,i) => {
     const reached = me.earned >= x.min, cur = x === a;
@@ -999,13 +978,13 @@ function renderArena(){
       <div class="card arena ${reached ? "" : "locked"} ${cur ? "current" : ""}" style="--c1:${x.c1};--c2:${x.c2};animation-delay:${i*45}ms">
         <div class="em">${reached ? x.em : "🔒"}</div>
         <div><h3>${esc(x.name)}</h3><div class="req">${x.min} – ${x.max} ${COIN}</div></div>
-        <div class="tag">${cur ? "موقعك الحالي" : reached ? "مفتوح" : "مقفل"}</div>
+        <div class="tag">${cur ? "YOU ARE HERE" : reached ? "UNLOCKED" : "LOCKED"}</div>
       </div>`;
   }).join("");
 }
 
 /* ============================================================
-   8. SPIRITUALS (NOTA RO7YA)
+   8. SPIRITUALS
    ============================================================ */
 function renderSpirit(){
   if(!me) return;
@@ -1017,19 +996,19 @@ function renderSpirit(){
   });
   if(spDay < dkey(days[0])) spDay = today;
 
-  $("spToday").textContent = now.toLocaleDateString("ar-EG", {weekday:"long", day:"numeric", month:"short"});
+  $("spToday").textContent = now.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"short"});
   $("spDays").innerHTML = days.map(d => {
     const k = dkey(d), v = spirit.days[k] || {};
     return `
       <button class="daybtn ${k === spDay ? "sel" : ""}" onclick="pickSpDay('${k}')">
-        <div class="wd">${k === today ? "اليوم" : d.toLocaleDateString("ar-EG",{weekday:"short"})}</div>
+        <div class="wd">${k === today ? "TODAY" : d.toLocaleDateString("en-GB",{weekday:"short"}).toUpperCase()}</div>
         <div class="dn">${d.getDate()}</div>
         <div class="dots">${spFor(k).map(x => `<i class="${v[x.k] ? "on" : ""}"></i>`).join("")}</div>
       </button>`;
   }).join("");
 
   const sel = days.find(d => dkey(d) === spDay) || now, v = spirit.days[spDay] || {};
-  $("spDayLbl").textContent = (spDay === today ? "اليوم — " : "") + sel.toLocaleDateString("ar-EG", {weekday:"long", day:"numeric", month:"long"});
+  $("spDayLbl").textContent = (spDay === today ? "TODAY — " : "") + sel.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"long"}).toUpperCase();
   
   $("spChecks").innerHTML = spFor(spDay).map(x => `
     <button class="sprow ${v[x.k] ? "on" : ""}" onclick="toggleSpirit('${x.k}')">
@@ -1039,11 +1018,11 @@ function renderSpirit(){
     </button>`).join("");
 
   const mk = mkey(now), e3 = spirit.e3traf[mk] === true;
-  $("spMonthLbl").textContent = "هذا الشهر — " + now.toLocaleDateString("ar-EG", {month:"long", year:"numeric"});
+  $("spMonthLbl").textContent = "THIS MONTH — " + now.toLocaleDateString("en-GB", {month:"long", year:"numeric"}).toUpperCase();
   $("spE3traf").innerHTML = `
     <button class="sprow e3 ${e3 ? "on" : ""}" onclick="toggleE3traf()">
       <span class="em">✝️</span>
-      <span class="tx"><b>جلسة الاعتراف</b><span>${e3 ? "تم الاعتراف هذا الشهر — باركك الرب!" : "اضغط هنا عند الجلوس مع أب اعترافك هذا الشهر"}</span></span>
+      <span class="tx"><b>Confession (E3traf)</b><span>${e3 ? "Done this month — well done!" : "Tick when you have done it this month"}</span></span>
       <span class="box">${e3 ? "✓" : ""}</span>
     </button>`;
 
@@ -1057,7 +1036,7 @@ function renderSpirit(){
     }
     return `
       <div class="spstat">
-        <span class="lb">${x.em} ${x.name}${x.days ? " (أربع وجمعة)" : ""}</span>
+        <span class="lb">${x.em} ${x.name}${x.days ? " (Wed & Fri)" : ""}</span>
         <div class="progress"><i style="width:${t ? (c/t)*100 : 0}%"></i></div>
         <span class="ct">${c}/${t}</span>
       </div>`;
@@ -1074,8 +1053,8 @@ async function toggleSpirit(k){
       days: { [spDay]: { [k]: val } },
       ts: { [spDay]: { [k]: val ? Date.now() : FV.delete() } }
     }, { merge: true });
-    if(allDone){ confetti(); toast("عظيم جداً! أكملت النوتة الروحية اليوم 🙏🎉"); }
-  } catch(e) { toast("تعذر الحفظ، تأكد من الاتصال بالإنترنت", true); }
+    if(allDone){ confetti(); toast("All done for today! 🙏🎉"); }
+  } catch(e) { toast("Could not save. Check connection.", true); }
 }
 
 async function toggleE3traf(){
@@ -1085,8 +1064,8 @@ async function toggleE3traf(){
       e3traf: { [mk]: val },
       e3ts: { [mk]: val ? Date.now() : FV.delete() }
     }, { merge: true });
-    if(val){ confetti(); toast("اعتراف مبارك! ربنا يثبتك ✝️"); }
-  } catch(e) { toast("تعذر الحفظ", true); }
+    if(val){ confetti(); toast("Confession recorded this month ✝️"); }
+  } catch(e) { toast("Could not save", true); }
 }
 
 /* ============================================================
@@ -1096,7 +1075,7 @@ const FRIDAYS = Array.from({length:52}, (_,i) => {
   const d = new Date(2026,10,20); d.setDate(d.getDate() + i*7); return dkey(d);
 });
 const CATS = [
-  {k:"odas",em:"⛪",name:"القداس"},{k:"madares",em:"📚",name:"الفصل"},{k:"asheya",em:"🌙",name:"العشية"},{k:"dars",em:"📖",name:"درس الكتاب"}
+  {k:"odas",em:"⛪",name:"Odas"},{k:"madares",em:"📚",name:"Fasl"},{k:"asheya",em:"🌙",name:"3asheya"},{k:"dars",em:"📖",name:"Dars Ketab"}
 ];
 
 const attHas = (k,c,id) => ((att[k] || {})[c] || {})[id] === true;
@@ -1134,9 +1113,9 @@ function renderMeStats(){
   const w = takenWeeks("odas"), n = w.filter(k => attHas(k,"odas",me.id)).length;
   $("meOdas").innerHTML = w.length
     ? `<div class="bigct">${n} <small>/ ${w.length}</small></div>
-       <div class="sub" style="text-align:center">حضرت ${n} قداس من أصل ${w.length} أسبوع</div>
+       <div class="sub" style="text-align:center">Week ${w.length} — you attended ${n} of ${w.length} Odas</div>
        <div class="progress"><i style="width:${(n/w.length)*100}%"></i></div>`
-    : `<div class="empty" style="padding:16px">لم يبدأ تسجيل الحضور بعد</div>`;
+    : `<div class="empty" style="padding:16px">Attendance has not started yet</div>`;
 
   $("meAttStreak").innerHTML = CATS.map(c => stTile(c.em, c.name, attStreak(c.k))).join("");
   $("meSpStreak").innerHTML = SPIRIT.map(x => stTile(x.em, x.name, spStreak(x))).join("");
@@ -1145,13 +1124,13 @@ function renderMeStats(){
     ? hist.slice(0,50).map(h => `
         <div class="hrow">
           <div class="grow">
-            <b>${esc(h.reason || "نقاط")}</b>
-            <span>${new Date(h.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
+            <b>${esc(h.reason || "Jokens")}</b>
+            <span>${new Date(h.at).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
           </div>
           <span class="amt ${h.amt<0?"neg":""}">${h.amt>0?"+":""}${h.amt} ${COIN}</span>
         </div>
       `).join("")
-    : `<div class="empty" style="padding:16px">لا يوجد سجل نقاط حتى الآن</div>`;
+    : `<div class="empty" style="padding:16px">No history yet</div>`;
 }
 
 /* ============================================================
@@ -1159,9 +1138,9 @@ function renderMeStats(){
    ============================================================ */
 async function sendPsalm(){
   const text = $("psText").value.trim();
-  if(!text){ toast("اكتب اسم أو رقم المزمور الذي حفظته", true); return; }
+  if(!text){ toast("Write which psalm you memorized", true); return; }
   if(myPsalms.some(p => p.status !== "rejected" && String(p.text).toLowerCase() === text.toLowerCase())){
-    toast("لقد أرسلت هذا المزمور مسبقاً!", true); return;
+    toast("You already sent this psalm!", true); return;
   }
   try {
     await col("psalms").add({
@@ -1172,28 +1151,28 @@ async function sendPsalm(){
       at: Date.now()
     });
     $("psText").value = "";
-    toast("تم إرسال الطلب لأستاذك للمراجعة 📜");
-  } catch(e) { toast("تعذر الإرسال", true); }
+    toast("Sent! Wait for your teacher 📜");
+  } catch(e) { toast("Could not send", true); }
 }
 
 function renderPsalm(){
   const st = {
-    pending: `<span class="pill">⏳ قيد المراجعة</span>`,
-    approved: `<span class="pill gold">✅ معتمد (+10 ${COIN})</span>`,
-    rejected: `<span class="pill red">❌ حاول مرة أخرى</span>`
+    pending: `<span class="pill">⏳ Waiting</span>`,
+    approved: `<span class="pill gold">✅ +10 ${COIN}</span>`,
+    rejected: `<span class="pill red">❌ Try again</span>`
   };
   $("psList").innerHTML = myPsalms.length
     ? myPsalms.map(p => `
         <div class="card" style="display:flex;align-items:center;gap:12px">
-          <div style="font-size:28px">📜</div>
+          <div style="font-size:30px">📜</div>
           <div style="flex:1;min-width:0">
-            <h3 style="font-size:16px">${esc(p.text)}</h3>
-            <div class="sub">${new Date(p.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short"})}</div>
+            <h3 style="font-size:18px">${esc(p.text)}</h3>
+            <div class="sub">${new Date(p.at).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</div>
           </div>
           ${st[p.status] || ""}
         </div>
       `).join("")
-    : `<div class="empty"><div class="em">📜</div>لم ترسل طلبات تسميع مزامير بعد</div>`;
+    : `<div class="empty"><div class="em">📜</div>No psalm requests yet</div>`;
 }
 
 /* ============================================================
@@ -1202,19 +1181,18 @@ function renderPsalm(){
 function renderNews(){
   if(!me) return;
   
-  // Check Birthdays this month across all students
   const bdaysThisMonth = students.filter(s => isBdayMonth(s));
   if(bdaysThisMonth.length > 0){
     $("bdayMonthCard").style.display = "block";
     $("bdayMonthList").innerHTML = bdaysThisMonth.map(s => `
-      <div>🎂 <b>${esc(s.name)}</b> — ${s.birthday ? `${+s.birthday.slice(8,10)} ${new Date(2026, +s.birthday.slice(5,7)-1, 1).toLocaleDateString("ar-EG",{month:"long"})}` : ""} ${isBdayToday(s)?"🥳 (عيد ميلاده اليوم!)":""}</div>
+      <div>🎂 <b>${esc(s.name)}</b> — ${s.birthday ? `${+s.birthday.slice(8,10)} ${new Date(2026, +s.birthday.slice(5,7)-1, 1).toLocaleDateString("en-GB",{month:"long"})}` : ""} ${isBdayToday(s)?"🥳 (Birthday Today!)":""}</div>
     `).join("");
   } else {
     $("bdayMonthCard").style.display = "none";
   }
 
   if(!news.length){
-    $("newsList").innerHTML = `<div class="empty"><div class="em">📭</div>لا توجد أحداث ومناسبات حالياً</div>`;
+    $("newsList").innerHTML = `<div class="empty"><div class="em">📭</div>No events yet</div>`;
     return;
   }
 
@@ -1228,18 +1206,18 @@ function renderNews(){
         <h3>${esc(n.title)}</h3>
         <p>${esc(n.text)}</p>
         <div class="vote">
-          <button class="btn green ${mine === true ? "chosen" : ""}" onclick="vote('${n.id}',true)">✅ سأحضر</button>
-          <button class="btn red ${mine === false ? "chosen" : ""}" onclick="vote('${n.id}',false)">❌ أعتذر</button>
+          <button class="btn green ${mine === true ? "chosen" : ""}" onclick="vote('${n.id}',true)">✅ I'm going</button>
+          <button class="btn red ${mine === false ? "chosen" : ""}" onclick="vote('${n.id}',false)">❌ Not going</button>
         </div>
         <div class="vbar"><i class="g" style="width:${(g/tot)*100}%"></i><i class="n" style="width:${(no/tot)*100}%"></i></div>
-        <div class="vcount"><span>${g} حاضر</span><span>${no} معتذر</span></div>
+        <div class="vcount"><span>${g} going</span><span>${no} not going</span></div>
       </div>`;
   }).join("");
 }
 
 async function vote(id,val){
   await col("events").doc(id).set({votes:{[me.id]:val}},{merge:true});
-  toast(val ? "في انتظارك بكل فرح! 🎉" : "ربنا معك 🙂");
+  toast(val ? "See you there! 🎉" : "Maybe next time 🙂");
 }
 
 /* ============================================================
@@ -1248,20 +1226,20 @@ async function vote(id,val){
 let quiz = null;
 function startChallenge(id){
   const c = challenges.find(x => x.id === id); if(!c) return;
-  if(me.done[c.id]){ toast(`أكملت هذا التحدي مسبقاً (+${me.done[c.id]} J)`); return; }
+  if(me.done[c.id]){ toast(`Already completed (+${me.done[c.id]} J)`); return; }
   const qs = c.questions || [];
-  if(!qs.length){ toast("لا توجد أسئلة في هذا التحدي بعد", true); return; }
+  if(!qs.length){ toast("No questions in this challenge yet", true); return; }
   quiz = { c, i: 0, correct: 0, locked: false };
   openModal(`
-    <h2 style="font-size:22px;color:var(--gold)">${esc(c.title)}</h2>
+    <h2 style="font-size:24px;color:var(--gold)">${esc(c.title)}</h2>
     <p class="sub" style="margin:6px 0 16px">${esc(c.desc)}</p>
     <div class="card" style="margin-bottom:14px;text-align:center">
-      <div class="sub">مكافآت التحدي</div>
-      <div style="display:flex;justify-content:space-around;margin-top:8px;font-weight:900;font-size:15px">
+      <div class="sub">REWARDS</div>
+      <div style="display:flex;justify-content:space-around;margin-top:8px;font-family:'Lilita One';font-size:16px">
         <span>&lt;60% → 5 ${COIN}</span><span>60%+ → 7 ${COIN}</span><span>90%+ → 10 ${COIN}</span>
       </div>
     </div>
-    <button class="btn gold wide" onclick="showQ()">بدء التحدي ⚔️</button>
+    <button class="btn gold wide" onclick="showQ()">START ⚔️</button>
   `);
 }
 
@@ -1269,12 +1247,12 @@ function showQ(){
   const q = quiz.c.questions[quiz.i]; quiz.locked = false;
   openModal(`
     <div class="q-top">
-      <span class="pill">السؤال ${quiz.i+1} من ${quiz.c.questions.length}</span>
-      <span class="pill gold">${quiz.correct} صح ✓</span>
+      <span class="pill">Question ${quiz.i+1} / ${quiz.c.questions.length}</span>
+      <span class="pill gold">${quiz.correct} ✓</span>
     </div>
     <div class="q-text">${esc(q.q)}</div>
     ${q.options.map((o,i) => `
-      <button class="opt" id="opt${i}" onclick="answer(${i})">${i+1}. ${esc(o)}</button>
+      <button class="opt" id="opt${i}" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${esc(o)}</button>
     `).join("")}
   `);
 }
@@ -1308,7 +1286,7 @@ async function finishQuiz(){
       t.set(col("history").doc(), {
         sid: me.id,
         amt: pts,
-        reason: "تحدي: " + quiz.c.title,
+        reason: "Challenge: " + quiz.c.title,
         at: Date.now()
       });
     });
@@ -1317,14 +1295,14 @@ async function finishQuiz(){
     openModal(`
       <div class="result">
         <div class="em">${pct>=90?"🏆":pct>=60?"🎉":"💪"}</div>
-        <h2>${pct>=90?"ممتاز جداً!":pct>=60?"عمل رائع!":"أحسنت المحاولة!"}</h2>
-        <div class="sub">أجبت ${quiz.correct} من أصل ${n} بشكل صحيح</div>
+        <h2>${pct>=90?"PERFECT!":pct>=60?"GREAT JOB!":"NICE TRY!"}</h2>
+        <div class="sub">${quiz.correct} / ${n} correct</div>
         <div class="earn">+${pts} ${COIN}</div>
-        <button class="btn gold wide" style="margin-top:16px" onclick="closeModal()">استلام النقاط</button>
+        <button class="btn gold wide" style="margin-top:16px" onclick="closeModal()">COLLECT</button>
       </div>
     `);
   } catch(e) {
-    toast("تم إنهاء التحدي مسبقاً!", true);
+    toast("Already completed!", true);
     closeModal();
   }
 }
@@ -1332,7 +1310,7 @@ async function finishQuiz(){
 function renderChal(){
   if(!me) return;
   if(!challenges.length){
-    $("chalList").innerHTML = `<div class="empty"><div class="em">⚔️</div>لا توجد تحديات حالياً</div>`;
+    $("chalList").innerHTML = `<div class="empty"><div class="em">⚔️</div>No challenges yet</div>`;
     return;
   }
   $("chalList").innerHTML = challenges.map((c,i) => {
@@ -1341,7 +1319,7 @@ function renderChal(){
       <div class="card chal ${done ? "done" : ""}" style="animation-delay:${i*50}ms" onclick="startChallenge('${c.id}')">
         <div class="ic">${done ? "✅" : "⚔️"}</div>
         <div style="flex:1;min-width:0"><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p></div>
-        <div>${done ? `<span class="pill gold">+${done} ${COIN}</span>` : `<span class="pill">${(c.questions||[]).length} أسئلة</span>`}</div>
+        <div>${done ? `<span class="pill gold">+${done} ${COIN}</span>` : `<span class="pill">${(c.questions||[]).length} Q</span>`}</div>
       </div>`;
   }).join("");
 }
@@ -1352,7 +1330,7 @@ function renderChal(){
 function renderShop(){
   if(!me) return;
   if(!shop.length){
-    $("shopGrid").innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="em">🎁</div>المتجر خالي حالياً</div>`;
+    $("shopGrid").innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="em">🎁</div>Shop is empty</div>`;
     return;
   }
   $("shopGrid").innerHTML = shop.map((g,i) => `
@@ -1360,21 +1338,21 @@ function renderShop(){
       ${g.photo ? `<img class="ph" src="${g.photo}" alt="">` : `<div class="em">${esc(g.emoji||"🎁")}</div>`}
       <div class="nm">${esc(g.name)}</div>
       <span class="pill gold">${g.cost} ${COIN}</span>
-      <div class="qty">متبقي: ${g.qty}</div>
+      <div class="qty">${g.qty} left</div>
     </div>`).join("");
 }
 
 function buy(id){
   const g = shop.find(x => x.id === id); if(!g || g.qty<=0) return;
-  if(me.coins < g.cost){ toast(`ينقصك ${g.cost - me.coins} نقطة لشراء الهدية`, true); return; }
+  if(me.coins < g.cost){ toast(`Need ${g.cost - me.coins} more Jokens`, true); return; }
   openModal(`
     <div class="result">
-      ${g.photo ? `<img src="${g.photo}" style="width:130px;height:130px;object-fit:cover;border-radius:20px;margin:0 auto;border:3px solid var(--gold)">` : `<div class="em">${esc(g.emoji||"🎁")}</div>`}
-      <h2 style="font-size:24px">${esc(g.name)}</h2>
-      <p class="sub">شراء الهدية مقابل <span style="color:var(--gold);font-weight:900">${g.cost} ${COIN}</span>؟ رصيدك الحالي ${me.coins} ${COIN}</p>
+      ${g.photo ? `<img src="${g.photo}" style="width:140px;height:140px;object-fit:cover;border-radius:20px;margin:0 auto;border:3px solid var(--gold)">` : `<div class="em">${esc(g.emoji||"🎁")}</div>`}
+      <h2 style="font-size:26px">${esc(g.name)}</h2>
+      <p class="sub">Buy for <span style="color:var(--gold);font-weight:900">${g.cost} ${COIN}</span>? You have ${me.coins} ${COIN}</p>
       <div style="display:flex;gap:10px;margin-top:16px">
-        <button class="btn gray" style="flex:1" onclick="closeModal()">إلغاء</button>
-        <button class="btn gold" style="flex:1" onclick="confirmBuy('${g.id}')">شراء 🛒</button>
+        <button class="btn gray" style="flex:1" onclick="closeModal()">Cancel</button>
+        <button class="btn gold" style="flex:1" onclick="confirmBuy('${g.id}')">BUY 🛒</button>
       </div>
     </div>
   `);
@@ -1386,8 +1364,8 @@ async function confirmBuy(id){
     await db.runTransaction(async t => {
       const [s,g] = await Promise.all([t.get(sref), t.get(gref)]);
       const sd = s.data() || {}, gd = g.data() || {};
-      if(gd.qty <= 0) throw new Error("نفذت الكمية!");
-      if((sd.coins||0) < gd.cost) throw new Error("الرصيد لا يكفي!");
+      if(gd.qty <= 0) throw new Error("Sold out!");
+      if((sd.coins||0) < gd.cost) throw new Error("Not enough Jokens!");
 
       t.update(sref, {
         coins: sd.coins - gd.cost,
@@ -1397,17 +1375,17 @@ async function confirmBuy(id){
       t.set(col("history").doc(), {
         sid: me.id,
         amt: -gd.cost,
-        reason: "شراء هدية: " + gd.name,
+        reason: "Bought: " + gd.name,
         at: Date.now()
       });
     });
 
-    confetti(); closeModal(); toast("تم الشراء بنجاح! اطلب هديتك من أستاذك 🎁");
-  } catch(e) { toast(e.message || "حدث خطأ", true); closeModal(); }
+    confetti(); closeModal(); toast("Purchased! Ask your teacher for it 🎁");
+  } catch(e) { toast(e.message || "Failed", true); closeModal(); }
 }
 
 /* ============================================================
-   14. PUSH NOTIFICATIONS & PWA INSTALL LOGIC
+   14. PUSH NOTIFICATIONS & PWA INSTALL
    ============================================================ */
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
@@ -1426,12 +1404,12 @@ function installPWA(){
   } else {
     openModal(`
       <div class="detail">
-        <h2>تثبيت التطبيق على الموبايل 📲</h2>
-        <p class="sub" style="margin:12px 0 16px;text-align:right;line-height:1.6">
-          • <b>على أجهزة آيفون (iOS):</b> اضغط على زر المشاركة (Share ⎋) في المتصفح، ثم اختر <b>إضافة إلى الشاشة الرئيسية (Add to Home Screen ➕)</b>.<br><br>
-          • <b>على أجهزة أندرويد (Android):</b> اضغط على الثلاث نقاط أعلى المتصفح واختر <b>تثبيت التطبيق (Install App)</b>.
+        <h2>Install on Phone 📲</h2>
+        <p class="sub" style="margin:12px 0 16px;text-align:left;line-height:1.6">
+          • <b>On iPhone (iOS Safari):</b> Tap the Share button (⎋), then scroll down and tap <b>Add to Home Screen (➕)</b>.<br><br>
+          • <b>On Android (Chrome):</b> Tap the 3 dots menu (⋮) at top right, then tap <b>Install App</b>.
         </p>
-        <button class="btn gold wide" onclick="closeModal()">حسناً فهمت ✅</button>
+        <button class="btn gold wide" onclick="closeModal()">Got it! ✅</button>
       </div>
     `);
   }
@@ -1446,37 +1424,31 @@ async function initPushNotifications(){
     $("notifBanner").style.display = "none";
   }
 
-  // Register service worker
   try {
-    const reg = await navigator.serviceWorker.register('sw.js');
-    console.log('SW registered:', reg);
-  } catch(e) { console.log('SW registration note:', e); }
+    await navigator.serviceWorker.register('sw.js');
+  } catch(e) {}
 
-  // Daily client-side reminder check
   checkDailyReminders();
 }
 
 async function enablePushNotifications(){
-  if(!('Notification' in window)){ toast("المتصفح لا يدعم الإشعارات", true); return; }
+  if(!('Notification' in window)){ toast("Browser does not support notifications", true); return; }
   try {
     const perm = await Notification.requestPermission();
     if(perm === 'granted'){
-      toast("تم تفعيل الإشعارات بنجاح! 🔔");
+      toast("Notifications enabled! 🔔");
       $("notifBanner").style.display = "none";
       registerFCMToken();
     } else {
-      toast("لم يتم السماح بالإشعارات", true);
+      toast("Permission denied", true);
     }
-  } catch(e) { toast("حدث خطأ", true); }
+  } catch(e) { toast("Error enabling notifications", true); }
 }
 
 async function registerFCMToken(){
   try {
     const messaging = firebase.messaging();
-    const token = await messaging.getToken({
-      vapidKey: "BPd9hD9y_sample_or_default_vapid" // Optional VAPID key
-    }).catch(() => null);
-
+    const token = await messaging.getToken().catch(() => null);
     if(token && me){
       await col("fcm_tokens").doc(token).set({
         sid: me.id,
@@ -1485,7 +1457,7 @@ async function registerFCMToken(){
         updatedAt: Date.now()
       }, { merge: true });
     }
-  } catch(e) { /* background token handling */ }
+  } catch(e) {}
 }
 
 function checkDailyReminders(){
@@ -1494,22 +1466,20 @@ function checkDailyReminders(){
   const hour = now.getHours();
   const todayKey = dkey(now);
   
-  // Morning spiritual reminder check (around 8-11 AM)
   const morningSent = localStorage.getItem("rem_morning_" + todayKey);
   if(hour >= 8 && hour < 12 && !morningSent){
     localStorage.setItem("rem_morning_" + todayKey, "1");
-    new Notification("🌅 صباح الخير مع المسيح — أسرة يوحنا الحبيب", {
-      body: "ابدأ يومك ببركة صلاة باكر وتدقيق النوتة الروحية اليوم 🙏",
+    new Notification("🌅 Good Morning with Christ — St. John Class", {
+      body: "Start your day with Morning Prayer & your Bible reading today! 🙏",
       icon: "images/logo.png"
     });
   }
 
-  // Evening spiritual reminder check (around 8-11 PM)
   const eveningSent = localStorage.getItem("rem_evening_" + todayKey);
   if(hour >= 20 && !eveningSent){
     localStorage.setItem("rem_evening_" + todayKey, "1");
-    new Notification("🌙 سلام ونعمة — أسرة يوحنا الحبيب", {
-      body: "اختم يومك بصلاة النوم وشكر ربنا في النوتة الروحية ✨",
+    new Notification("🌙 Peace of Christ — St. John Class", {
+      body: "Before you sleep, remember your Night Prayer & Spiritual Note ✨",
       icon: "images/logo.png"
     });
   }

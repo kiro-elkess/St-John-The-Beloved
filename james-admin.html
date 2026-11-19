@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>لوحة التحكم | فصل القديس يوحنا الحبيب</title>
+  <title>St. John the Beloved — Admin Panel</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
   <link
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Lilita+One&family=Nunito:wght@700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&display=swap"
     rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -20,11 +21,11 @@
 
   <style>
     :root {
-      --bg1: #140c2e;
-      --bg2: #241656;
-      --bg3: #3d218f;
-      --panel: #1c1044;
-      --panel2: #281861;
+      --bg1: #0f1e4a;
+      --bg2: #1b3a8f;
+      --bg3: #2a5bd7;
+      --panel: #12224f;
+      --panel2: #1a3070;
       --gold: #ffcc33;
       --gold2: #ff9a1f;
       --gold3: #a85f00;
@@ -34,9 +35,11 @@
       --green2: #2f9f2f;
       --red: #ff5a5a;
       --red2: #c62828;
+      --purple: #b46bff;
+      --purple2: #7b2fd6;
       --text: #fff;
-      --muted: #b7a9e6;
-      --border: #0e0622;
+      --muted: #9db4e6;
+      --border: #0a1436;
       --shadow: 0 6px 0 var(--border), 0 12px 20px rgba(0, 0, 0, .35);
     }
 
@@ -44,94 +47,112 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent
+      -webkit-tap-highlight-color: transparent;
     }
 
     html,
     body {
-      height: 100%
+      height: 100%;
     }
 
     body {
-      font-family: 'Cairo', 'Nunito', sans-serif;
+      font-family: 'Nunito', sans-serif;
       color: var(--text);
       background: radial-gradient(1200px 600px at 50% -10%, var(--bg3), var(--bg1) 60%);
       background-attachment: fixed;
-      overflow: hidden
+      overflow: hidden;
     }
 
     h1,
     h2,
     h3 {
-      font-family: 'Cairo', 'Lilita One', cursive;
+      font-family: 'Lilita One', cursive;
       letter-spacing: .5px;
-      text-shadow: 0 3px 0 rgba(0, 0, 0, .35)
+      text-shadow: 0 3px 0 rgba(0, 0, 0, .35);
     }
 
     button {
       font-family: inherit;
       cursor: pointer;
       border: none;
-      color: inherit
+      color: inherit;
     }
 
     #app {
       height: 100%;
       display: flex;
-      flex-direction: column
+      flex-direction: column;
     }
 
     header {
-      padding: calc(env(safe-area-inset-top) + 8px) 14px 10px;
+      padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(20, 12, 46, .95), rgba(20, 12, 46, .7) 80%, transparent)
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(15, 30, 74, .95), rgba(15, 30, 74, .6) 80%, transparent);
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .crest {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
     }
 
     header h1 {
-      font-size: 18px;
+      font-size: 19px;
       color: var(--gold);
-      line-height: 1.2
+      line-height: 1.1;
     }
 
     header h1 small {
-      font-size: 11px;
-      color: var(--muted);
       display: block;
-      text-shadow: none
+      font-family: 'Nunito';
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-shadow: none;
     }
 
     main {
       flex: 1;
       overflow: hidden;
-      position: relative
+      position: relative;
     }
 
     .page {
       position: absolute;
       inset: 0;
       overflow-y: auto;
-      padding: 6px 14px calc(100px + env(safe-area-inset-bottom));
+      padding: 6px 14px calc(105px + env(safe-area-inset-bottom));
       opacity: 0;
-      transform: translateX(-30px);
+      transform: translateX(30px);
       pointer-events: none;
-      transition: .3s
+      transition: .3s;
     }
 
     .page.active {
       opacity: 1;
       transform: none;
-      pointer-events: auto
+      pointer-events: auto;
     }
 
     .page h2 {
-      font-size: 24px;
-      margin: 8px 0 14px
+      font-size: 26px;
+      margin: 8px 0 14px;
     }
 
     .page h2 span {
-      color: var(--gold)
+      color: var(--gold);
     }
 
     nav {
@@ -140,12 +161,12 @@
       right: 0;
       bottom: 0;
       z-index: 30;
-      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-      background: linear-gradient(180deg, #12082b, #0a0418);
-      border-top: 3px solid #362070;
+      padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, #0d1a40, #08122e);
+      border-top: 3px solid #24408a;
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      gap: 2px
+      gap: 2px;
     }
 
     nav button {
@@ -163,24 +184,24 @@
       font-weight: 900;
       font-size: 8px;
       color: var(--muted);
-      transition: .2s
+      transition: .2s;
     }
 
     nav button .ic {
       font-size: 19px;
       transition: transform .3s cubic-bezier(.2, 1.6, .4, 1);
-      filter: grayscale(.5)
+      filter: grayscale(.6);
     }
 
     nav button.on {
       color: var(--gold);
-      background: linear-gradient(180deg, #3a2278, #261454);
-      box-shadow: 0 3px 0 var(--border)
+      background: linear-gradient(180deg, #1f3b85, #14285e);
+      box-shadow: 0 3px 0 var(--border);
     }
 
     nav button.on .ic {
-      transform: translateY(-3px) scale(1.2);
-      filter: none
+      transform: translateY(-3px) scale(1.15);
+      filter: none;
     }
 
     .card {
@@ -188,21 +209,21 @@
       border-radius: 18px;
       padding: 14px;
       box-shadow: var(--shadow);
-      border: 2px solid #452b8f;
+      border: 2px solid #28448f;
       position: relative;
       margin-bottom: 12px;
-      animation: pop .35s cubic-bezier(.2, 1.4, .4, 1) both
+      animation: pop .35s cubic-bezier(.2, 1.4, .4, 1) both;
     }
 
     @keyframes pop {
       from {
         opacity: 0;
-        transform: scale(.9)
+        transform: scale(.92);
       }
 
       to {
         opacity: 1;
-        transform: none
+        transform: none;
       }
     }
 
@@ -213,55 +234,59 @@
       gap: 6px;
       padding: 12px 18px;
       border-radius: 14px;
-      font-family: 'Cairo', 'Lilita One';
-      font-weight: 900;
-      font-size: 15px;
+      font-family: 'Lilita One';
+      font-size: 17px;
       text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
       background: linear-gradient(180deg, var(--blue), var(--blue2));
       box-shadow: 0 5px 0 #0d3f8f, 0 8px 12px rgba(0, 0, 0, .35);
       transition: .1s;
-      user-select: none
+      user-select: none;
     }
 
     .btn:active {
       transform: translateY(4px);
-      box-shadow: 0 1px 0 #0d3f8f
+      box-shadow: 0 1px 0 #0d3f8f;
     }
 
     .btn.gold {
       background: linear-gradient(180deg, var(--gold), var(--gold2));
       box-shadow: 0 5px 0 var(--gold3), 0 8px 12px rgba(0, 0, 0, .35);
       color: #4a2a00;
-      text-shadow: 0 1px 0 rgba(255, 255, 255, .4)
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .4);
     }
 
     .btn.green {
       background: linear-gradient(180deg, var(--green), var(--green2));
-      box-shadow: 0 5px 0 #1b6b1b
+      box-shadow: 0 5px 0 #1b6b1b;
     }
 
     .btn.red {
       background: linear-gradient(180deg, var(--red), var(--red2));
-      box-shadow: 0 5px 0 #7a1010
+      box-shadow: 0 5px 0 #7a1010;
+    }
+
+    .btn.purple {
+      background: linear-gradient(180deg, var(--purple), var(--purple2));
+      box-shadow: 0 5px 0 #521899;
     }
 
     .btn.gray {
-      background: linear-gradient(180deg, #6b7a99, #46526e);
-      box-shadow: 0 5px 0 #262d3f
+      background: linear-gradient(180deg, #4b5d80, #313f5c);
+      box-shadow: 0 5px 0 #1b2333;
     }
 
     .btn.sm {
       padding: 7px 12px;
-      font-size: 13px
+      font-size: 14px;
     }
 
     .btn.wide {
-      width: 100%
+      width: 100%;
     }
 
     .btn[disabled] {
       opacity: .5;
-      pointer-events: none
+      pointer-events: none;
     }
 
     .inp,
@@ -270,23 +295,23 @@
       width: 100%;
       padding: 12px;
       border-radius: 12px;
-      border: 2px solid #452b8f;
-      background: #100829;
+      border: 2px solid #28448f;
+      background: #0d1a40;
       color: #fff;
-      font-family: 'Cairo', 'Nunito';
+      font-family: 'Nunito';
       font-weight: 800;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
-      margin-bottom: 10px
+      margin-bottom: 10px;
     }
 
     .inp:focus {
-      border-color: var(--gold)
+      border-color: var(--gold);
     }
 
     textarea.inp {
       min-height: 90px;
-      resize: vertical
+      resize: vertical;
     }
 
     label.lbl {
@@ -295,17 +320,17 @@
       font-weight: 900;
       color: var(--muted);
       letter-spacing: 1px;
-      margin: 4px 0 4px
+      margin: 4px 0 4px;
     }
 
     .row {
       display: flex;
       gap: 8px;
-      align-items: center
+      align-items: center;
     }
 
     .row .inp {
-      margin-bottom: 0
+      margin-bottom: 0;
     }
 
     .pill {
@@ -316,69 +341,72 @@
       border-radius: 999px;
       font-weight: 900;
       font-size: 12px;
-      background: rgba(0, 0, 0, .3)
+      background: rgba(0, 0, 0, .3);
     }
 
     .pill.gold {
       background: linear-gradient(180deg, var(--gold), var(--gold2));
-      color: #4a2a00
+      color: #4a2a00;
     }
 
     .pill.green {
-      background: var(--green2)
+      background: var(--green2);
     }
 
     .pill.red {
-      background: var(--red2)
+      background: var(--red2);
+    }
+
+    .pill.purple {
+      background: var(--purple2);
     }
 
     .muted {
       color: var(--muted);
       font-weight: 800;
-      font-size: 12.5px
+      font-size: 13px;
     }
 
     .item {
       display: flex;
       align-items: center;
-      gap: 10px
+      gap: 10px;
     }
 
     .item .grow {
       flex: 1;
-      min-width: 0
+      min-width: 0;
     }
 
     .item h3 {
-      font-size: 16px;
+      font-size: 17px;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis
+      text-overflow: ellipsis;
     }
 
     .item p {
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis
+      text-overflow: ellipsis;
     }
 
     .av {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       overflow: hidden;
-      background: #321970;
+      background: #1b3a8f;
       border: 2px solid var(--gold);
       display: grid;
       place-items: center;
-      font-family: 'Cairo', 'Lilita One';
-      font-size: 18px;
-      font-weight: 900;
+      font-family: 'Lilita One';
+      font-size: 20px;
       flex-shrink: 0;
-      position: relative
+      position: relative;
     }
 
     .av img {
@@ -386,13 +414,94 @@
       height: 100%;
       object-fit: cover;
       position: absolute;
-      inset: 0
+      inset: 0;
     }
 
+    /* SCORE */
+    .scoregrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .sbtn {
+      aspect-ratio: 1;
+      border-radius: 16px;
+      font-family: 'Lilita One';
+      font-size: 24px;
+      text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+      transition: .15s;
+      box-shadow: 0 5px 0 var(--sh);
+      background: linear-gradient(180deg, var(--a), var(--b));
+    }
+
+    .sbtn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--sh);
+    }
+
+    .sbtn.plus {
+      --a: #5bd35b;
+      --b: #2f9f2f;
+      --sh: #1b6b1b;
+    }
+
+    .sbtn.minus {
+      --a: #ff5a5a;
+      --b: #c62828;
+      --sh: #7a1010;
+    }
+
+    .sbtn.sel {
+      outline: 4px solid var(--gold);
+      outline-offset: 2px;
+      transform: scale(1.08);
+    }
+
+    #reader {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      min-height: 240px;
+      display: none;
+    }
+
+    #reader.on {
+      display: block;
+    }
+
+    .selected-op {
+      font-family: 'Lilita One';
+      font-size: 24px;
+      text-align: center;
+      margin: 6px 0;
+    }
+
+    .selected-op.plus {
+      color: var(--green);
+    }
+
+    .selected-op.minus {
+      color: var(--red);
+    }
+
+    .log {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, .3);
+      margin-top: 6px;
+      border-left: 4px solid var(--gold);
+    }
+
+    /* RULES */
     .rules {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px
+      gap: 8px;
     }
 
     .rule {
@@ -408,24 +517,24 @@
       background: linear-gradient(180deg, var(--a), var(--b));
       box-shadow: 0 4px 0 var(--sh);
       transition: .15s;
-      user-select: none
+      user-select: none;
     }
 
     .rule:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 var(--sh)
+      box-shadow: 0 1px 0 var(--sh);
     }
 
     .rule.plus {
       --a: #5bd35b;
       --b: #2f9f2f;
-      --sh: #1b6b1b
+      --sh: #1b6b1b;
     }
 
     .rule.minus {
       --a: #ff5a5a;
       --b: #c62828;
-      --sh: #7a1010
+      --sh: #7a1010;
     }
 
     .rule b {
@@ -433,27 +542,37 @@
       font-size: 20px;
       font-weight: 400;
       flex-shrink: 0;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, .3)
+      text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
     }
 
     .rule span {
       flex: 1;
       min-width: 0;
       line-height: 1.2;
-      overflow-wrap: anywhere
+      overflow-wrap: anywhere;
     }
 
     .rule.sel {
       outline: 4px solid var(--gold);
-      outline-offset: 2px
+      outline-offset: 2px;
+    }
+
+    .rule .rx {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, .4);
+      font-size: 11px;
+      font-weight: 900;
+      flex-shrink: 0;
     }
 
     .picklist {
-      max-height: 300px;
+      max-height: 320px;
       overflow-y: auto;
       border-radius: 12px;
       background: rgba(0, 0, 0, .25);
-      padding: 4px
+      padding: 4px;
     }
 
     .pickrow {
@@ -464,17 +583,17 @@
       border-radius: 10px;
       cursor: pointer;
       font-weight: 800;
-      font-size: 14px
+      font-size: 15px;
     }
 
     .pickrow.on {
-      background: rgba(91, 211, 91, .18)
+      background: rgba(91, 211, 91, .18);
     }
 
     .pickrow .chk {
-      width: 24px;
-      height: 24px;
-      pointer-events: none
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
     }
 
     .pickrow .grow {
@@ -482,73 +601,99 @@
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis
+      text-overflow: ellipsis;
     }
 
+    /* BADGES */
     .badgepick {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 8px
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
     }
 
     .bp {
-      padding: 10px 4px;
-      text-align: center;
-      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
       background: rgba(0, 0, 0, .3);
       cursor: pointer;
       border: 2px solid transparent;
-      filter: grayscale(1);
-      opacity: .5;
-      transition: .2s
+      filter: grayscale(.8);
+      opacity: .6;
+      transition: .2s;
     }
 
     .bp.on {
       filter: none;
       opacity: 1;
       border-color: var(--gold);
-      background: rgba(255, 204, 51, .15)
+      background: rgba(255, 204, 51, .15);
     }
 
-    .bp .em {
-      font-size: 28px
+    .bp img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
     }
 
     .bp .nm {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 900;
-      margin-top: 4px
     }
 
+    .bp .cost {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    /* CHECKBOXES */
     .chk {
       appearance: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 3px solid #5033a3;
-      background: #100829;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      border: 3px solid #28448f;
+      background: #0d1a40;
       display: grid;
       place-items: center;
       cursor: pointer;
       flex-shrink: 0;
-      transition: .15s
+      transition: .15s;
     }
 
     .chk:checked {
       background: linear-gradient(180deg, var(--green), var(--green2));
-      border-color: var(--green)
+      border-color: var(--green);
     }
 
     .chk:checked::after {
       content: "✓";
       font-family: 'Lilita One';
-      font-size: 17px;
-      color: #fff
+      font-size: 18px;
+      color: #fff;
     }
 
     .chk.abs:not(:checked) {
       background: #3a1a2a;
-      border-color: #7a2a3a
+      border-color: #7a2a3a;
+    }
+
+    .rounds {
+      display: flex;
+      gap: 6px;
+    }
+
+    .rounds label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--muted);
     }
 
     .pctbar {
@@ -556,14 +701,14 @@
       border-radius: 999px;
       background: rgba(0, 0, 0, .4);
       overflow: hidden;
-      margin-top: 6px
+      margin-top: 6px;
     }
 
     .pctbar i {
       display: block;
       height: 100%;
       background: linear-gradient(90deg, var(--gold2), var(--gold));
-      transition: width .6s
+      transition: width .6s;
     }
 
     .top {
@@ -571,73 +716,114 @@
       align-items: center;
       gap: 10px;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, .08)
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
     }
 
     .top:last-child {
-      border: none
+      border: none;
     }
 
     .top .medal {
-      font-size: 22px;
+      font-size: 24px;
       width: 30px;
-      text-align: center
+      text-align: center;
     }
 
+    .gift-ph {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+      flex-shrink: 0;
+    }
+
+    .ph-pick {
+      width: 100%;
+      aspect-ratio: 3/1;
+      border: 3px dashed #28448f;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      background: rgba(0, 0, 0, .2);
+      margin-bottom: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ph-pick img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+
+    .ph-pick span {
+      position: relative;
+      z-index: 1;
+      font-weight: 900;
+      color: var(--muted);
+      background: rgba(0, 0, 0, .5);
+      padding: 6px 12px;
+      border-radius: 10px;
+    }
+
+    /* MODAL */
     .overlay {
       position: fixed;
       inset: 0;
       z-index: 50;
-      background: rgba(5, 5, 25, .8);
+      background: rgba(5, 10, 30, .85);
       backdrop-filter: blur(6px);
       display: flex;
       align-items: flex-end;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: .25s
+      transition: .25s;
     }
 
     .overlay.show {
       opacity: 1;
-      pointer-events: auto
+      pointer-events: auto;
     }
 
     .modal {
       position: relative;
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       max-height: 90vh;
       overflow-y: auto;
       border-radius: 26px 26px 0 0;
       padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
-      background: linear-gradient(180deg, #301a6b, #140c2e);
-      border: 3px solid #5033a3;
+      background: linear-gradient(180deg, #1b3275, #0f1e4a);
+      border: 3px solid #28448f;
       border-bottom: none;
       transform: translateY(60px);
       transition: transform .35s cubic-bezier(.2, 1.2, .3, 1);
-      text-align: right
     }
 
     .overlay.show .modal {
-      transform: none
+      transform: none;
     }
 
     @media(min-width:600px) {
       .overlay {
-        align-items: center
+        align-items: center;
       }
 
       .modal {
         border-radius: 26px;
-        border-bottom: 3px solid #5033a3
+        border-bottom: 3px solid #28448f;
       }
     }
 
     .modal .x {
       position: absolute;
       top: 12px;
-      left: 14px;
+      right: 14px;
       width: 34px;
       height: 34px;
       border-radius: 10px;
@@ -645,7 +831,7 @@
       box-shadow: 0 3px 0 #7a1010;
       font-family: 'Lilita One';
       font-size: 18px;
-      z-index: 2
+      z-index: 2;
     }
 
     #qrbox {
@@ -655,7 +841,7 @@
       padding: 16px;
       border-radius: 16px;
       margin: 12px auto;
-      width: fit-content
+      width: fit-content;
     }
 
     #toast {
@@ -666,9 +852,8 @@
       z-index: 200;
       padding: 12px 20px;
       border-radius: 14px;
-      font-family: 'Cairo', 'Lilita One';
-      font-weight: 900;
-      font-size: 16px;
+      font-family: 'Lilita One';
+      font-size: 17px;
       background: linear-gradient(180deg, var(--gold), var(--gold2));
       color: #4a2a00;
       box-shadow: 0 5px 0 var(--gold3), 0 10px 20px rgba(0, 0, 0, .4);
@@ -676,53 +861,54 @@
       pointer-events: none;
       transition: .3s;
       max-width: 90vw;
-      text-align: center
+      text-align: center;
     }
 
     #toast.show {
       opacity: 1;
-      transform: translate(-50%, 0)
+      transform: translate(-50%, 0);
     }
 
     #toast.bad {
       background: linear-gradient(180deg, var(--red), var(--red2));
       color: #fff;
-      box-shadow: 0 5px 0 #7a1010
+      box-shadow: 0 5px 0 #7a1010;
     }
 
     .empty {
       text-align: center;
       color: var(--muted);
       font-weight: 800;
-      padding: 30px 10px
+      padding: 30px 10px;
     }
 
     .btngrid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px
+      gap: 8px;
     }
 
     .catpct {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
-      margin-top: 6px
+      margin-top: 6px;
     }
 
     .catpct .pill {
       font-size: 10px;
-      padding: 2px 7px
+      padding: 2px 7px;
     }
 
     .attrow {
-      padding: 10px 12px
+      padding: 10px 12px;
     }
 
     .attrow .av {
       width: 36px;
       height: 36px;
-      font-size: 16px
+      font-size: 17px;
+      border-radius: 10px;
     }
 
     .attchecks {
@@ -731,7 +917,7 @@
       gap: 4px;
       margin-top: 10px;
       padding-top: 8px;
-      border-top: 1px solid rgba(255, 255, 255, .08)
+      border-top: 1px solid rgba(255, 255, 255, .08);
     }
 
     .attchecks label {
@@ -742,14 +928,14 @@
       font-size: 10px;
       font-weight: 900;
       color: var(--muted);
-      cursor: pointer
+      cursor: pointer;
     }
 
     .daygrid {
       width: 100%;
       border-collapse: collapse;
       font-weight: 800;
-      font-size: 12.5px
+      font-size: 13px;
     }
 
     .daygrid th {
@@ -759,31 +945,31 @@
       padding: 6px 4px;
       text-align: center;
       position: sticky;
-      top: 0
+      top: 0;
     }
 
     .daygrid td {
       padding: 5px 4px;
       text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, .08)
+      border-top: 1px solid rgba(255, 255, 255, .08);
     }
 
     .daygrid td:first-child,
     .daygrid th:first-child {
-      text-align: right;
-      white-space: nowrap
+      text-align: left;
+      white-space: nowrap;
     }
 
     .daygrid .y {
-      color: var(--green)
+      color: var(--green);
     }
 
     .daygrid .n {
-      color: rgba(255, 255, 255, .25)
+      color: rgba(255, 255, 255, .25);
     }
 
     input[type=date].inp {
-      color-scheme: dark
+      color-scheme: dark;
     }
 
     .jk {
@@ -802,7 +988,7 @@
       font-weight: 400;
       text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
       vertical-align: -.22em;
-      box-shadow: inset 0 -.12em 0 rgba(0, 0, 0, .2)
+      box-shadow: inset 0 -.12em 0 rgba(0, 0, 0, .2);
     }
 
     nav .nb {
@@ -818,135 +1004,30 @@
       font-size: 10px;
       font-weight: 900;
       display: none;
-      place-items: center
-    }
-
-    .log {
-      font-size: 12.5px;
-      font-weight: 800;
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, .3);
-      margin-top: 6px;
-      border-right: 4px solid var(--gold);
-      text-align: right
-    }
-
-    .rounds {
-      display: flex;
-      gap: 6px
-    }
-
-    .rounds label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      font-size: 10px;
-      font-weight: 900;
-      color: var(--muted)
-    }
-
-    .gift-ph {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 2px solid var(--gold);
-      flex-shrink: 0
-    }
-
-    .ph-pick {
-      width: 100%;
-      aspect-ratio: 3/1;
-      border: 3px dashed #5033a3;
-      border-radius: 14px;
-      display: grid;
       place-items: center;
-      cursor: pointer;
-      background: rgba(0, 0, 0, .2);
-      margin-bottom: 10px;
-      overflow: hidden;
-      position: relative
     }
 
-    .ph-pick img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      inset: 0
-    }
-
-    .ph-pick span {
-      position: relative;
-      z-index: 1;
-      font-weight: 900;
-      color: var(--muted);
-      background: rgba(0, 0, 0, .5);
-      padding: 6px 12px;
-      border-radius: 10px
-    }
-
-    #reader {
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #000;
-      min-height: 240px;
-      display: none
-    }
-
-    #reader.on {
-      display: block
-    }
-
-    .selected-op {
-      font-family: 'Cairo', 'Lilita One';
-      font-weight: 900;
-      font-size: 20px;
-      text-align: center;
-      margin: 6px 0
-    }
-
-    .selected-op.plus {
-      color: var(--green)
-    }
-
-    .selected-op.minus {
-      color: var(--red)
-    }
-
-    .qb {
+    /* History Timeline */
+    .history-list {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-top: 8px;
+      border-radius: 12px;
       background: rgba(0, 0, 0, .25);
-      border-radius: 14px;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 2px dashed #5033a3
+      padding: 6px;
     }
 
-    .qb .opts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px
-    }
-
-    .qb .opt {
+    .hist-item {
       display: flex;
       align-items: center;
-      gap: 6px
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      font-size: 13px;
     }
 
-    .qb .opt input[type=radio] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--gold);
-      flex-shrink: 0
-    }
-
-    .qb .opt .inp {
-      margin: 0;
-      padding: 8px
+    .hist-item:last-child {
+      border: none;
     }
   </style>
 </head>
@@ -954,219 +1035,220 @@
 <body>
   <div id="app">
     <header>
-      <div style="display:flex;align-items:center;gap:10px">
-        <img src="images/logo.png"
-          style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 8px rgba(0,0,0,.4)">
-        <div>
-          <h1>أسرة القديس يوحنا الحبيب</h1>
-          <small>لوحة التحكم والإدارة — ADMIN</small>
-        </div>
+      <div class="brand">
+        <img class="crest" src="images/logo.png" alt="St. John Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%231b3a8f%22 stroke=%22%23ffcc33%22 stroke-width=%224%22/><text x=%2250%22 y=%2258%22 font-size=%2232%22 text-anchor=%22middle%22 fill=%22%23ffcc33%22>SJ</text></svg>'">
+        <h1>ST. JOHN <small>ADMIN PANEL</small></h1>
       </div>
-      <button class="btn gold sm" onclick="openNotifCenter()">🔔 الإشعارات</button>
+      <a href="index.html" class="btn sm gray" style="text-decoration:none;font-size:12px;padding:6px 12px">👤 Student Site</a>
     </header>
 
     <main>
-      <!-- SCORE -->
+      <!-- 1. JOKENS -->
       <section class="page active" id="p-score">
-        <h2>نقاط الجوكنز <i class="jk">J</i></h2>
+        <h2>Jokens <i class="jk">J</i></h2>
         <div class="card">
-          <label class="lbl">1 — اختر قاعدة أو بند التقييم</label>
+          <label class="lbl">1 — PICK A RULE</label>
           <div class="rules" id="ruleList"></div>
-          <label class="lbl" style="margin-top:14px">إضافة قاعدة جديدة أو استخدام مباشر</label>
+          <label class="lbl" style="margin-top:14px">CUSTOM — NAME + AMOUNT (e.g. 3 or -4)</label>
           <div class="row" style="margin-bottom:8px">
-            <input class="inp" id="ruleLabel" placeholder="اسم البند (مثال: حفظ ترنيمة)" maxlength="60">
+            <input class="inp" id="ruleLabel" placeholder="Rule name (e.g. Answered quiz)" dir="auto" maxlength="60">
             <input class="inp" id="ruleAmt" type="number" placeholder="±" style="width:84px;text-align:center">
           </div>
           <div class="btngrid">
-            <button class="btn sm gray" onclick="useOnce()">استخدام لمرة واحدة</button>
-            <button class="btn sm gold" onclick="addRule()">💾 حفظ كقاعدة دائمة</button>
+            <button class="btn sm gray" onclick="useOnce()">Use once</button>
+            <button class="btn sm gold" onclick="addRule()">💾 Save as rule</button>
           </div>
-          <div class="selected-op" id="opLabel">اختر قاعدة أولاً</div>
+          <div class="selected-op" id="opLabel">Pick a rule</div>
         </div>
 
         <div class="card">
-          <label class="lbl">2 — اختر الطلاب (واحد أو أكثر)</label>
-          <input class="inp" id="pickSearch" placeholder="🔍 بحث عن اسم الطالب…" oninput="renderPick()">
+          <label class="lbl">2 — PICK STUDENTS (one or many)</label>
+          <input class="inp" id="pickSearch" placeholder="🔍 Search student…" oninput="renderPick()">
           <div class="btngrid" style="margin-bottom:8px">
-            <button class="btn gray sm" onclick="pickAll(true)">تحديد الكل</button>
-            <button class="btn gray sm" onclick="pickAll(false)">إلغاء التحديد</button>
+            <button class="btn gray sm" onclick="pickAll(true)">Select all</button>
+            <button class="btn gray sm" onclick="pickAll(false)">Clear</button>
           </div>
           <div class="picklist" id="pickList"></div>
-          <button class="btn green wide" style="margin-top:12px" onclick="applyManual()" id="manualBtn" disabled>تطبيق
-            النقاط</button>
+          <button class="btn green wide" style="margin-top:12px" onclick="applyManual()" id="manualBtn" disabled>Apply</button>
         </div>
 
         <div class="card">
-          <label class="lbl">أو مسح كارت الـ QR للطالب 📷</label>
+          <label class="lbl">OR SCAN STUDENT QR CARD</label>
           <div id="reader"></div>
-          <button class="btn gold wide" style="margin-top:10px" id="scanBtn" onclick="toggleScan()" disabled>📷 فتح
-            كاميرا QR</button>
+          <button class="btn gold wide" style="margin-top:10px" id="scanBtn" onclick="toggleScan()" disabled>📷 SCAN QR</button>
         </div>
         <div id="scanLog"></div>
       </section>
 
-      <!-- STUDENTS -->
+      <!-- 2. STUDENTS -->
       <section class="page" id="p-students">
-        <h2>قائمة الطلاب <span id="stuCount"></span></h2>
-
-        <!-- SYNC ROSTER BUTTON -->
-        <button class="btn gold wide" style="margin-bottom:12px" onclick="syncInitialRoster()">🔄 مزامنة وتحديث قائمة
-          الـ 33 طالباً مع تواريخ الميلاد</button>
+        <h2>Students <span id="stuCount"></span></h2>
+        <div class="card" style="border-color:var(--gold)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <label class="lbl" style="margin:0;color:var(--gold)">ROSTER SETUP (33 STUDENTS)</label>
+            <button class="btn gold sm" onclick="syncRoster()">🔄 Sync 33 Students Roster</button>
+          </div>
+          <p class="muted">Syncs the official list of 33 students with their exact birthdays into Firebase. Safe: will not erase earned Jokens or badges!</p>
+        </div>
 
         <div class="card">
-          <label class="lbl">إضافة طالب جديد يدوي</label>
-          <input class="inp" id="newName" placeholder="اسم الطالب بالإنجليزية (مثال: Adam Ragy)">
-          <label class="lbl">تاريخ الميلاد 🎂</label>
+          <label class="lbl">ADD NEW STUDENT</label>
+          <input class="inp" id="newName" placeholder="Full name (e.g. John Doe)">
+          <label class="lbl">BIRTHDAY 🎂 (optional)</label>
           <div class="row">
             <input class="inp" id="newBday" type="date">
-            <button class="btn green sm" onclick="addStudent()">إضافة</button>
+            <button class="btn green sm" onclick="addStudent()">Add</button>
           </div>
         </div>
         <div id="stuList"></div>
       </section>
 
-      <!-- ATTENDANCE -->
+      <!-- 3. ATTENDANCE -->
       <section class="page" id="p-att">
-        <h2>دفتر الحضور <span>📋</span></h2>
+        <h2>Attendance <span>📋</span></h2>
         <div class="card">
-          <label class="lbl">تاريخ الجمعة</label>
+          <label class="lbl">FRIDAY DATE</label>
           <select class="inp" id="attDate" onchange="renderAttList()"></select>
-          <label class="lbl">تسجيل حضور الكل في:</label>
+          <label class="lbl">MARK EVERYONE PRESENT IN…</label>
           <div class="btngrid" id="attAllBtns"></div>
-          <button class="btn gray sm wide" style="margin-top:8px" onclick="clearDay()">تسجيل غياب الكل لهذه
-            الجمعة</button>
+          <button class="btn gray sm wide" style="margin-top:8px" onclick="clearDay()">Mark everyone absent (all activities)</button>
           <p class="muted" id="attSummary" style="margin-top:10px"></p>
         </div>
         <div id="attList"></div>
+
         <div class="card" style="border-color:var(--gold)">
-          <h3 style="font-size:18px;color:var(--gold);margin-bottom:6px">🏅 أنشط الطلاب حضوراً</h3>
+          <h3 style="font-size:20px;color:var(--gold);margin-bottom:6px">🏅 Top Active Students</h3>
           <p class="muted" id="attWeeks" style="margin-bottom:6px"></p>
           <div id="topActive"></div>
         </div>
+
         <div class="card">
-          <h3 style="font-size:17px;margin-bottom:6px">نسبة حضور جميع الطلاب %</h3>
+          <h3 style="font-size:18px;margin-bottom:6px">All Students — Attendance %</h3>
           <div id="attPct"></div>
         </div>
+
         <div class="card">
-          <h3 style="font-size:17px;margin-bottom:4px">📊 تصدير شيت Excel</h3>
+          <h3 style="font-size:18px;margin-bottom:4px">📊 Export to Excel</h3>
+          <p class="muted" style="margin-bottom:10px">One Excel file per activity: students, attendance for each Friday, and percentage.</p>
           <div class="btngrid" id="attExportBtns"></div>
         </div>
       </section>
 
-      <!-- SPIRITUALS -->
+      <!-- 4. SPIRITUALS -->
       <section class="page" id="p-spirit">
-        <h2>متابعة النوتة الروحية <span>🙏</span></h2>
+        <h2>Spirituals <span>🙏</span></h2>
         <div class="card">
-          <label class="lbl">الشهر</label>
+          <label class="lbl">SELECT MONTH</label>
           <select class="inp" id="spMonth" onchange="renderSpirit()"></select>
           <p class="muted" id="spSummary"></p>
         </div>
         <div id="spList"></div>
       </section>
 
-      <!-- PSALMS -->
+      <!-- 5. PSALMS -->
       <section class="page" id="p-psalm">
-        <h2>تسميع المزامير <span>📜</span></h2>
-        <p class="muted" style="margin:-6px 0 12px">الطلبات المرسلة من الطلاب. الاعتماد يضيف تلقائياً <b>+10 نقاط</b>
-          للطالب.</p>
+        <h2>Psalms <span>📜</span></h2>
+        <p class="muted" style="margin:-6px 0 12px">Students request verification after memorizing a psalm. Approving gives <b>+10 Jokens</b> automatically.</p>
         <div id="psPending"></div>
-        <h3 style="font-size:17px;margin:14px 0 6px">الطلبات المعتمدة حديثاً</h3>
+        <h3 style="font-size:18px;margin:14px 0 6px">Recent Decisions</h3>
         <div id="psDone"></div>
       </section>
 
-      <!-- EFTKAD -->
+      <!-- 6. EFTKAD -->
       <section class="page" id="p-eft">
-        <h2>الافتقاد والزيارات <span>🏠</span></h2>
-        <p class="muted" style="margin:-6px 0 12px">حدد الجولة عند كل زيارة منزلية للطالب واكتب الملاحظات.</p>
-        <button class="btn gold wide" style="margin-bottom:14px" onclick="exportEftkad()">📊 تصدير شيت الافتقاد
-          Excel</button>
+        <h2>Eftkad <span>🏠</span></h2>
+        <p class="muted" style="margin:-6px 0 12px">Tick each round when visiting the child at home. Notes save with 💾.</p>
+        <button class="btn gold wide" style="margin-bottom:14px" onclick="exportEftkad()">📊 Export Eftkad to Excel</button>
         <div id="eftList"></div>
       </section>
 
-      <!-- EVENTS -->
+      <!-- 7. EVENTS -->
       <section class="page" id="p-news">
-        <h2>المناسبات والأحداث <span>📅</span></h2>
+        <h2>Events <span>📅</span></h2>
         <div class="card">
-          <input class="inp" id="newsTitle" placeholder="عنوان المناسبة (مثال: رحلة دير الأنبا مقار)">
-          <textarea class="inp" id="newsText" placeholder="التفاصيل (الموعد، المكان، ما يجب إحضاره...)"></textarea>
-          <button class="btn green wide" onclick="addNews()">📢 نشر المناسبة</button>
+          <input class="inp" id="newsTitle" placeholder="Event title">
+          <textarea class="inp" id="newsText" placeholder="Description (date, place, details...)"></textarea>
+          <button class="btn green wide" onclick="addNews()">📢 Publish Announcement</button>
         </div>
         <div id="newsList"></div>
       </section>
 
-      <!-- CHALLENGES -->
-      <section class="page" id="p-chal">
-        <h2>إدارة التحديات</h2>
+      <!-- 8. NOTIFICATIONS -->
+      <section class="page" id="p-notifs">
+        <h2>Push Reminders <span>🔔</span></h2>
         <div class="card">
-          <input class="inp" id="chTitle" placeholder="عنوان التحدي (مثال: مسابقة إنجيل يوحنا الإصحاح 1)">
-          <textarea class="inp" id="chDesc" placeholder="وصف قصير" style="min-height:60px"></textarea>
-          <label class="lbl">الأسئلة (حدد الإجابة الصحيحة بالدائرة)</label>
+          <h3 style="font-size:18px;color:var(--gold);margin-bottom:6px">⚡ Quick Spiritual Reminders</h3>
+          <p class="muted" style="margin-bottom:12px">Send push notifications to all student phones and admin devices.</p>
+          <div class="btngrid" style="margin-bottom:8px">
+            <button class="btn purple sm" onclick="sendQuickNotif('morning')">🌅 Morning Prayer</button>
+            <button class="btn purple sm" onclick="sendQuickNotif('evening')">🌙 Night Prayer</button>
+          </div>
+          <button class="btn gold wide sm" onclick="sendBirthdayNotifs()">🎂 Send Today's Birthday Alerts</button>
+        </div>
+
+        <div class="card">
+          <label class="lbl">CUSTOM BROADCAST</label>
+          <input class="inp" id="notifTitle" placeholder="Notification Title (e.g. Mass Tomorrow)">
+          <textarea class="inp" id="notifBody" placeholder="Message content..." style="min-height:70px"></textarea>
+          <button class="btn green wide" onclick="broadcastCustomNotif()">🚀 Send Broadcast</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:16px;margin-bottom:8px">Sent Notifications History</h3>
+          <div id="notifHistory"></div>
+        </div>
+      </section>
+
+      <!-- 9. CHALLENGES -->
+      <section class="page" id="p-chal">
+        <h2>Challenges <span>⚔️</span></h2>
+        <div class="card">
+          <input class="inp" id="chTitle" placeholder="Challenge title">
+          <textarea class="inp" id="chDesc" placeholder="Short description" style="min-height:60px"></textarea>
+          <label class="lbl">QUESTIONS (select the radio button for the correct answer)</label>
           <div id="qBuilder"></div>
           <div style="display:flex;gap:8px">
-            <button class="btn gray sm" onclick="addQ()">+ سؤال جديد</button>
-            <button class="btn green" style="flex:1" onclick="saveChallenge()">⚔️ حفظ التحدي</button>
+            <button class="btn gray sm" onclick="addQ()">+ Question</button>
+            <button class="btn green" style="flex:1" onclick="saveChallenge()">⚔️ Save Challenge</button>
           </div>
         </div>
         <div id="chalList"></div>
       </section>
 
-      <!-- SHOP -->
+      <!-- 10. SHOP -->
       <section class="page" id="p-shop">
-        <h2>متجر الهدايا <span>🎁</span></h2>
+        <h2>Gift <span>Shop 🎁</span></h2>
         <div class="card">
           <input type="file" id="gFile" accept="image/*" hidden onchange="loadGiftPhoto(this)">
           <div class="ph-pick" onclick="document.getElementById('gFile').click()">
-            <img id="gPreview" style="display:none"><span id="gPhLabel">📷 اضغط لاختيار صورة الهدية (اختياري)</span>
+            <img id="gPreview" style="display:none">
+            <span id="gPhLabel">📷 Tap to add a photo (optional)</span>
           </div>
           <div class="row" style="margin-bottom:10px">
             <input class="inp" id="gEmoji" placeholder="🎁" style="width:70px;text-align:center;font-size:22px">
-            <input class="inp" id="gName" placeholder="اسم الهدية">
+            <input class="inp" id="gName" placeholder="Gift name">
           </div>
           <div class="row" style="margin-bottom:10px">
-            <input class="inp" id="gCost" type="number" placeholder="السعر بالنقاط">
-            <input class="inp" id="gQty" type="number" placeholder="الكمية المتاحة">
+            <input class="inp" id="gCost" type="number" placeholder="Cost (Jokens)">
+            <input class="inp" id="gQty" type="number" placeholder="Quantity">
           </div>
-          <button class="btn green wide" onclick="addGift()">🎁 إضافة للمتجر</button>
+          <button class="btn green wide" onclick="addGift()">🎁 Add Gift</button>
         </div>
         <div id="shopList"></div>
-      </section>
-
-      <!-- NOTIFICATIONS TAB -->
-      <section class="page" id="p-notif">
-        <h2>مركز الإشعارات <span>🔔</span></h2>
-        <div class="card">
-          <h3 style="font-size:18px;color:var(--gold);margin-bottom:8px">إرسال تذكيرات فورية لجميع الطلاب</h3>
-          <p class="muted" style="margin-bottom:12px">اضغط لإرسال إشعار فوري على هواتف جميع الطلاب والخدام المسجلين:</p>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn gold" onclick="sendSpiritualNotif('morning')">🌅 إرسال تذكير صلاة باكر والنوتة
-              الروحية</button>
-            <button class="btn gold" onclick="sendSpiritualNotif('evening')">🌙 إرسال تذكير صلاة النوم قبل
-              النوم</button>
-            <button class="btn gold" onclick="sendBirthdayNotif()">🎂 إرسال تهنئة أعياد ميلاد اليوم لجميع
-              الطلاب</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 style="font-size:18px;margin-bottom:8px">إشعار مخصص للجميع 📢</h3>
-          <input class="inp" id="customNotifTitle" placeholder="عنوان الإشعار (مثال: موعد القداس غداً)">
-          <textarea class="inp" id="customNotifBody" placeholder="نص الإشعار..."></textarea>
-          <button class="btn green wide" onclick="sendCustomNotif()">إرسال الإشعار للجميع 📢</button>
-        </div>
       </section>
     </main>
 
     <nav id="nav">
-      <button data-p="score" class="on"><span class="ic"><i class="jk">J</i></span>النقاط</button>
-      <button data-p="students"><span class="ic">👥</span>الطلاب</button>
-      <button data-p="att"><span class="ic">📋</span>الغياب</button>
-      <button data-p="spirit"><span class="ic">🙏</span>النوتة</button>
-      <button data-p="psalm"><span class="ic">📜</span>مزمور<b class="nb" id="psBadge"></b></button>
-      <button data-p="eft"><span class="ic">🏠</span>افتقاد</button>
-      <button data-p="news"><span class="ic">📅</span>أحداث</button>
-      <button data-p="chal"><span class="ic">⚔️</span>تحديات</button>
-      <button data-p="shop"><span class="ic">🎁</span>متجر</button>
-      <button data-p="notif"><span class="ic">🔔</span>إشعار</button>
+      <button data-p="score" class="on"><span class="ic"><i class="jk">J</i></span>Jokens</button>
+      <button data-p="students"><span class="ic">👥</span>Students</button>
+      <button data-p="att"><span class="ic">📋</span>Attend.</button>
+      <button data-p="spirit"><span class="ic">🙏</span>Spirit.</button>
+      <button data-p="psalm"><span class="ic">📜</span>Psalm<b class="nb" id="psBadge"></b></button>
+      <button data-p="eft"><span class="ic">🏠</span>Eftkad</button>
+      <button data-p="news"><span class="ic">📅</span>Events</button>
+      <button data-p="notifs"><span class="ic">🔔</span>Alerts</button>
+      <button data-p="chal"><span class="ic">⚔️</span>Chall.</button>
+      <button data-p="shop"><span class="ic">🎁</span>Shop</button>
     </nav>
   </div>
 
@@ -1177,9 +1259,9 @@
 
   <script>
     /* ============================================================
-       1. FIREBASE CONFIG — Loaded from firebase-config.js
+       1. FIREBASE CONFIG
        ============================================================ */
-    const defaultFirebaseConfig = {
+    const firebaseConfig = window.FIREBASE_CONFIG || {
       apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
       authDomain: "st-john-the-beloved.firebaseapp.com",
       projectId: "st-john-the-beloved",
@@ -1189,11 +1271,7 @@
       measurementId: "G-PTHE3NCBNK"
     };
 
-    const activeConfig = (typeof firebaseConfig !== 'undefined' && firebaseConfig && firebaseConfig.apiKey)
-      ? firebaseConfig
-      : defaultFirebaseConfig;
-
-    firebase.initializeApp(activeConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const FV = firebase.firestore.FieldValue;
     const ROOT = db.collection("james").doc("app");
@@ -1202,8 +1280,26 @@
     const COIN = '<i class="jk">J</i>';
 
     /* ============================================================
-       2. ROSTER OF 33 STUDENTS & BIRTHDAYS
+       2. CONSTANTS & ROSTER
        ============================================================ */
+    const ARENAS = [
+      { name: "Starter Camp", min: 0, em: "🏕️" },
+      { name: "Faith Fortress", min: 50, em: "🏰" },
+      { name: "Strength Summit", min: 120, em: "💪" },
+      { name: "Wisdom Grove", min: 200, em: "🌳" },
+      { name: "Prayer Peaks", min: 350, em: "🏔️" },
+      { name: "Crown of Life", min: 500, em: "👑" },
+    ];
+
+    /* 4 Official Badges */
+    const BADGES = [
+      { id: "seer", name: "John the Seer", ar: "يوحنا الرائي", cost: 150, img: "images/badge_seer.svg", em: "👁️" },
+      { id: "apostle", name: "John the Apostle", ar: "يوحنا الرسولي", cost: 200, img: "images/badge_apostle.svg", em: "📜" },
+      { id: "evangelist", name: "John the Evangelist", ar: "يوحنا الانجيلي", cost: 400, img: "images/badge_evangelist.svg", em: "🦅" },
+      { id: "beloved", name: "John the Beloved", ar: "يوحنا الحبيب", cost: 550, img: "images/badge_beloved.svg", em: "❤️" }
+    ];
+
+    /* 33 Official Students List */
     const INITIAL_STUDENTS = [
       { name: "Adam Ragy", birthday: "2015-05-14" },
       { name: "Armia Bishoy", birthday: "2014-10-12" },
@@ -1240,70 +1336,63 @@
       { name: "Mina Youssef", birthday: "" }
     ];
 
-    /* 4 St. John Badges */
-    const BADGES = [
-      { id: "john_seer", em: "🦅", name: "يوحنا الرائي", cost: 150, img: "images/badge_seer.svg" },
-      { id: "john_apostle", em: "📜", name: "يوحنا الرسولي", cost: 200, img: "images/badge_apostle.svg" },
-      { id: "john_evangelist", em: "✨", name: "يوحنا الإنجيلي", cost: 400, img: "images/badge_evangelist.svg" },
-      { id: "john_beloved", em: "👑", name: "يوحنا الحبيب", cost: 550, img: "images/badge_beloved.svg" },
-    ];
+    const FRIDAYS = Array.from({ length: 52 }, (_, i) => {
+      const d = new Date(2026, 10, 20);
+      d.setDate(d.getDate() + i * 7);
+      return d;
+    });
 
-    const ARENAS = [
-      { name: "Starter Camp", min: 0, em: "🏕️" }, { name: "Faith Fortress", min: 26, em: "🏰" }, { name: "Strength Summit", min: 51, em: "💪" },
-      { name: "Wisdom Grove", min: 91, em: "🌳" }, { name: "Voice Tower", min: 141, em: "📣" }, { name: "Patience Pass", min: 181, em: "⏳" },
-      { name: "Prayer Peaks", min: 221, em: "🏔️" }, { name: "Crown of Life", min: 261, em: "👑" },
-    ];
-
-    const FRIDAYS = Array.from({ length: 52 }, (_, i) => { const d = new Date(2026, 10, 20); d.setDate(d.getDate() + i * 7); return d; });
     const CATS = [
-      { k: "odas", name: "القداس", short: "القداس" },
-      { k: "madares", name: "الفصل", short: "الفصل" },
-      { k: "asheya", name: "العشية", short: "العشية" },
-      { k: "dars", name: "درس الكتاب", short: "درس الكتاب" },
+      { k: "odas", name: "Liturgy (قداس)", short: "Odas" },
+      { k: "madares", name: "Sunday School (فصل)", short: "Fasl" },
+      { k: "asheya", name: "3asheya (عشية)", short: "3asheya" },
+      { k: "dars", name: "Bible Study (درس كتاب)", short: "Dars" },
     ];
 
     const DEFAULT_RULES = [
-      { id: "d-bonus", amt: 1, label: "Bonus تشجيعي" },
-      { id: "d-asheya", amt: 2, label: "حضور العشية" },
-      { id: "d-dars", amt: 2, label: "درس كتاب" },
-      { id: "d-ask", amt: 2, label: "مشاركة وإجابة سؤال" },
-      { id: "d-odas", amt: 5, label: "حضور القداس" },
-      { id: "d-fasl", amt: 5, label: "حضور الفصل" },
-      { id: "d-pray", amt: 7, label: "صلاة وحفظ مزمور" },
-      { id: "d-talk", amt: -1, label: "كلام بدون إذن" },
-      { id: "d-joke", amt: -2, label: "هزار أثناء الصلاة" },
-      { id: "d-bad", amt: -5, label: "سلوك غير لائق" },
-      { id: "d-shib", amt: -5, label: "شبشب" },
-      { id: "d-short", amt: -5, label: "شورت" },
+      { id: "d-bonus", amt: 1, label: "Bonus / تشجيع" },
+      { id: "d-asheya", amt: 2, label: "3asheya / عشية" },
+      { id: "d-dars", amt: 2, label: "Bible Study / درس كتاب" },
+      { id: "d-ask", amt: 2, label: "Good Question / إجابة مميزة" },
+      { id: "d-odas", amt: 5, label: "Liturgy / قداس" },
+      { id: "d-fasl", amt: 5, label: "Sunday School / فصل" },
+      { id: "d-pray", amt: 7, label: "Prayer & Agpeya / صلاة" },
+      { id: "d-talk", amt: -1, label: "Talking without permission" },
+      { id: "d-joke", amt: -2, label: "Distraction in prayer" },
+      { id: "d-bad", amt: -5, label: "Inappropriate language" },
+      { id: "d-short", amt: -5, label: "Inappropriate attire" }
     ];
 
     const PSALM_PTS = 10;
     const SPIRIT = [
-      { k: "mp", em: "🌅", name: "صلاة باكر", short: "باكر" }, { k: "np", em: "🌙", name: "صلاة النوم", short: "نوم" }, { k: "bible", em: "📖", name: "إنجيل", short: "إنجيل" },
-      { k: "som", em: "🌾", name: "صوم", short: "صوم", days: [3, 5] },
+      { k: "mp", em: "🌅", name: "Morning Prayer", short: "Morning" },
+      { k: "np", em: "🌙", name: "Night Prayer", short: "Night" },
+      { k: "bible", em: "📖", name: "Bible Reading", short: "Bible" },
+      { k: "som", em: "🌾", name: "Fasting", short: "Som", days: [3, 5] },
     ];
 
     const spApplies = (x, k) => !x.days || x.days.includes(new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, +k.slice(8, 10)).getDay());
     const dkey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    const dlabel = d => d.toLocaleDateString("ar-EG", { day: "numeric", month: "short", year: "numeric" });
-    const MONTHS = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-
+    const dlabel = d => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const isBdayMonth = s => !!s.birthday && +String(s.birthday).slice(5, 7) === new Date().getMonth() + 1;
     const bdayLabel = s => s.birthday ? `${+String(s.birthday).slice(8, 10)} ${MONTHS[+String(s.birthday).slice(5, 7) - 1]}` : "";
 
-    let students = [], news = [], challenges = [], shop = [], att = {}, spirit = {};
+    /* ============================================================
+       3. STATE & HELPERS
+       ============================================================ */
+    let students = [], news = [], challenges = [], shop = [], att = {}, spirit = [], notifs = [];
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const arenaOf = e => { let a = ARENAS[0]; for (const x of ARENAS) if (e >= x.min) a = x; return a; };
     const avatar = s => `<div class="av">${esc((s.name || "?")[0])}<img src="${IMG_DIR}${encodeURIComponent(s.name)}.png" alt="" onerror="this.remove()"></div>`;
-
-    function toast(m, bad) { const t = $("toast"); t.textContent = m; t.className = bad ? "show bad" : "show"; clearTimeout(t._t); t._t = setTimeout(() => t.className = "", 2400); }
+    function toast(m, bad) { const t = $("toast"); t.textContent = m; t.className = bad ? "show bad" : "show"; clearTimeout(t._t); t._t = setTimeout(() => t.className = "", 2200); }
     function openModal(h) { $("modal").innerHTML = `<button class="x" onclick="closeModal()">✕</button>` + h; $("overlay").classList.add("show"); }
     function closeModal() { $("overlay").classList.remove("show"); }
     const slug = n => n.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
     /* ============================================================
-       3. REALTIME SYNC
+       4. LIVE DATA SYNC
        ============================================================ */
     col("students").onSnapshot(s => {
       students = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => a.name.localeCompare(b.name));
@@ -1314,124 +1403,166 @@
     col("shop").orderBy("cost").onSnapshot(s => { shop = s.docs.map(d => ({ id: d.id, ...d.data() })); renderShop(); });
     col("attendance").onSnapshot(s => { att = {}; s.docs.forEach(d => att[d.id] = d.data() || {}); renderAttList(); renderAttStats(); });
     col("spirituals").onSnapshot(s => { spirit = {}; s.docs.forEach(d => spirit[d.id] = d.data() || {}); renderSpirit(); });
+    col("notifications").orderBy("createdAt", "desc").limit(20).onSnapshot(s => {
+      notifs = s.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderNotifHistory();
+    });
 
-    /* Populate dates */
-    const selD = $("attDate");
-    FRIDAYS.forEach(d => { const opt = document.createElement("option"); opt.value = dkey(d); opt.textContent = dlabel(d); selD.appendChild(opt); });
-    const curFri = FRIDAYS.map(dkey).filter(k => k <= dkey(new Date())).pop() || dkey(FRIDAYS[0]);
-    selD.value = curFri;
+    (function initSelectors() {
+      const today = dkey(new Date());
+      let def = FRIDAYS[0];
+      for (const d of FRIDAYS) if (dkey(d) <= today) def = d;
+      $("attDate").innerHTML = FRIDAYS.map((d, i) => `<option value="${dkey(d)}" ${d === def ? "selected" : ""}>Week ${i + 1} — ${dlabel(d)}</option>`).join("");
+      $("attAllBtns").innerHTML = CATS.map(c => `<button class="btn green sm" onclick="markCat('${c.k}')">✓ ${c.short}</button>`).join("");
+      $("attExportBtns").innerHTML = CATS.map(c => `<button class="btn gold sm" onclick="exportAtt('${c.k}')">⬇ ${c.short}</button>`).join("");
 
-    $("attAllBtns").innerHTML = CATS.map(c => `<button class="btn sm green" onclick="markCat('${c.k}')">حضور ${c.name} للكل</button>`).join("");
-    $("attExportBtns").innerHTML = CATS.map(c => `<button class="btn sm gold" onclick="exportAtt('${c.k}')">📊 ${c.name}</button>`).join("");
-
-    const selM = $("spMonth");
-    for (let i = 0; i < 12; i++) {
-      const d = new Date(2026, i, 1), k = `${d.getFullYear()}-${String(i + 1).padStart(2, "0")}`;
-      const opt = document.createElement("option"); opt.value = k; opt.textContent = `${MONTHS[i]} ${d.getFullYear()}`; selM.appendChild(opt);
-    }
-    selM.value = dkey(new Date()).slice(0, 7);
+      const now = new Date(), cur = dkey(now).slice(0, 7), ms = [];
+      let d = new Date(2026, 9, 1); const end = new Date(Math.max(new Date(2027, 8, 1), new Date(now.getFullYear(), now.getMonth(), 1)));
+      while (d <= end) { ms.push(dkey(d).slice(0, 7)); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); }
+      const sel = ms.includes(cur) ? cur : ms[0];
+      $("spMonth").innerHTML = ms.map(m => `<option value="${m}" ${m === sel ? "selected" : ""}>${MONTHS[+m.slice(5) - 1]} ${m.slice(0, 4)}</option>`).join("");
+    })();
 
     /* ============================================================
-       4. SCORE / JOKENS
+       5. JOKENS & RULES
        ============================================================ */
-    let customRules = [], op = null, opReason = "", sel = new Set();
-    col("rules").onSnapshot(s => { customRules = s.docs.map(d => ({ id: d.id, ...d.data() })); renderRules(); });
+    let op = 0, opReason = "", opId = "", customRules = [], sel = new Set(), scanner = null, scanning = false, lastScan = { id: "", t: 0 };
+    const fmt = n => (n > 0 ? "+" : "") + n;
+    const allRules = () => [...DEFAULT_RULES, ...customRules].sort((x, y) => (x.amt < 0) - (y.amt < 0) || Math.abs(x.amt) - Math.abs(y.amt));
 
-    function allRules() { return [...DEFAULT_RULES, ...customRules]; }
+    col("rules").onSnapshot(s => {
+      customRules = s.docs.map(d => ({ id: d.id, custom: true, ...d.data() })).sort((x, y) => (x.createdAt || 0) - (y.createdAt || 0));
+      renderRules();
+    });
+
     function renderRules() {
       $("ruleList").innerHTML = allRules().map(r => `
-    <div class="rule ${r.amt > 0 ? "plus" : "minus"} ${op === r.amt && opReason === r.label ? "sel" : ""}" onclick="pickRule(${r.amt},'${esc(r.label)}')">
-      <b>${r.amt > 0 ? "+" : ""}${r.amt}</b><span>${esc(r.label)}</span>
-      ${r.id.startsWith("d-") ? "" : `<button class="rule-del rx" onclick="event.stopPropagation();delRule('${r.id}')">✕</button>`}
-    </div>`).join("");
+        <div class="rule ${r.amt > 0 ? "plus" : "minus"} ${r.id === opId ? "sel" : ""}" onclick="pickRule('${r.id}')">
+          <b>${fmt(r.amt)}</b>
+          <span dir="auto">${esc(r.label)}</span>
+          ${r.custom ? `<button class="rx" title="Delete rule" onclick="event.stopPropagation();delRule('${r.id}')">✕</button>` : ""}
+        </div>`).join("");
     }
-    function pickRule(amt, reason) { op = amt; opReason = reason; renderRules(); updateOp(); }
-    function useOnce() {
-      const amt = +$("ruleAmt").value, label = $("ruleLabel").value.trim();
-      if (!amt || !label) { toast("اكتب الوصف والنقاط", true); return; }
-      pickRule(amt, label);
-    }
-    async function addRule() {
-      const amt = +$("ruleAmt").value, label = $("ruleLabel").value.trim();
-      if (!amt || !label) { toast("اكتب الوصف والنقاط", true); return; }
-      await col("rules").add({ amt, label, createdAt: Date.now() });
-      $("ruleAmt").value = ""; $("ruleLabel").value = ""; toast("تم حفظ البند ✅");
-    }
-    async function delRule(id) { if (confirm("حذف هذه القاعدة؟")) await col("rules").doc(id).delete(); }
 
-    function fmt(n) { return (n > 0 ? "+" : "") + n; }
-    function updateOp() {
-      const l = $("opLabel");
-      if (op === null) { l.textContent = "اختر قاعدة أولاً"; l.className = "selected-op"; }
-      else { l.textContent = `المحدد: ${fmt(op)} ${COIN} — ${opReason}`; l.className = "selected-op " + (op > 0 ? "plus" : "minus"); }
-      $("manualBtn").disabled = !op || !sel.size;
-      $("scanBtn").disabled = !op;
+    function setOp(n, id, reason) {
+      op = n; opId = id; opReason = reason;
+      const l = $("opLabel"); l.innerHTML = `${fmt(n)} ${COIN} <span dir="auto">${esc(reason)}</span>`; l.className = "selected-op " + (n > 0 ? "plus" : "minus");
+      $("scanBtn").disabled = false; renderRules(); updateApplyBtn();
+    }
+
+    function clearOp() { op = 0; opId = ""; opReason = ""; const l = $("opLabel"); l.textContent = "Pick a rule"; l.className = "selected-op"; $("scanBtn").disabled = true; renderRules(); updateApplyBtn(); }
+    function pickRule(id) { const r = allRules().find(x => x.id === id); if (r) setOp(r.amt, r.id, r.label); }
+    function readRule() {
+      const label = $("ruleLabel").value.trim(), amt = parseInt($("ruleAmt").value, 10);
+      if (!amt) { toast("Enter a non-zero amount", true); return null; }
+      return { label, amt };
+    }
+    function useOnce() { const r = readRule(); if (r) setOp(r.amt, "once", r.label || "Custom"); }
+    async function addRule() {
+      const r = readRule(); if (!r) return;
+      if (!r.label) { toast("Give the rule a name", true); return; }
+      try {
+        const d = await col("rules").add({ label: r.label, amt: r.amt, createdAt: Date.now() });
+        $("ruleLabel").value = ""; $("ruleAmt").value = ""; setOp(r.amt, d.id, r.label); toast("Rule saved ✅");
+      } catch (e) { toast("Failed: " + e.message, true); }
+    }
+    async function delRule(id) {
+      if (!confirm("Delete this rule?")) return;
+      try { await col("rules").doc(id).delete(); if (opId === id) clearOp(); toast("Rule deleted"); }
+      catch (e) { toast("Failed: " + e.message, true); }
     }
 
     function renderPick() {
-      const q = $("pickSearch").value.trim().toLowerCase();
       const ids = new Set(students.map(s => s.id));[...sel].forEach(id => { if (!ids.has(id)) sel.delete(id); });
+      const q = $("pickSearch").value.trim().toLowerCase();
       const list = students.filter(s => !q || s.name.toLowerCase().includes(q));
       $("pickList").innerHTML = list.length ? list.map(s => `
-    <div class="pickrow ${sel.has(s.id) ? "on" : ""}" onclick="togglePick('${esc(s.id)}',this)">
-      <input type="checkbox" class="chk" tabindex="-1" ${sel.has(s.id) ? "checked" : ""}>
-      <span class="grow">${esc(s.name)}</span>
-      <span class="pill gold">${s.coins || 0} ${COIN}</span>
-    </div>`).join("") : `<div class="empty" style="padding:16px">لا يوجد طلاب</div>`;
-      updateOp();
+        <div class="pickrow ${sel.has(s.id) ? "on" : ""}" onclick="togglePick('${esc(s.id)}',this)">
+          <input type="checkbox" class="chk" tabindex="-1" ${sel.has(s.id) ? "checked" : ""}>
+          <span class="grow">${esc(s.name)}</span>
+          <span class="pill gold">${s.earned || 0} ${COIN}</span>
+        </div>`).join("") : `<div class="empty" style="padding:16px">No students found</div>`;
+      updateApplyBtn();
     }
-    function togglePick(id, el) { if (sel.has(id)) sel.delete(id); else sel.add(id); renderPick(); }
+
+    function togglePick(id, el) {
+      const on = !sel.has(id); on ? sel.add(id) : sel.delete(id);
+      el.classList.toggle("on", on); el.querySelector("input").checked = on; updateApplyBtn();
+    }
     function pickAll(on) {
       const q = $("pickSearch").value.trim().toLowerCase();
       if (on) students.filter(s => !q || s.name.toLowerCase().includes(q)).forEach(s => sel.add(s.id)); else sel.clear();
       renderPick();
     }
+    function updateApplyBtn() {
+      const b = $("manualBtn"); b.disabled = !op || !sel.size;
+      b.textContent = !op ? "Pick a rule first" : !sel.size ? "Pick students" : `Apply ${fmt(op)} to ${sel.size} student${sel.size === 1 ? "" : "s"}`;
+    }
 
     async function award(id, amt, reason) {
-      const s = students.find(x => x.id === id); if (!s) throw new Error("طالب غير معروف");
+      const s = students.find(x => x.id === id); if (!s) throw new Error("Unknown student");
       const ref = col("students").doc(id);
       await db.runTransaction(async t => {
         const d = (await t.get(ref)).data() || {};
-        t.update(ref, {
-          coins: Math.max(0, (d.coins || 0) + amt),
-          earned: Math.max(0, (d.earned || 0) + (amt > 0 ? amt : 0))
-        });
+        const coins = Math.max(0, (d.coins || 0) + amt);
+        const earned = Math.max(0, (d.earned || 0) + (amt > 0 ? amt : 0));
+        t.update(ref, { coins, earned });
         t.set(col("history").doc(), { sid: id, amt, reason, at: Date.now() });
       });
+      const log = document.createElement("div"); log.className = "log";
+      log.innerHTML = `<b>${esc(s.name)}</b> ${fmt(amt)} ${COIN} <span dir="auto">${esc(reason)}</span> <span class="muted">${new Date().toLocaleTimeString()}</span>`;
+      $("scanLog").prepend(log);
     }
 
     async function applyManual() {
       if (!op || !sel.size) return;
-      const ids = [...sel], amt = op, reason = opReason;
-      const b = $("manualBtn"); b.disabled = true; b.textContent = "جاري الحفظ... ⏳";
+      const ids = [...sel], amt = op, reason = opReason, b = $("manualBtn"); let ok = 0, bad = 0;
+      b.disabled = true; b.textContent = "Applying…";
+      for (const id of ids) { try { await award(id, amt, reason); ok++; } catch (e) { bad++; console.error(e); } }
+      if (navigator.vibrate) navigator.vibrate(80);
+      sel.clear(); renderPick();
+      toast(bad ? `Done for ${ok}, failed for ${bad}` : `${fmt(amt)} given to ${ok} student${ok === 1 ? "" : "s"} ✅`, !!bad);
+    }
+
+    async function toggleScan() {
+      if (scanning) { await stopScan(); return; }
+      if (!op) { toast("Pick a rule first", true); return; }
+      $("reader").classList.add("on"); $("scanBtn").textContent = "⏹ STOP SCANNING";
+      scanner = new Html5Qrcode("reader");
+      try { await scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 220, height: 220 } }, onScan); scanning = true; }
+      catch (e) { toast("Camera error: " + e, true); $("reader").classList.remove("on"); $("scanBtn").textContent = "📷 SCAN QR"; }
+    }
+    async function stopScan() { try { await scanner.stop(); scanner.clear(); } catch (e) { } scanning = false; $("reader").classList.remove("on"); $("scanBtn").textContent = "📷 SCAN QR"; }
+    function onScan(text) {
+      const id = text.trim(), now = Date.now();
+      if (lastScan.id === id && now - lastScan.t < 3000) return;
+      lastScan = { id, t: now }; applyScore(id);
+    }
+    async function applyScore(id) {
+      const s = students.find(x => x.id === id);
+      if (!s) { toast("Unknown student", true); return; }
+      if (!op) { toast("Pick a rule first", true); return; }
       try {
-        for (const id of ids) await award(id, amt, reason);
-        toast(`تم تطبيق ${fmt(amt)} لـ ${ids.length} طالب ✅`);
-        sel.clear(); renderPick();
-      } catch (e) { toast("خطأ: " + e.message, true); }
-      finally { updateOp(); }
+        await award(id, op, opReason);
+        if (navigator.vibrate) navigator.vibrate(80);
+        toast(`${s.name}: ${fmt(op)} Jokens`);
+      } catch (e) { toast("Failed: " + e.message, true); }
     }
 
     /* ============================================================
-       5. STUDENTS & ROSTER SYNC (33 STUDENTS)
+       6. STUDENTS & ROSTER SYNC
        ============================================================ */
-    async function syncInitialRoster() {
-      if (!confirm("هل تريد مزامنة وتحديث قائمة الـ 33 طالباً في قاعدة البيانات مع الحفاظ على أي نقاط سابقة؟")) return;
-      toast("جاري مزامنة 33 طالب... ⏳");
-      let count = 0;
+    async function syncRoster() {
+      if (!confirm("Sync the official 33 students roster? Existing students' scores and badges will be preserved.")) return;
+      let added = 0, updated = 0;
       for (const s of INITIAL_STUDENTS) {
         const id = slug(s.name);
-        const ref = col("students").doc(id);
-        const snap = await ref.get();
-        if (snap.exists) {
-          await ref.update({
+        const docRef = col("students").doc(id);
+        const snap = await docRef.get();
+        if (!snap.exists) {
+          await docRef.set({
             name: s.name,
-            birthday: s.birthday || ""
-          });
-        } else {
-          await ref.set({
-            name: s.name,
-            birthday: s.birthday || "",
+            birthday: s.birthday,
             coins: 0,
             earned: 0,
             badges: [],
@@ -1441,248 +1572,234 @@
             eftkadNote: "",
             createdAt: Date.now()
           });
+          added++;
+        } else {
+          if (s.birthday && (!snap.data().birthday || snap.data().birthday !== s.birthday)) {
+            await docRef.update({ birthday: s.birthday });
+            updated++;
+          }
         }
-        count++;
       }
-      toast(`تمت مزامنة ${count} طالب بنجاح! ✅`);
+      toast(`Roster synced! (${added} added, ${updated} birthdays updated) ✅`);
     }
 
     async function addStudent() {
       const name = $("newName").value.trim(); if (!name) return;
       const id = slug(name);
-      if (!id) { toast("يجب أن يحتوي الاسم على حروف إنجليزية", true); return; }
-      if ((await col("students").doc(id).get()).exists) { toast("الطالب مسجل بالفعل", true); return; }
+      if (!id) { toast("Name must contain letters or numbers", true); return; }
+      if ((await col("students").doc(id).get()).exists) { toast("Student already exists", true); return; }
       await col("students").doc(id).set({
-        name, coins: 0, earned: 0, badges: [], done: {}, purchases: [],
-        eftkad: [false, false, false, false, false], eftkadNote: "",
-        birthday: $("newBday").value || "", createdAt: Date.now()
+        name,
+        coins: 0,
+        earned: 0,
+        badges: [],
+        done: {},
+        purchases: [],
+        eftkad: [false, false, false, false, false],
+        eftkadNote: "",
+        birthday: $("newBday").value || "",
+        createdAt: Date.now()
       });
-      $("newName").value = ""; $("newBday").value = ""; toast("تمت إضافة " + name + " ✅");
+      $("newName").value = ""; $("newBday").value = ""; toast("Added " + name + " ✅");
     }
 
     function renderStudents() {
       $("stuCount").textContent = `(${students.length})`;
       renderPick();
-      if (!students.length) { $("stuList").innerHTML = `<div class="empty">لا يوجد طلاب حالياً</div>`; return; }
+      if (!students.length) { $("stuList").innerHTML = `<div class="empty">No students yet</div>`; return; }
       $("stuList").innerHTML = students.map((s, i) => `
-    <div class="card item" onclick="openStudent('${esc(s.id)}')" style="cursor:pointer;animation-delay:${Math.min(i * 30, 300)}ms">
-      ${avatar(s)}
-      <div class="grow">
-        <h3>${isBdayMonth(s) ? "🎂 " : ""}${esc(s.name)}</h3>
-        <p>${s.birthday ? `🎂 ${bdayLabel(s)} • ` : ""}${arenaOf(s.earned || 0).em} ${esc(arenaOf(s.earned || 0).name)} • ${(s.badges || []).length} أوسمة</p>
-      </div>
-      <div style="text-align:left">
-        <span class="pill gold">${s.coins || 0} ${COIN}</span>
-        <p class="muted" style="font-size:11px;margin-top:3px">المجموع: ${s.earned || 0}</p>
-      </div>
-    </div>`).join("");
+        <div class="card item" onclick="openStudent('${esc(s.id)}')" style="cursor:pointer;animation-delay:${Math.min(i * 25, 300)}ms">
+          ${avatar(s)}
+          <div class="grow">
+            <h3>${isBdayMonth(s) ? "🎂 " : ""}${esc(s.name)}</h3>
+            <p>${s.birthday ? `🎂 ${bdayLabel(s)} • ` : ""}${arenaOf(s.earned || 0).em} ${esc(arenaOf(s.earned || 0).name)} • ${(s.badges || []).length} badges</p>
+          </div>
+          <div style="text-align:right">
+            <span class="pill gold">${s.earned || 0} ${COIN}</span>
+            <p class="muted" style="font-size:11px;margin-top:3px">wallet: ${s.coins || 0}</p>
+          </div>
+        </div>`).join("");
     }
 
     async function openStudent(id) {
       const s = students.find(x => x.id === id); if (!s) return;
       const b = new Set(s.badges || []);
 
-      // Fetch full score history for student
-      let histHtml = `<div class="empty" style="padding:10px">لا يوجد سجل نقاط</div>`;
+      // fetch history for this student
+      let histDocs = [];
       try {
-        const snap = await col("history").where("sid", "==", id).get();
-        const hList = snap.docs.map(d => d.data()).sort((x, y) => (y.at || 0) - (x.at || 0));
-        if (hList.length) {
-          histHtml = hList.map(h => `
-        <div class="log" style="font-size:12px;padding:6px 8px">
-          <b>${esc(h.reason)}</b> — <span class="pill ${h.amt < 0 ? "red" : "green"}">${h.amt > 0 ? "+" : ""}${h.amt} ${COIN}</span>
-          <span class="muted">${new Date(h.at).toLocaleDateString("ar-EG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
-        </div>
-      `).join("");
-        }
-      } catch (e) { }
+        const snap = await col("history").where("sid", "==", id).orderBy("at", "desc").limit(20).get();
+        histDocs = snap.docs.map(d => d.data());
+      } catch (e) {
+        console.warn("History fetch without index:", e);
+      }
 
       openModal(`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-      ${avatar(s)}
-      <div>
-        <h2 style="font-size:22px">${esc(s.name)} ${isBdayMonth(s) ? "🎂" : ""}</h2>
-        <p class="muted">كود الطالب: <b>${esc(s.id)}</b></p>
-      </div>
-    </div>
-    
-    <label class="lbl">تاريخ الميلاد 🎂</label>
-    <input class="inp" id="edBday" type="date" value="${esc(s.birthday || "")}">
-    
-    <div class="row" style="margin-bottom:10px">
-      <div style="flex:1">
-        <label class="lbl">المجموع التراكمي (Leaderboard)</label>
-        <input class="inp" id="edEarned" type="number" value="${s.earned || 0}">
-      </div>
-      <div style="flex:1">
-        <label class="lbl">الرصيد الحالي للأوسمة والمتجر</label>
-        <input class="inp" id="edJokens" type="number" value="${s.coins || 0}">
-      </div>
-    </div>
-    
-    <label class="lbl">الأوسمة الـ 4 (اضغط للتفعيل أو الإلغاء)</label>
-    <div class="badgepick" id="badgePick">
-      ${BADGES.map(x => `
-        <div class="bp ${b.has(x.id) ? "on" : ""}" data-id="${x.id}" onclick="this.classList.toggle('on')">
-          <div class="em">${x.em}</div>
-          <div class="nm">${esc(x.name)}</div>
-        </div>`).join("")}
-    </div>
-    
-    <button class="btn green wide" style="margin-top:12px" onclick="saveStudent('${esc(s.id)}')">💾 حفظ التعديلات</button>
-    
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button class="btn gold" style="flex:1" onclick="showQR('${esc(s.id)}')">🔳 كارت QR للطالب</button>
-      <button class="btn red sm" onclick="delStudent('${esc(s.id)}')">🗑 حذف الطالب</button>
-    </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          ${avatar(s)}
+          <div>
+            <h2 style="font-size:22px">${esc(s.name)}${isBdayMonth(s) ? " 🎂" : ""}</h2>
+            <p class="muted">ID: <b>${esc(s.id)}</b></p>
+          </div>
+        </div>
 
-    <label class="lbl" style="margin-top:16px">📜 سجل النقاط التفصيلي (History)</label>
-    <div style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:12px;padding:6px">
-      ${histHtml}
-    </div>
-  `);
+        <label class="lbl">BIRTHDAY 🎂</label>
+        <input class="inp" id="edBday" type="date" value="${esc(s.birthday || "")}">
+
+        <div class="row" style="margin-bottom:10px">
+          <div style="flex:1">
+            <label class="lbl">LIFETIME EARNED (Leaderboard)</label>
+            <input class="inp" id="edEarned" type="number" value="${s.earned || 0}">
+          </div>
+          <div style="flex:1">
+            <label class="lbl">WALLET (Spendable Jokens)</label>
+            <input class="inp" id="edJokens" type="number" value="${s.coins || 0}">
+          </div>
+        </div>
+
+        <label class="lbl">ST. JOHN BADGES (Tap to toggle)</label>
+        <div class="badgepick" id="badgePick">
+          ${BADGES.map(x => `
+            <div class="bp ${b.has(x.id) ? "on" : ""}" data-id="${x.id}" onclick="this.classList.toggle('on')">
+              <img src="${x.img}" alt="${x.name}">
+              <div>
+                <div class="nm">${x.name}</div>
+                <div class="cost">${x.cost} Jokens (${x.ar})</div>
+              </div>
+            </div>`).join("")}
+        </div>
+
+        <button class="btn green wide" style="margin-top:14px" onclick="saveStudent('${esc(s.id)}')">💾 Save Student Info</button>
+
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn gold" style="flex:1" onclick="showQR('${esc(s.id)}')">🔳 QR Card</button>
+          <button class="btn gray sm" onclick="resetStudentScore('${esc(s.id)}')">🔄 Reset Wallet</button>
+          <button class="btn red sm" onclick="delStudent('${esc(s.id)}')">🗑</button>
+        </div>
+
+        <label class="lbl" style="margin-top:16px">SCORE HISTORY (Recent transactions)</label>
+        <div class="history-list">
+          ${histDocs.length ? histDocs.map(h => `
+            <div class="hist-item">
+              <div>
+                <b>${esc(h.reason || "Score")}</b>
+                <div class="muted" style="font-size:11px">${new Date(h.at).toLocaleString()}</div>
+              </div>
+              <span class="pill ${h.amt > 0 ? "green" : "red"}">${fmt(h.amt)} ${COIN}</span>
+            </div>`).join("") : `<div class="empty" style="padding:10px">No transaction history found</div>`}
+        </div>
+
+        ${(s.purchases || []).length ? `
+          <label class="lbl" style="margin-top:14px">BADGE & GIFT PURCHASES</label>
+          <div class="history-list">
+            ${s.purchases.slice().reverse().map(p => `
+              <div class="hist-item">
+                <div><b>${esc(p.item || p.badgeName)}</b><div class="muted" style="font-size:11px">${new Date(p.at).toLocaleDateString()}</div></div>
+                <span class="pill gold">-${p.cost} ${COIN}</span>
+              </div>`).join("")}
+          </div>` : ""}
+      `);
     }
 
     async function saveStudent(id) {
       const badges = [...document.querySelectorAll("#badgePick .bp.on")].map(x => x.dataset.id);
-      const s = students.find(x => x.id === id), coins = +$("edJokens").value || 0, diff = coins - ((s || {}).coins || 0);
+      const s = students.find(x => x.id === id);
+      const coins = +$("edJokens").value || 0;
+      const earned = +$("edEarned").value || 0;
+      const diff = coins - ((s || {}).coins || 0);
+
       await col("students").doc(id).update({
-        earned: +$("edEarned").value || 0,
+        earned,
         coins,
         badges,
         birthday: $("edBday").value || ""
       });
-      if (diff) col("history").add({ sid: id, amt: diff, reason: "تعديل رصيد بواسطة المشرف", at: Date.now() }).catch(() => { });
-      toast("تم الحفظ بنجاح ✅"); closeModal();
+
+      if (diff) {
+        col("history").add({ sid: id, amt: diff, reason: "Teacher adjustment", at: Date.now() }).catch(() => { });
+      }
+      toast("Saved ✅"); closeModal();
+    }
+
+    async function resetStudentScore(id) {
+      if (!confirm("Reset spendable wallet balance to 0? (Lifetime earned score for leaderboard remains unchanged)")) return;
+      await col("students").doc(id).update({ coins: 0 });
+      col("history").add({ sid: id, amt: 0, reason: "Wallet balance reset", at: Date.now() }).catch(() => { });
+      toast("Wallet reset to 0 ✅"); closeModal();
     }
 
     async function delStudent(id) {
       const s = students.find(x => x.id === id);
-      if (!confirm(`هل أنت متأكد من حذف ${s.name} نهائياً؟`)) return;
+      if (!confirm(`Delete ${s.name}? This cannot be undone.`)) return;
       await col("students").doc(id).delete();
       col("spirituals").doc(id).delete().catch(() => { });
-      closeModal(); toast("تم الحذف");
+      closeModal(); toast("Deleted");
     }
 
     function showQR(id) {
       const s = students.find(x => x.id === id);
       openModal(`
-    <div style="text-align:center">
-      <h2 style="font-size:24px;color:var(--gold)">${esc(s.name)}</h2>
-      <p class="muted">امسح الكود لإضافة النقاط ${COIN}</p>
-      <div id="qrbox"></div>
-      <p class="muted">كود: <b>${esc(s.id)}</b></p>
-      <button class="btn wide" style="margin-top:10px" onclick="downloadQR('${esc(s.name)}')">⬇ تحميل صورة QR</button>
-    </div>`);
+        <div style="text-align:center">
+          <h2 style="font-size:24px;color:var(--gold)">${esc(s.name)}</h2>
+          <p class="muted">Scan with teacher's phone camera</p>
+          <div id="qrbox"></div>
+          <p class="muted">ID: <b>${esc(s.id)}</b></p>
+          <button class="btn wide" style="margin-top:10px" onclick="downloadQR('${esc(s.name)}')">⬇ Download QR Image</button>
+        </div>`);
       new QRCode($("qrbox"), { text: id, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.H });
     }
-    function downloadQR(name) { const c = $("qrbox").querySelector("canvas"); if (!c) return; const a = document.createElement("a"); a.download = `QR-${name}.png`; a.href = c.toDataURL(); a.click(); }
 
-    /* ============================================================
-       6. PUSH NOTIFICATIONS CENTER
-       ============================================================ */
-    function openNotifCenter() {
-      document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.p === "notif"));
-      document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "p-notif"));
-    }
-
-    async function sendSpiritualNotif(type) {
-      const isMorning = type === 'morning';
-      const title = isMorning ? "🌅 صباح الخير مع المسيح — أسرة يوحنا الحبيب" : "🌙 سلام ونعمة — أسرة يوحنا الحبيب";
-      const body = isMorning
-        ? "ابدأ يومك ببركة صلاة باكر وتدقيق النوتة الروحية اليوم 🙏📖"
-        : "اختم يومك بالصلاة والشكر في النوتة الروحية قبل النوم ✨✝️";
-
-      await broadcastPush(title, body);
-    }
-
-    async function sendBirthdayNotif() {
-      const today = new Date();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const target = `-${mm}-${dd}`;
-      const bdays = students.filter(s => s.birthday && s.birthday.endsWith(target));
-
-      if (!bdays.length) {
-        toast("لا توجد أعياد ميلاد مسجلة لهذا اليوم!");
-        return;
-      }
-      const names = bdays.map(s => s.name).join(" و ");
-      const title = "🎉🎂 عيد ميلاد سعيد في أسرة يوحنا الحبيب!";
-      const body = `نحتفل اليوم بكل فرح بعيد ميلاد: ${names} 🥳🎈 كل سنة وأنت طيب وفي حضن المسيح!`;
-      await broadcastPush(title, body);
-    }
-
-    async function sendCustomNotif() {
-      const title = $("customNotifTitle").value.trim();
-      const body = $("customNotifBody").value.trim();
-      if (!title || !body) { toast("اكتب العنوان ونص الإشعار", true); return; }
-      await broadcastPush(title, body);
-      $("customNotifTitle").value = "";
-      $("customNotifBody").value = "";
-    }
-
-    async function broadcastPush(title, body) {
-      toast("جاري إرسال الإشعار... 🔔");
-      try {
-        // Record in events so students without push notifications also see it!
-        await col("events").add({
-          title,
-          text: body,
-          votes: {},
-          createdAt: Date.now()
-        });
-
-        // Check device tokens
-        const snap = await col("fcm_tokens").get();
-        toast(`تم إرسال الإشعار لـ ${snap.docs.length} جهاز ونشره في المناسبات بنجاح! 🔔✅`);
-      } catch (e) {
-        toast("خطأ في الإرسال: " + e.message, true);
-      }
+    function downloadQR(name) {
+      const c = $("qrbox").querySelector("canvas"); if (!c) return;
+      const a = document.createElement("a"); a.download = `QR-${name}.png`; a.href = c.toDataURL(); a.click();
     }
 
     /* ============================================================
-       7. ATTENDANCE & EXCEL
+       7. ATTENDANCE & STATS
        ============================================================ */
     function curDay() { return $("attDate").value; }
     const attHas = (k, cat, id) => ((att[k] || {})[cat] || {})[id] === true;
+
     function renderAttList() {
       const k = curDay(); if (!k) return;
-      $("attSummary").textContent = CATS.map(c => `${c.name}: ${students.filter(s => attHas(k, c.k, s.id)).length}`).join(" • ") + ` — من إجمالي ${students.length}`;
-      if (!students.length) { $("attList").innerHTML = `<div class="empty">لا يوجد طلاب</div>`; return; }
+      $("attSummary").textContent = CATS.map(c => `${c.short}: ${students.filter(s => attHas(k, c.k, s.id)).length}`).join(" • ") + ` — of ${students.length}`;
+      if (!students.length) { $("attList").innerHTML = `<div class="empty">No students yet</div>`; return; }
       $("attList").innerHTML = students.map(s => {
         const n = CATS.filter(c => attHas(k, c.k, s.id)).length;
         return `
-      <div class="card attrow" style="animation:none">
-        <div class="item">
-          ${avatar(s)}
-          <div class="grow"><h3>${esc(s.name)}</h3></div>
-          <span class="pill ${n === CATS.length ? "green" : n ? "gold" : ""}">${n} / ${CATS.length}</span>
-        </div>
-        <div class="attchecks">
-          ${CATS.map(c => `
-            <label>${c.short}
-              <input type="checkbox" class="chk abs" ${attHas(k, c.k, s.id) ? "checked" : ""} onchange="setAtt('${c.k}','${esc(s.id)}',this.checked)">
-            </label>`).join("")}
-        </div>
-      </div>`;
+          <div class="card attrow" style="animation:none">
+            <div class="item">
+              ${avatar(s)}
+              <div class="grow"><h3>${esc(s.name)}</h3></div>
+              <span class="pill ${n === CATS.length ? "green" : n ? "gold" : ""}">${n} / ${CATS.length}</span>
+            </div>
+            <div class="attchecks">
+              ${CATS.map(c => `
+                <label>${c.short}
+                  <input type="checkbox" class="chk abs" ${attHas(k, c.k, s.id) ? "checked" : ""} onchange="setAtt('${c.k}','${esc(s.id)}',this.checked)">
+                </label>`).join("")}
+            </div>
+          </div>`;
       }).join("");
     }
+
     async function setAtt(cat, id, val) {
       try { await col("attendance").doc(curDay()).set({ [cat]: { [id]: val } }, { merge: true }); }
-      catch (e) { toast("خطأ: " + e.message, true); }
+      catch (e) { toast("Failed: " + e.message, true); }
     }
+
     async function markCat(cat) {
       const m = {}; students.forEach(s => m[s.id] = true);
       await col("attendance").doc(curDay()).set({ [cat]: m }, { merge: true });
-      toast(`تم تسجيل حضور الكل في ${CATS.find(c => c.k === cat).name} ✅`);
+      toast(`Marked all present in ${CATS.find(c => c.k === cat).short} ✅`);
     }
+
     async function clearDay() {
-      if (!confirm(`تسجيل غياب الكل لهذه الجمعة؟`)) return;
+      if (!confirm(`Mark everyone absent for this Friday?`)) return;
       const m = {}; students.forEach(s => m[s.id] = false);
       const data = {}; CATS.forEach(c => data[c.k] = m);
       await col("attendance").doc(curDay()).set(data, { merge: true });
-      toast("تم تسجيل الغياب");
+      toast("Marked all absent");
     }
 
     const pastFridays = () => { const today = dkey(new Date()); return FRIDAYS.map(dkey).filter(k => k <= today); };
@@ -1701,54 +1818,62 @@
 
     function renderAttStats() {
       const st = attStats(), tk = {}; CATS.forEach(c => tk[c.k] = takenWeeks(c.k).length);
-      $("attWeeks").textContent = `الأسابيع حتى الآن — ` + CATS.map(c => `${c.short}: ${tk[c.k]}`).join(" • ");
-      if (!st.length) { $("topActive").innerHTML = $("attPct").innerHTML = `<div class="empty">لا يوجد بيانات</div>`; return; }
+      $("attWeeks").textContent = `Weeks taken so far — ` + CATS.map(c => `${c.short}: ${tk[c.k]}`).join(" • ");
+      if (!st.length) { $("topActive").innerHTML = $("attPct").innerHTML = `<div class="empty">No students yet</div>`; return; }
       const medals = ["🥇", "🥈", "🥉", "4", "5"];
       $("topActive").innerHTML = st.slice(0, 5).map((x, i) => `
-    <div class="top">
-      <div class="medal">${medals[i]}</div>
-      ${avatar(x.s)}
-      <div class="grow"><b>${esc(x.s.name)}</b><div class="pctbar"><i style="width:${x.pct}%"></i></div></div>
-      <span class="pill gold">${x.pct}%</span>
-    </div>`).join("");
+        <div class="top">
+          <div class="medal">${medals[i]}</div>
+          ${avatar(x.s)}
+          <div class="grow">
+            <b>${esc(x.s.name)}</b>
+            <div class="pctbar"><i style="width:${x.pct}%"></i></div>
+          </div>
+          <span class="pill gold">${x.pct}%</span>
+        </div>`).join("");
+
       $("attPct").innerHTML = st.map(x => `
-    <div class="top">
-      <div class="grow">
-        <b>${esc(x.s.name)}</b> <span class="muted">${x.n}/${x.total}</span>
-        <div class="pctbar"><i style="width:${x.pct}%"></i></div>
-        <div class="catpct">${CATS.map(c => `<span class="pill">${c.short} ${x.per[c.k]}/${tk[c.k]} • ${tk[c.k] ? Math.round(x.per[c.k] / tk[c.k] * 100) : 0}%</span>`).join("")}</div>
-      </div>
-      <span class="pill ${x.pct >= 75 ? "green" : x.pct >= 50 ? "gold" : "red"}">${x.pct}%</span>
-    </div>`).join("");
+        <div class="top">
+          <div class="grow">
+            <b>${esc(x.s.name)}</b> <span class="muted">${x.n}/${x.total}</span>
+            <div class="pctbar"><i style="width:${x.pct}%"></i></div>
+            <div class="catpct">
+              ${CATS.map(c => `<span class="pill">${c.short} ${x.per[c.k]}/${tk[c.k]} • ${tk[c.k] ? Math.round(x.per[c.k] / tk[c.k] * 100) : 0}%</span>`).join("")}
+            </div>
+          </div>
+          <span class="pill ${x.pct >= 75 ? "green" : x.pct >= 50 ? "gold" : "red"}">${x.pct}%</span>
+        </div>`).join("");
     }
 
     function saveSheet(rows, sheetName, fileName, widths) {
-      if (!window.XLSX) { toast("لم يتم تحميل مكتبة Excel", true); return; }
+      if (!window.XLSX) { toast("Excel library error", true); return; }
       const ws = XLSX.utils.aoa_to_sheet(rows);
       ws["!cols"] = widths.map(w => ({ wch: w }));
       const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, sheetName);
-      XLSX.writeFile(wb, fileName); toast("تم تنزيل " + fileName + " 📊");
+      XLSX.writeFile(wb, fileName); toast("Downloaded " + fileName + " 📊");
     }
+
     function exportAtt(catKey) {
       const c = CATS.find(x => x.k === catKey), today = dkey(new Date());
-      if (!students.length) { toast("لا يوجد طلاب", true); return; }
-      const head = ["الطالب", ...FRIDAYS.map((d, i) => `أسبوع ${i + 1} — ${dlabel(d)}`), "حضر", "النسبة"];
+      if (!students.length) { toast("No students yet", true); return; }
+      const head = ["Student", ...FRIDAYS.map((d, i) => `W${i + 1} — ${dlabel(d)}`), "Attended", "Percentage"];
       const rows = students.map(s => {
         let n = 0, t = 0;
-        const cells = FRIDAYS.map(d => { const k = dkey(d); if (k > today || !catTaken(k, c.k)) return ""; t++; const v = attHas(k, c.k, s.id); if (v) n++; return v ? "نعم" : "لا"; });
+        const cells = FRIDAYS.map(d => { const k = dkey(d); if (k > today || !catTaken(k, c.k)) return ""; t++; const v = attHas(k, c.k, s.id); if (v) n++; return v ? "Yes" : "No"; });
         return [s.name, ...cells, `${n} / ${t}`, (t ? Math.round(n / t * 100) : 0) + "%"];
       });
-      saveSheet([head, ...rows], c.name, `حضور - ${c.name}.xlsx`, [28, ...FRIDAYS.map(() => 18), 12, 12]);
+      saveSheet([head, ...rows], c.short, `Attendance - ${c.short}.xlsx`, [28, ...FRIDAYS.map(() => 18), 12, 12]);
     }
+
     function exportEftkad() {
-      if (!students.length) { toast("لا يوجد طلاب", true); return; }
-      const head = ["الطالب", "جولة 1", "جولة 2", "جولة 3", "جولة 4", "جولة 5", "عدد الزيارات", "ملاحظات"];
-      const rows = students.map(s => { const r = s.eftkad || []; return [s.name, ...[0, 1, 2, 3, 4].map(i => r[i] ? "نعم" : "لا"), r.filter(Boolean).length + " / 5", s.eftkadNote || ""]; });
-      saveSheet([head, ...rows], "الافتقاد", "الافتقاد.xlsx", [28, 10, 10, 10, 10, 10, 10, 60]);
+      if (!students.length) { toast("No students yet", true); return; }
+      const head = ["Student", "Round 1", "Round 2", "Round 3", "Round 4", "Round 5", "Visits", "Comments"];
+      const rows = students.map(s => { const r = s.eftkad || []; return [s.name, ...[0, 1, 2, 3, 4].map(i => r[i] ? "Yes" : "No"), r.filter(Boolean).length + " / 5", s.eftkadNote || ""]; });
+      saveSheet([head, ...rows], "Eftkad", "Eftkad.xlsx", [28, 10, 10, 10, 10, 10, 10, 60]);
     }
 
     /* ============================================================
-       8. SPIRITUALS (NOTA RO7YA)
+       8. SPIRITUALS (Read-only for Admin)
        ============================================================ */
     function daysSoFar(m) {
       const now = new Date(), cur = dkey(now).slice(0, 7);
@@ -1756,166 +1881,301 @@
       if (m === cur) return now.getDate();
       return new Date(+m.slice(0, 4), +m.slice(5), 0).getDate();
     }
+
     function spiritOf(s, m) {
       const d = (spirit[s.id] || {}).days || {}, n = daysSoFar(m), c = {}, t = {};
       SPIRIT.forEach(x => { c[x.k] = t[x.k] = 0; for (let i = 1; i <= n; i++) { const k = `${m}-${String(i).padStart(2, "0")}`; if (!spApplies(x, k)) continue; t[x.k]++; if ((d[k] || {})[x.k]) c[x.k]++; } });
       const sum = SPIRIT.reduce((a, x) => a + c[x.k], 0), tot = SPIRIT.reduce((a, x) => a + t[x.k], 0);
       return { c, t, n, e3: ((spirit[s.id] || {}).e3traf || {})[m] === true, pct: tot ? Math.round(sum / tot * 100) : 0 };
     }
+
     function renderSpirit() {
       const m = $("spMonth").value; if (!m) return;
-      if (!students.length) { $("spSummary").textContent = ""; $("spList").innerHTML = `<div class="empty">لا يوجد طلاب</div>`; return; }
+      if (!students.length) { $("spSummary").textContent = ""; $("spList").innerHTML = `<div class="empty">No students yet</div>`; return; }
       const st = students.map(s => ({ s, ...spiritOf(s, m) }));
       const n = daysSoFar(m);
-      $("spSummary").textContent = n ? `${n} يوم حتى الآن • تم الاعتراف من ${st.filter(x => x.e3).length} من ${students.length}` : "لم يبدأ هذا الشهر بعد";
+      $("spSummary").textContent = n ? `${n} days so far • Confession done by ${st.filter(x => x.e3).length} of ${students.length}` : "Month has not started yet";
       $("spList").innerHTML = st.map(x => `
-    <div class="card" style="animation:none;cursor:pointer" onclick="openSpirit('${esc(x.s.id)}')">
-      <div class="item">
-        ${avatar(x.s)}
-        <div class="grow">
-          <h3>${esc(x.s.name)}</h3>
-          <div class="catpct">${SPIRIT.map(y => `<span class="pill">${y.em} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}<span class="pill ${x.e3 ? "green" : "red"}">✝️ اعتراف ${x.e3 ? "✓" : "✗"}</span></div>
-        </div>
-        <span class="pill ${x.pct >= 75 ? "green" : x.pct >= 50 ? "gold" : "red"}">${x.pct}%</span>
-      </div>
-      <div class="pctbar"><i style="width:${x.pct}%"></i></div>
-    </div>`).join("");
+        <div class="card" style="animation:none;cursor:pointer" onclick="openSpirit('${esc(x.s.id)}')">
+          <div class="item">
+            ${avatar(x.s)}
+            <div class="grow">
+              <h3>${esc(x.s.name)}</h3>
+              <div class="catpct">
+                ${SPIRIT.map(y => `<span class="pill">${y.em} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}
+                <span class="pill ${x.e3 ? "green" : "red"}">✝️ Confession ${x.e3 ? "✓" : "✗"}</span>
+              </div>
+            </div>
+            <span class="pill ${x.pct >= 75 ? "green" : x.pct >= 50 ? "gold" : "red"}">${x.pct}%</span>
+          </div>
+          <div class="pctbar"><i style="width:${x.pct}%"></i></div>
+        </div>`).join("");
     }
-    const tsFull = t => { const d = new Date(t); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}`; };
-    const tsl = (t, k) => !t ? "" : dkey(new Date(t)) === k ? `<small>${new Date(t).toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}</small>` : `<small style="color:var(--gold)">${tsFull(t)}</small>`;
+
+    const tsFull = t => { const d = new Date(t); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`; };
+    const tsl = (t, k) => !t ? "" : dkey(new Date(t)) === k ? `<small>${new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</small>` : `<small class="late">${tsFull(t)}</small>`;
 
     function openSpirit(id) {
       const s = students.find(x => x.id === id); if (!s) return;
       const m = $("spMonth").value, x = spiritOf(s, m), d = (spirit[id] || {}).days || {}, ts = (spirit[id] || {}).ts || {}, e3t = ((spirit[id] || {}).e3ts || {})[m];
       const rows = Array.from({ length: x.n }, (_, i) => {
         const k = `${m}-${String(i + 1).padStart(2, "0")}`, v = d[k] || {};
-        const wd = new Date(+m.slice(0, 4), +m.slice(5) - 1, i + 1).toLocaleDateString("ar-EG", { weekday: "short" });
+        const wd = new Date(+m.slice(0, 4), +m.slice(5) - 1, i + 1).toLocaleDateString("en-GB", { weekday: "short" });
         return `<tr><td>${wd} ${i + 1}</td>${SPIRIT.map(y => !spApplies(y, k) ? `<td></td>` : v[y.k] ? `<td class="y">✓${tsl((ts[k] || {})[y.k], k)}</td>` : `<td class="n">—</td>`).join("")}</tr>`;
       }).join("");
       openModal(`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-      ${avatar(s)}
-      <div>
-        <h2 style="font-size:22px">${esc(s.name)}</h2>
-        <p class="muted">${MONTHS[+m.slice(5) - 1]} ${m.slice(0, 4)} • الاعتراف: <b>${x.e3 ? "✅ تم" : "❌ لم يتم بعد"}</b>${x.e3 && e3t ? ` (${tsFull(e3t)})` : ""}</p>
-      </div>
-    </div>
-    <div class="catpct" style="margin-bottom:10px">${SPIRIT.map(y => `<span class="pill gold">${y.em} ${y.name} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}</div>
-    ${x.n ? `<table class="daygrid"><tr><th>اليوم</th>${SPIRIT.map(y => `<th>${y.em}<br>${y.short}</th>`).join("")}</tr>${rows}</table>` : `<div class="empty">لم يبدأ هذا الشهر بعد</div>`}
-  `);
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          ${avatar(s)}
+          <div>
+            <h2 style="font-size:22px">${esc(s.name)}</h2>
+            <p class="muted">${MONTHS[+m.slice(5) - 1]} ${m.slice(0, 4)} • Confession: <b>${x.e3 ? "✅ done" : "❌ not yet"}</b>${x.e3 && e3t ? ` (${tsFull(e3t)})` : ""}</p>
+          </div>
+        </div>
+        <div class="catpct" style="margin-bottom:10px">${SPIRIT.map(y => `<span class="pill gold">${y.em} ${y.name} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}</div>
+        ${x.n ? `<table class="daygrid"><tr><th>DAY</th>${SPIRIT.map(y => `<th>${y.em}<br>${y.short.toUpperCase()}</th>`).join("")}</tr>${rows}</table>` : `<div class="empty">Month has not started yet</div>`}`);
     }
 
     /* ============================================================
-       9. EFTKAD
+       9. EFTKAD (Home Visits)
        ============================================================ */
     function renderEftkad() {
-      if (!students.length) { $("eftList").innerHTML = `<div class="empty">لا يوجد طلاب</div>`; return; }
+      if (!students.length) { $("eftList").innerHTML = `<div class="empty">No students yet</div>`; return; }
       $("eftList").innerHTML = students.map(s => {
-        const r = s.eftkad || [false, false, false, false, false], done = r.filter(Boolean).length;
+        const r = s.eftkad || [false, false, false, false, false];
+        const done = r.filter(Boolean).length;
         return `
-      <div class="card" style="animation:none">
-        <div class="item" style="margin-bottom:10px">
-          ${avatar(s)}
-          <div class="grow"><h3>${esc(s.name)}</h3><p>${done} / 5 زيارات</p></div>
-          <div class="rounds">${[0, 1, 2, 3, 4].map(i => `<label>جولة ${i + 1}<input type="checkbox" class="chk" ${r[i] ? "checked" : ""} onchange="setRound('${esc(s.id)}',${i},this.checked)"></label>`).join("")}</div>
-        </div>
-        <div class="row">
-          <textarea class="inp" id="note-${esc(s.id)}" placeholder="ملاحظات الافتقاد..." style="min-height:54px">${esc(s.eftkadNote || "")}</textarea>
-          <button class="btn green sm" onclick="saveNote('${esc(s.id)}')">💾</button>
-        </div>
-      </div>`;
+          <div class="card" style="animation:none">
+            <div class="item" style="margin-bottom:10px">
+              ${avatar(s)}
+              <div class="grow"><h3>${esc(s.name)}</h3><p>${done} / 5 visits</p></div>
+              <div class="rounds">
+                ${[0, 1, 2, 3, 4].map(i => `<label>R${i + 1}<input type="checkbox" class="chk" ${r[i] ? "checked" : ""} onchange="setRound('${esc(s.id)}',${i},this.checked)"></label>`).join("")}
+              </div>
+            </div>
+            <div class="row">
+              <textarea class="inp" id="note-${esc(s.id)}" placeholder="Teacher notes for ${esc(s.name)}..." style="min-height:56px">${esc(s.eftkadNote || "")}</textarea>
+              <button class="btn green sm" onclick="saveNote('${esc(s.id)}')">💾</button>
+            </div>
+          </div>`;
       }).join("");
     }
+
     async function setRound(id, i, val) {
       const s = students.find(x => x.id === id); const r = [...(s.eftkad || [false, false, false, false, false])]; r[i] = val;
       await col("students").doc(id).update({ eftkad: r });
     }
-    async function saveNote(id) { await col("students").doc(id).update({ eftkadNote: $("note-" + id).value.trim() }); toast("تم حفظ الملاحظات ✅"); }
+    async function saveNote(id) {
+      await col("students").doc(id).update({ eftkadNote: $("note-" + id).value.trim() });
+      toast("Note saved ✅");
+    }
 
     /* ============================================================
-       10. EVENTS
+       10. NOTIFICATIONS & REMINDERS
+       ============================================================ */
+    async function sendQuickNotif(type) {
+      let title = "", body = "";
+      if (type === "morning") {
+        title = "🌅 Good Morning! Morning Prayer Reminder";
+        body = "Start your blessed day with morning prayer and agpeya! 'O God, my God, unto Thee do I rise early...' 🙏";
+      } else if (type === "evening") {
+        title = "🌙 Good Evening! Night Prayer Reminder";
+        body = "Don't forget to take your spiritual note and pray before sleeping. May the peace of Christ protect you! 🕊️";
+      }
+
+      await col("notifications").add({
+        title,
+        body,
+        type,
+        createdAt: Date.now()
+      });
+      toast("Sent reminder to all students! 🔔");
+    }
+
+    async function sendBirthdayNotifs() {
+      const today = new Date();
+      const m = String(today.getMonth() + 1).padStart(2, "0");
+      const d = String(today.getDate()).padStart(2, "0");
+      const md = `-${m}-${d}`;
+
+      const bdayStudents = students.filter(s => s.birthday && s.birthday.endsWith(md));
+      if (!bdayStudents.length) {
+        toast("No students have a birthday today (" + d + "/" + m + ") 🎉");
+        return;
+      }
+
+      for (const s of bdayStudents) {
+        await col("notifications").add({
+          title: `🎂 Happy Birthday ${s.name}! 🎉`,
+          body: `Wishing our beloved ${s.name} a blessed and joyful birthday in Christ! 🎈🍰`,
+          type: "birthday",
+          studentId: s.id,
+          createdAt: Date.now()
+        });
+      }
+      toast(`Sent birthday wishes for ${bdayStudents.length} student(s)! 🎂`);
+    }
+
+    async function broadcastCustomNotif() {
+      const title = $("notifTitle").value.trim();
+      const body = $("notifBody").value.trim();
+      if (!title || !body) { toast("Please enter both title and message", true); return; }
+
+      await col("notifications").add({
+        title,
+        body,
+        type: "custom",
+        createdAt: Date.now()
+      });
+
+      $("notifTitle").value = "";
+      $("notifBody").value = "";
+      toast("Broadcast sent successfully! 🚀");
+    }
+
+    function renderNotifHistory() {
+      if (!notifs.length) {
+        $("notifHistory").innerHTML = `<div class="empty">No reminders sent yet</div>`;
+        return;
+      }
+      $("notifHistory").innerHTML = notifs.map(n => `
+        <div class="log" style="border-left-color:var(--gold);margin-bottom:8px">
+          <b>${esc(n.title)}</b>
+          <p style="font-size:12px;margin:3px 0">${esc(n.body)}</p>
+          <span class="muted" style="font-size:10px">${new Date(n.createdAt).toLocaleString()}</span>
+        </div>`).join("");
+    }
+
+    /* ============================================================
+       11. EVENTS, CHALLENGES, PSALMS & SHOP
        ============================================================ */
     async function addNews() {
       const title = $("newsTitle").value.trim(), text = $("newsText").value.trim();
-      if (!title) { toast("اكتب العنوان", true); return; }
+      if (!title) { toast("Title required", true); return; }
       await col("events").add({ title, text, votes: {}, createdAt: Date.now() });
-      $("newsTitle").value = ""; $("newsText").value = ""; toast("تم النشر 📢");
+      $("newsTitle").value = ""; $("newsText").value = ""; toast("Published 📢");
     }
+
     function renderNews() {
-      if (!news.length) { $("newsList").innerHTML = `<div class="empty">لا توجد أحداث</div>`; return; }
+      if (!news.length) { $("newsList").innerHTML = `<div class="empty">No events yet</div>`; return; }
       $("newsList").innerHTML = news.map(n => {
         const v = Object.values(n.votes || {}); const g = v.filter(x => x === true).length, no = v.filter(x => x === false).length;
         return `
-      <div class="card">
-        <div class="item">
-          <div class="grow">
-            <h3>${esc(n.title)}</h3><p>${esc(n.text)}</p>
-            <div style="margin-top:6px"><span class="pill green">✅ ${g} حاضر</span> <span class="pill red">❌ ${no} معتذر</span></div>
-          </div>
-          <button class="btn red sm" onclick="delDoc('events','${n.id}')">🗑</button>
-        </div>
-        ${g ? `<p class="muted" style="margin-top:8px">الحاضرين: ${Object.entries(n.votes).filter(([k, val]) => val).map(([k]) => esc((students.find(s => s.id === k) || {}).name || k)).join(", ")}</p>` : ""}
-      </div>`;
+          <div class="card">
+            <div class="item">
+              <div class="grow">
+                <h3>${esc(n.title)}</h3>
+                <p>${esc(n.text)}</p>
+                <div style="margin-top:6px"><span class="pill green">✅ ${g} going</span> <span class="pill red">❌ ${no} not</span></div>
+              </div>
+              <button class="btn red sm" onclick="delDoc('events','${n.id}')">🗑</button>
+            </div>
+            ${g ? `<p class="muted" style="margin-top:8px">Attending: ${Object.entries(n.votes).filter(([k, v]) => v).map(([k]) => esc((students.find(s => s.id === k) || {}).name || k)).join(", ")}</p>` : ""}
+          </div>`;
       }).join("");
     }
-    async function delDoc(c, id) { if (!confirm("حذف هذا العنصر؟")) return; await col(c).doc(id).delete(); toast("تم الحذف"); }
 
-    /* ============================================================
-       11. CHALLENGES
-       ============================================================ */
+    async function delDoc(c, id) { if (!confirm("Delete this?")) return; await col(c).doc(id).delete(); toast("Deleted"); }
+
     let qCount = 0;
     function addQ() {
       qCount++; const n = qCount;
       const d = document.createElement("div"); d.className = "qb";
       d.innerHTML = `
-    <div class="row" style="margin-bottom:8px">
-      <input class="inp q" placeholder="السؤال ${n}">
-      <button class="btn red sm" onclick="this.closest('.qb').remove()">✕</button>
-    </div>
-    <div class="opts">
-      ${[0, 1, 2, 3].map(i => `
-        <div class="opt">
-          <input type="radio" name="ans${n}" value="${i}" ${i === 0 ? "checked" : ""}>
-          <input class="inp o" placeholder="الخيار ${i + 1}">
-        </div>`).join("")}
-    </div>`;
+        <div class="row" style="margin-bottom:8px">
+          <input class="inp q" placeholder="Question ${n}">
+          <button class="btn red sm" onclick="this.closest('.qb').remove()">✕</button>
+        </div>
+        <div class="opts" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${[0, 1, 2, 3].map(i => `
+            <div class="opt" style="display:flex;align-items:center;gap:6px">
+              <input type="radio" name="ans${n}" value="${i}" ${i === 0 ? "checked" : ""}>
+              <input class="inp o" placeholder="Option ${String.fromCharCode(65 + i)}" style="margin:0">
+            </div>`).join("")}
+        </div>`;
       $("qBuilder").appendChild(d);
     }
+
     async function saveChallenge() {
       const title = $("chTitle").value.trim(), desc = $("chDesc").value.trim();
-      if (!title) { toast("اكتب عنوان التحدي", true); return; }
+      if (!title) { toast("Title required", true); return; }
       const questions = [];
       for (const qb of document.querySelectorAll("#qBuilder .qb")) {
         const q = qb.querySelector(".q").value.trim(); if (!q) continue;
         const options = [...qb.querySelectorAll(".o")].map(x => x.value.trim()).filter(Boolean);
-        if (options.length < 2) { toast("كل سؤال يحتاج خيارين على الأقل", true); return; }
+        if (options.length < 2) { toast("Each question needs at least 2 options", true); return; }
         const answer = +qb.querySelector("input[type=radio]:checked").value;
-        if (answer >= options.length) { toast("حدد خياراً مكتوباً كإجابة صحيحة", true); return; }
+        if (answer >= options.length) { toast("Selected correct answer must have text", true); return; }
         questions.push({ q, options, answer });
       }
-      if (!questions.length) { toast("أضف سؤالاً واحداً على الأقل", true); return; }
+      if (!questions.length) { toast("Add at least one question", true); return; }
       await col("challenges").add({ title, desc, questions, createdAt: Date.now() });
       $("chTitle").value = ""; $("chDesc").value = ""; $("qBuilder").innerHTML = ""; qCount = 0; addQ(); addQ();
-      toast("تم حفظ التحدي ⚔️");
+      toast("Challenge saved ⚔️");
     }
+
     function renderChal() {
-      if (!challenges.length) { $("chalList").innerHTML = `<div class="empty">لا توجد تحديات</div>`; return; }
+      if (!challenges.length) { $("chalList").innerHTML = `<div class="empty">No challenges yet</div>`; return; }
       $("chalList").innerHTML = challenges.map(c => {
         const done = students.filter(s => (s.done || {})[c.id]).length;
         return `
-      <div class="card item">
-        <div class="grow">
-          <h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>
-          <div style="margin-top:6px"><span class="pill">${(c.questions || []).length} أسئلة</span> <span class="pill gold">${done} أنجزوه</span></div>
-        </div>
-        <button class="btn red sm" onclick="delDoc('challenges','${c.id}')">🗑</button>
-      </div>`;
+          <div class="card item">
+            <div class="grow">
+              <h3>${esc(c.title)}</h3>
+              <p>${esc(c.desc)}</p>
+              <div style="margin-top:6px"><span class="pill">${(c.questions || []).length} questions</span> <span class="pill gold">${done} completed</span></div>
+            </div>
+            <button class="btn red sm" onclick="delDoc('challenges','${c.id}')">🗑</button>
+          </div>`;
       }).join("");
     }
 
-    /* ============================================================
-       12. SHOP
-       ============================================================ */
+    let psalms = [];
+    col("psalms").onSnapshot(s => { psalms = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => (y.at || 0) - (x.at || 0)); renderPsalms(); });
+
+    function renderPsalms() {
+      const nm = p => esc((students.find(s => s.id === p.sid) || {}).name || p.name || p.sid);
+      const when = t => new Date(t).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const pend = psalms.filter(p => p.status === "pending"), done = psalms.filter(p => p.status !== "pending").slice(0, 30);
+      const b = $("psBadge"); b.textContent = pend.length; b.style.display = pend.length ? "grid" : "none";
+      $("psPending").innerHTML = pend.length ? pend.map(p => `
+        <div class="card">
+          <h3 style="font-size:18px">${nm(p)}</h3>
+          <p dir="auto" style="font-weight:800;font-size:15px;margin:4px 0">📜 ${esc(p.text)}</p>
+          <p class="muted" style="font-size:11px">${when(p.at)}</p>
+          <div class="btngrid" style="margin-top:10px">
+            <button class="btn green sm" onclick="decidePsalm('${p.id}',true)">✓ Approve +${PSALM_PTS}</button>
+            <button class="btn red sm" onclick="decidePsalm('${p.id}',false)">✕ Reject</button>
+          </div>
+        </div>`).join("") : `<div class="empty">No pending psalm requests</div>`;
+
+      $("psDone").innerHTML = done.length ? done.map(p => `
+        <div class="log" style="border-left-color:var(--${p.status === "approved" ? "green" : "red"})">
+          <b>${nm(p)}</b> — <span dir="auto">${esc(p.text)}</span>
+          <span class="pill ${p.status === "approved" ? "green" : "red"}">${p.status === "approved" ? "+" + PSALM_PTS : "rejected"}</span>
+          <span class="muted">${when(p.decidedAt || p.at)}</span>
+        </div>`).join("") : `<p class="muted">No recent requests</p>`;
+    }
+
+    async function decidePsalm(id, ok) {
+      const p = psalms.find(x => x.id === id); if (!p) return;
+      const pref = col("psalms").doc(id), sref = col("students").doc(p.sid);
+      try {
+        await db.runTransaction(async t => {
+          const pd = await t.get(pref);
+          if (!pd.exists || pd.data().status !== "pending") throw new Error("Already decided");
+          if (ok) {
+            const sd = await t.get(sref);
+            if (!sd.exists) throw new Error("Student not found");
+            const d = sd.data();
+            t.update(sref, { coins: (d.coins || 0) + PSALM_PTS, earned: (d.earned || 0) + PSALM_PTS });
+            t.set(col("history").doc(), { sid: p.sid, amt: PSALM_PTS, reason: "Psalm memorized: " + p.text, at: Date.now() });
+          }
+          t.update(pref, { status: ok ? "approved" : "rejected", decidedAt: Date.now() });
+        });
+        toast(ok ? `Approved: +${PSALM_PTS} Jokens ✅` : "Rejected");
+      } catch (e) { toast("Failed: " + e.message, true); }
+    }
+
     let giftPhoto = "";
     function loadGiftPhoto(input) {
       const f = input.files[0]; if (!f) return;
@@ -1925,116 +2185,38 @@
         const ctx = c.getContext("2d"); const m = Math.min(img.width, img.height);
         ctx.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, S, S);
         giftPhoto = c.toDataURL("image/png", .8); URL.revokeObjectURL(url);
-        $("gPreview").src = giftPhoto; $("gPreview").style.display = "block"; $("gPhLabel").textContent = "📷 تغيير الصورة";
+        $("gPreview").src = giftPhoto; $("gPreview").style.display = "block"; $("gPhLabel").textContent = "📷 Change photo";
       };
       img.src = url;
     }
+
     async function addGift() {
       const name = $("gName").value.trim(), emoji = $("gEmoji").value.trim() || "🎁", cost = +$("gCost").value, qty = +$("gQty").value;
-      if (!name || !cost || !qty) { toast("أكمل الاسم والسعر والكمية", true); return; }
+      if (!name || !cost || !qty) { toast("Fill name, cost and quantity", true); return; }
       await col("shop").add({ name, emoji, cost, qty, photo: giftPhoto, createdAt: Date.now() });
       ["gName", "gEmoji", "gCost", "gQty", "gFile"].forEach(i => $(i).value = "");
-      giftPhoto = ""; $("gPreview").style.display = "none"; $("gPhLabel").textContent = "📷 اختيار صورة (اختياري)";
-      toast("تمت إضافة الهدية 🎁");
+      giftPhoto = ""; $("gPreview").style.display = "none"; $("gPhLabel").textContent = "📷 Tap to add photo";
+      toast("Gift added 🎁");
     }
+
     function renderShop() {
-      if (!shop.length) { $("shopList").innerHTML = `<div class="empty">المتجر خالي</div>`; return; }
+      if (!shop.length) { $("shopList").innerHTML = `<div class="empty">Shop is empty</div>`; return; }
       $("shopList").innerHTML = shop.map(g => `
-    <div class="card item">
-      ${g.photo ? `<img class="gift-ph" src="${g.photo}" alt="">` : `<div style="font-size:32px;width:56px;text-align:center">${esc(g.emoji || "🎁")}</div>`}
-      <div class="grow"><h3>${esc(g.name)}</h3><p>${g.cost} ${COIN} للقطعة</p></div>
-      <div class="row">
-        <button class="btn gray sm" onclick="qty('${g.id}',-1)">−</button>
-        <span class="pill gold" style="min-width:36px;justify-content:center">${g.qty}</span>
-        <button class="btn gray sm" onclick="qty('${g.id}',1)">+</button>
-      </div>
-      <button class="btn red sm" onclick="delDoc('shop','${g.id}')">🗑</button>
-    </div>`).join("");
+        <div class="card item">
+          ${g.photo ? `<img class="gift-ph" src="${g.photo}" alt="">` : `<div style="font-size:34px;width:60px;text-align:center">${esc(g.emoji || "🎁")}</div>`}
+          <div class="grow"><h3>${esc(g.name)}</h3><p>${g.cost} ${COIN} each</p></div>
+          <div class="row">
+            <button class="btn gray sm" onclick="qty('${g.id}',-1)">−</button>
+            <span class="pill gold" style="min-width:40px;justify-content:center">${g.qty}</span>
+            <button class="btn gray sm" onclick="qty('${g.id}',1)">+</button>
+          </div>
+          <button class="btn red sm" onclick="delDoc('shop','${g.id}')">🗑</button>
+        </div>`).join("");
     }
     async function qty(id, d) { await col("shop").doc(id).update({ qty: FV.increment(d) }); }
 
     /* ============================================================
-       13. PSALMS
-       ============================================================ */
-    let psalms = [];
-    col("psalms").onSnapshot(s => { psalms = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((x, y) => (y.at || 0) - (x.at || 0)); renderPsalms(); });
-    function renderPsalms() {
-      const nm = p => esc((students.find(s => s.id === p.sid) || {}).name || p.name || p.sid);
-      const when = t => new Date(t).toLocaleString("ar-EG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-      const pend = psalms.filter(p => p.status === "pending"), done = psalms.filter(p => p.status !== "pending").slice(0, 30);
-      const b = $("psBadge"); b.textContent = pend.length; b.style.display = pend.length ? "grid" : "none";
-      $("psPending").innerHTML = pend.length ? pend.map(p => `
-    <div class="card">
-      <h3 style="font-size:17px">${nm(p)}</h3>
-      <p style="font-weight:800;font-size:15px;margin:4px 0">📜 ${esc(p.text)}</p>
-      <p class="muted" style="font-size:11px">${when(p.at)}</p>
-      <div class="btngrid" style="margin-top:10px">
-        <button class="btn green sm" onclick="decidePsalm('${p.id}',true)">✓ اعتماد (+${PSALM_PTS} ${COIN})</button>
-        <button class="btn red sm" onclick="decidePsalm('${p.id}',false)">✕ رفض وإعادة</button>
-      </div>
-    </div>`).join("") : `<div class="empty">لا توجد طلبات معلقة</div>`;
-      $("psDone").innerHTML = done.length ? done.map(p => `
-    <div class="log" style="border-right-color:var(--${p.status === "approved" ? "green" : "red"})">
-      <b>${nm(p)}</b> — <span>${esc(p.text)}</span> <span class="pill ${p.status === "approved" ? "green" : "red"}">${p.status === "approved" ? "+" + PSALM_PTS : "مرفوض"}</span> <span class="muted">${when(p.decidedAt || p.at)}</span>
-    </div>`).join("") : `<p class="muted">لا شيء بعد</p>`;
-    }
-    async function decidePsalm(id, ok) {
-      const p = psalms.find(x => x.id === id); if (!p) return;
-      const pref = col("psalms").doc(id), sref = col("students").doc(p.sid);
-      try {
-        await db.runTransaction(async t => {
-          const pd = await t.get(pref);
-          if (!pd.exists || pd.data().status !== "pending") throw new Error("تم اتخاذ القرار مسبقاً");
-          if (ok) {
-            const sd = await t.get(sref);
-            if (!sd.exists) throw new Error("الطالب غير موجود");
-            const d = sd.data();
-            t.update(sref, {
-              coins: (d.coins || 0) + PSALM_PTS,
-              earned: (d.earned || 0) + PSALM_PTS
-            });
-            t.set(col("history").doc(), { sid: p.sid, amt: PSALM_PTS, reason: "تسميع مزمور: " + p.text, at: Date.now() });
-          }
-          t.update(pref, { status: ok ? "approved" : "rejected", decidedAt: Date.now() });
-        });
-        toast(ok ? `تم اعتماد المزمور: +${PSALM_PTS} نقاط ✅` : "تم الرفض");
-      } catch (e) { toast("خطأ: " + e.message, true); }
-    }
-
-    /* ============================================================
-       14. SCANNER
-       ============================================================ */
-    let scanner = null, scanning = false, lastScan = { id: "", t: 0 };
-    function toggleScan() { if (scanning) stopScan(); else startScan(); }
-    async function startScan() {
-      if (!op) { toast("اختر قاعدة أولاً", true); return; }
-      try {
-        scanner = new Html5Qrcode("reader");
-        $("reader").classList.add("on");
-        await scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 240, height: 240 } }, onScan, () => { });
-        scanning = true; $("scanBtn").textContent = "⏹ إيقاف الكاميرا";
-      } catch (e) { toast("تعذر تشغيل الكاميرا: " + e.message, true); stopScan(); }
-    }
-    async function stopScan() { try { await scanner.stop(); scanner.clear(); } catch (e) { } scanning = false; $("reader").classList.remove("on"); $("scanBtn").textContent = "📷 فتح كاميرا QR"; }
-    function onScan(text) {
-      const id = text.trim(), now = Date.now();
-      if (lastScan.id === id && now - lastScan.t < 3000) return;
-      lastScan = { id, t: now }; applyScore(id);
-    }
-    async function applyScore(id) {
-      const s = students.find(x => x.id === id);
-      if (!s) { toast("طالب غير معروف", true); return; }
-      if (!op) { toast("اختر قاعدة أولاً", true); return; }
-      try {
-        await award(id, op, opReason);
-        if (navigator.vibrate) navigator.vibrate(80);
-        toast(`${s.name}: ${fmt(op)} نقاط`);
-      } catch (e) { toast("فشل: " + e.message, true); }
-    }
-    renderRules();
-
-    /* ============================================================
-       15. NAV
+       12. NAVIGATION
        ============================================================ */
     $("nav").addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
