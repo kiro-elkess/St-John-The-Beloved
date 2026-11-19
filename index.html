@@ -247,13 +247,9 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
   <div class="box">
     <img src="images/logo.png" class="crest-img" alt="St. John Class">
     <h1>ST. JOHN CLASS</h1>
-    <p>Select your name or enter your Student ID</p>
+    <p>Enter your Student ID</p>
     
-    <select class="inp" id="loginSelect" onchange="if(this.value)$('loginId').value=this.value">
-      <option value="">-- Choose student from list --</option>
-    </select>
-    
-    <input class="inp" id="loginId" placeholder="Student ID" autocomplete="off">
+    <input class="inp" id="loginId" placeholder="Student ID (e.g. adam-ragy)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
     <div class="err" id="loginErr"></div>
     <button class="btn gold wide" onclick="doLogin()">ENTER ⚔️</button>
   </div>
@@ -442,53 +438,45 @@ const ROOT = db.collection("james").doc("app");
 const col = name => ROOT.collection(name);
 
 /* ============================================================
-   2. 33 STUDENTS & BIRTHDAYS
+   2. 33 STUDENTS & BIRTHDAYS (Official Roster with IDs)
    ============================================================ */
-const INITIAL_STUDENTS = [
-  { name: "Adam Ragy", birthday: "2015-05-14" },
-  { name: "Armia Bishoy", birthday: "2014-10-12" },
-  { name: "Patrick Hany", birthday: "2014-11-11" },
-  { name: "Benuel Mina", birthday: "2014-10-27" },
-  { name: "Georgino Ehab", birthday: "2014-07-18" },
-  { name: "Jonathan Romany", birthday: "2015-10-06" },
-  { name: "Jonathan Kirollos", birthday: "2015-02-03" },
-  { name: "Jonathan Walid", birthday: "2014-05-14" },
-  { name: "Daniel Mina", birthday: "2014-12-22" },
-  { name: "David Mina", birthday: "2014-06-14" },
-  { name: "Ramy Bassem", birthday: "2014-10-20" },
-  { name: "Randy Amir", birthday: "2015-05-18" },
-  { name: "Steven Sherif", birthday: "2015-05-05" },
-  { name: "Karas Sameh", birthday: "2014-02-17" },
-  { name: "Karim Hany", birthday: "2015-06-28" },
-  { name: "Kirollos Wael", birthday: "2014-08-30" },
-  { name: "Matthew Sherif", birthday: "2014-08-09" },
-  { name: "Matthew Eid", birthday: "2012-03-15" },
-  { name: "Martin Michael", birthday: "2015-12-19" },
-  { name: "Mark Ramy", birthday: "2014-12-08" },
-  { name: "Mark Awad", birthday: "2014-06-10" },
-  { name: "Mina Beshara", birthday: "2014-02-24" },
-  { name: "John Samer", birthday: "2015-11-10" },
-  { name: "Mina Yasser", birthday: "2014-12-14" },
-  { name: "John Sherif", birthday: "2015-11-09" },
-  { name: "Sebastian Pola", birthday: "" },
-  { name: "Patrick Raymon", birthday: "2015-08-22" },
-  { name: "David Aziz", birthday: "2015-05-20" },
-  { name: "Andrew Elia", birthday: "2013-03-11" },
-  { name: "Philopater Michel", birthday: "2014-12-31" },
-  { name: "David Sherif", birthday: "" },
-  { name: "Adham Karim", birthday: "2015-12-10" },
-  { name: "Mina Youssef", birthday: "" }
-];
-
 const slug = n => n.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 
-const lsel = $("loginSelect");
-INITIAL_STUDENTS.forEach(s => {
-  const opt = document.createElement("option");
-  opt.value = slug(s.name);
-  opt.textContent = `${s.name} ${s.birthday ? `(🎂 ${s.birthday.slice(8,10)}/${s.birthday.slice(5,7)})` : ""}`;
-  lsel.appendChild(opt);
-});
+const INITIAL_STUDENTS = [
+  { id: "adam-ragy", name: "Adam Ragy", birthday: "2015-05-14" },
+  { id: "armia-bishoy", name: "Armia Bishoy", birthday: "2014-10-12" },
+  { id: "patrick-hany", name: "Patrick Hany", birthday: "2014-11-11" },
+  { id: "benuel-mina", name: "Benuel Mina", birthday: "2014-10-27" },
+  { id: "georgino-ehab", name: "Georgino Ehab", birthday: "2014-07-18" },
+  { id: "jonathan-romany", name: "Jonathan Romany", birthday: "2015-10-06" },
+  { id: "jonathan-kirollos", name: "Jonathan Kirollos", birthday: "2015-02-03" },
+  { id: "jonathan-walid", name: "Jonathan Walid", birthday: "2014-05-14" },
+  { id: "daniel-mina", name: "Daniel Mina", birthday: "2014-12-22" },
+  { id: "david-mina", name: "David Mina", birthday: "2014-06-14" },
+  { id: "ramy-bassem", name: "Ramy Bassem", birthday: "2014-10-20" },
+  { id: "randy-amir", name: "Randy Amir", birthday: "2015-05-18" },
+  { id: "steven-sherif", name: "Steven Sherif", birthday: "2015-05-05" },
+  { id: "karas-sameh", name: "Karas Sameh", birthday: "2014-02-17" },
+  { id: "karim-hany", name: "Karim Hany", birthday: "2015-06-28" },
+  { id: "kirollos-wael", name: "Kirollos Wael", birthday: "2014-08-30" },
+  { id: "matthew-sherif", name: "Matthew Sherif", birthday: "2014-08-09" },
+  { id: "matthew-eid", name: "Matthew Eid", birthday: "2012-03-15" },
+  { id: "martin-michael", name: "Martin Michael", birthday: "2015-12-19" },
+  { id: "mark-ramy", name: "Mark Ramy", birthday: "2014-12-08" },
+  { id: "mark-awad", name: "Mark Awad", birthday: "2014-06-10" },
+  { id: "mina-beshara", name: "Mina Beshara", birthday: "2014-02-24" },
+  { id: "john-samer", name: "John Samer", birthday: "2015-11-10" },
+  { id: "mina-yasser", name: "Mina Yasser", birthday: "2014-12-14" },
+  { id: "john-sherif", name: "John Sherif", birthday: "2015-11-09" },
+  { id: "sebastian-pola", name: "Sebastian Pola", birthday: "" },
+  { id: "patrick-raymon", name: "Patrick Raymon", birthday: "2015-08-22" },
+  { id: "david-aziz", name: "David Aziz", birthday: "2015-05-20" },
+  { id: "andrew-elia", name: "Andrew Elia", birthday: "2013-03-11" },
+  { id: "philopater-michel", name: "Philopater Michel", birthday: "2014-12-31" },
+  { id: "david-sherif", name: "David Sherif", birthday: "" },
+  { id: "adham-karim", name: "Adham Karim", birthday: "2015-12-10" },
+  { id: "mina-youssef", name: "Mina Youssef", birthday: "" }
+];
 
 /* ============================================================
    3. GAME CONSTANTS & 4 BADGES
@@ -610,14 +598,23 @@ let me = null, students = [], news = [], challenges = [], shop = [];
 let att = {}, hist = [], myPsalms = [], nextBadgeObj = BADGES[0];
 
 async function doLogin(){
-  let id = $("loginId").value.trim();
-  if(!id) return;
-  id = slug(id);
+  const raw = $("loginId").value.trim();
+  if(!raw) return;
+  const clean = slug(raw);
   $("loginErr").textContent = "";
+
+  // Match against roster by exact ID or Name
+  let match = INITIAL_STUDENTS.find(s => s.id === clean || slug(s.name) === clean);
+  if(!match){
+    const rawAlpha = raw.toLowerCase().replace(/[^a-z0-9]/g, "");
+    match = INITIAL_STUDENTS.find(s => s.name.toLowerCase().replace(/[^a-z0-9]/g, "") === rawAlpha);
+  }
+
+  const id = match ? match.id : clean;
+
   try {
     let snap = await col("students").doc(id).get();
     if(!snap.exists){
-      const match = INITIAL_STUDENTS.find(s => slug(s.name) === id);
       if(match){
         await col("students").doc(id).set({
           name: match.name,
@@ -631,15 +628,21 @@ async function doLogin(){
         });
         snap = await col("students").doc(id).get();
       } else {
-        $("loginErr").textContent = "Student ID not found. Select your name from the list!";
+        $("loginErr").textContent = "Student ID not found. Please enter your valid ID (e.g. adam-ragy)";
         return;
       }
     }
     localStorage.setItem("stjohn_id", id);
     startApp(id);
   } catch(e) {
-    $("loginErr").textContent = "Connection error. Check Firebase connection.";
-    console.error(e);
+    console.error("Login fetch error:", e);
+    // If student is in roster, allow entry offline
+    if(match){
+      localStorage.setItem("stjohn_id", id);
+      startApp(id);
+    } else {
+      $("loginErr").textContent = "Connection error. Please try again.";
+    }
   }
 }
 
@@ -662,6 +665,20 @@ function startApp(id){
       x.done = x.done || {};
     });
 
+    // Ensure all initial students exist in local memory if Firestore is empty
+    if(students.length === 0){
+      students = INITIAL_STUDENTS.map(s => ({
+        id: s.id,
+        name: s.name,
+        birthday: s.birthday,
+        coins: 0,
+        earned: 0,
+        badges: [],
+        done: {},
+        purchases: []
+      }));
+    }
+
     // Order strictly by accumulated earned score
     students.sort((a,b) => (b.earned - a.earned) || a.name.localeCompare(b.name));
     students.forEach((x,i) => {
@@ -670,9 +687,15 @@ function startApp(id){
 
     me = students.find(x => x.id === id);
     if(!me){
-      localStorage.removeItem("stjohn_id");
-      location.reload();
-      return;
+      const match = INITIAL_STUDENTS.find(x => x.id === id);
+      if(match){
+        me = { id, name: match.name, birthday: match.birthday, coins: 0, earned: 0, badges: [], done: {}, purchases: [] };
+        students.push(me);
+      } else {
+        localStorage.removeItem("stjohn_id");
+        location.reload();
+        return;
+      }
     }
 
     computeNextBadge();
