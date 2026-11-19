@@ -1,0 +1,9 @@
+{
+  "name": "st-john-the-beloved",
+  "version": "1.0.0",
+  "description": "St. John the Beloved Class",
+  "scripts": {
+    "login": "firebase login",
+    "deploy": "firebase deploy --only hosting"
+  }
+}

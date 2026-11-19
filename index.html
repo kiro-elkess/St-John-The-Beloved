@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>St. John the Beloved Class | أسرة يوحنا الحبيب</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b3a8f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="apple-touch-icon" href="images/logo.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<style>
+:root{
+  --bg1:#0b1536; --bg2:#162c6d; --bg3:#2246ad;
+  --panel:#101d44; --panel2:#182b63;
+  --gold:#ffcc33; --gold2:#ff9a1f; --gold3:#a85f00;
+  --blue:#3aa0ff; --blue2:#1b6be0;
+  --green:#5bd35b; --green2:#2f9f2f;
+  --red:#ff5a5a; --red2:#c62828;
+  --purple:#b46bff; --purple2:#7b2fd6;
+  --text:#fff; --muted:#9db4e6; --border:#09122c;
+  --shadow:0 6px 0 var(--border), 0 12px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Cairo','Nunito',sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 50% -10%,var(--bg3),var(--bg1) 60%);background-attachment:fixed;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.06) 1.5px,transparent 1.5px);background-size:26px 26px;animation:drift 40s linear infinite}
+@keyframes drift{to{background-position:260px 260px}}
+h1,h2,h3{font-family:'Cairo','Lilita One',cursive;letter-spacing:.5px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+img{display:block}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+header{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 8px) 14px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,rgba(11,21,54,.96),rgba(11,21,54,.7) 80%,transparent)}
+.logo{display:flex;align-items:center;gap:10px;min-width:0}
+.logo .crest-img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2.5px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.5);animation:bob 3.5s ease-in-out infinite;flex-shrink:0}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
+.logo h1{font-size:18px;color:var(--gold);line-height:1.2}
+.logo small{display:block;font-size:10.5px;color:var(--muted);letter-spacing:1px;text-shadow:none}
+.mechip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;background:linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:0 4px 0 var(--border);border:1.5px solid #28448f;flex-shrink:0;cursor:pointer}
+.mechip .av{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--bg3);border:2px solid var(--gold);flex-shrink:0}
+.mechip .av img{width:100%;height:100%;object-fit:cover}
+.mechip .nm{font-weight:900;font-size:13px;line-height:1.1;max-width:105px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mechip .kr{font-weight:900;color:var(--gold);font-size:12px;display:flex;align-items:center;gap:4px}
+main{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 14px calc(95px + env(safe-area-inset-bottom));opacity:0;transform:translateX(-30px) scale(.98);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,.9,.3,1.2)}
+.page.active{opacity:1;transform:none;pointer-events:auto}
+.page-title{display:flex;align-items:center;justify-content:space-between;margin:8px 0 14px}
+.page-title h2{font-size:26px;color:#fff}.page-title h2 span{color:var(--gold)}
+.sub{color:var(--muted);font-weight:800;font-size:12.5px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#0a1330,#060c20);border-top:3px solid #1e387c;display:grid;grid-template-columns:repeat(9,1fr);gap:2px;box-shadow:0 -10px 30px rgba(0,0,0,.5)}
+nav button{background:transparent;border-radius:12px;padding:6px 1px;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:8.5px;white-space:nowrap;color:var(--muted);transition:.2s}
+nav button .ic{font-size:20px;transition:transform .3s cubic-bezier(.2,1.6,.4,1);filter:grayscale(.5)}
+nav button.on{color:var(--gold);background:linear-gradient(180deg,#243e8a,#182d66);box-shadow:0 3px 0 var(--border)}
+nav button.on .ic{transform:translateY(-3px) scale(1.2);filter:none}
+nav button:active .ic{transform:scale(.85)}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:18px;padding:14px;box-shadow:var(--shadow);border:2px solid #28448f;position:relative;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:16px;text-shadow:0 2px 0 rgba(0,0,0,.3);background:linear-gradient(180deg,var(--blue),var(--blue2));box-shadow:0 5px 0 #0d3f8f,0 8px 12px rgba(0,0,0,.35);transition:transform .1s,box-shadow .1s;user-select:none}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0d3f8f}
+.btn.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));box-shadow:0 5px 0 var(--gold3),0 8px 12px rgba(0,0,0,.35);color:#4a2a00;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.btn.gold:active{box-shadow:0 1px 0 var(--gold3)}
+.btn.green{background:linear-gradient(180deg,var(--green),var(--green2));box-shadow:0 5px 0 #1b6b1b,0 8px 12px rgba(0,0,0,.35)}
+.btn.green:active{box-shadow:0 1px 0 #1b6b1b}
+.btn.red{background:linear-gradient(180deg,var(--red),var(--red2));box-shadow:0 5px 0 #7a1010,0 8px 12px rgba(0,0,0,.35)}
+.btn.red:active{box-shadow:0 1px 0 #7a1010}
+.btn.gray{background:linear-gradient(180deg,#6b7a99,#46526e);box-shadow:0 5px 0 #262d3f;color:#c7d0e6}
+.btn.wide{width:100%}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-weight:900;font-size:12px;background:rgba(0,0,0,.3)}
+.pill.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00}
+
+/* RANK BOARD */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.scard{padding:0;overflow:hidden;cursor:pointer;transition:transform .15s}
+.scard:active{transform:scale(.95)}
+.scard .img{aspect-ratio:1;background:linear-gradient(160deg,#24439c,#122357);position:relative;overflow:hidden}
+.scard .img img,.detail .big img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+.init{position:absolute;inset:0;display:grid;place-items:center;font-family:'Cairo','Lilita One';font-size:52px;font-weight:900;color:rgba(255,255,255,.7)}
+.scard .img::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 60%,rgba(8,16,42,.92))}
+.scard .info{padding:10px 10px 12px;text-align:right}
+.scard .nm{font-family:'Cairo','Lilita One';font-size:15.5px;font-weight:900;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scard .ar{font-size:11px;color:var(--muted);font-weight:900;margin:3px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scard.me{border-color:var(--gold);box-shadow:0 6px 0 var(--gold3),0 0 22px rgba(255,204,51,.35)}
+.scard.me::before{content:"أنت";position:absolute;top:8px;right:8px;z-index:3;font-family:'Cairo';font-weight:900;font-size:11px;padding:2px 8px;border-radius:8px;background:var(--gold);color:#4a2a00}
+.scard .cake{position:absolute;bottom:6px;left:8px;z-index:3;font-size:24px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.4));animation:bob 2s ease-in-out infinite}
+.scard.bday{border-color:#ff6bb5}
+.scard .rk{position:absolute;top:8px;left:8px;z-index:3;font-family:'Cairo','Lilita One';font-size:13px;font-weight:900;line-height:1;padding:4px 8px;border-radius:10px;background:rgba(6,12,32,.85);border:2px solid #3a5fc4;box-shadow:0 3px 0 var(--border)}
+.scard .rk.top{font-size:14px;color:#4a2a00;border-color:#fff3}
+.scard .rk.r1{background:linear-gradient(180deg,#ffe066,#ffb300)}
+.scard .rk.r2{background:linear-gradient(180deg,#f2f5fa,#aab4c4)}
+.scard .rk.r3{background:linear-gradient(180deg,#f0b27a,#c2743a)}
+
+/* BADGES ROW IN LEADERBOARD */
+.b-strip{display:flex;gap:4px;margin-top:6px;align-items:center}
+.b-mini-ic{width:22px;height:22px;border-radius:50%;border:1.5px solid #28448f;background:rgba(0,0,0,.3);display:grid;place-items:center;font-size:11px;filter:grayscale(1);opacity:.45}
+.b-mini-ic.on{filter:none;opacity:1;border-color:var(--gold);background:linear-gradient(135deg,#ffe066,#d98a00);color:#4a2a00;box-shadow:0 0 6px rgba(255,204,51,.6)}
+
+/* BADGES STORE / WINDOW */
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.badge-item{text-align:center;padding:16px 12px;border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid #28448f;position:relative;cursor:pointer;transition:.2s}
+.badge-item:hover{transform:translateY(-2px)}
+.badge-item.owned{border-color:var(--gold);box-shadow:0 6px 0 var(--gold3),0 0 18px rgba(255,204,51,.25)}
+.badge-item.ready{border-color:var(--green);box-shadow:0 0 16px rgba(91,211,91,.4);animation:pulseReady 2s infinite}
+@keyframes pulseReady{0%,100%{box-shadow:0 0 14px rgba(91,211,91,.4)}50%{box-shadow:0 0 24px rgba(91,211,91,.8)}}
+.badge-item.locked{filter:grayscale(.8) brightness(.7)}
+.b-preview{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;object-fit:cover;box-shadow:0 6px 12px rgba(0,0,0,.4);border:3px solid transparent}
+.badge-item.owned .b-preview{border-color:var(--gold)}
+.badge-item .bname{font-family:'Cairo';font-weight:900;font-size:15px;color:#fff;margin-bottom:4px}
+.badge-item .bcost{font-size:12px;font-weight:900;color:var(--gold)}
+.badge-item .bstat{font-size:11px;font-weight:900;margin-top:6px;padding:3px 8px;border-radius:8px;background:rgba(0,0,0,.35)}
+.badge-item.owned .bstat{background:var(--gold);color:#4a2a00}
+.badge-item.ready .bstat{background:var(--green);color:#fff}
+
+/* PROGRESS BAR */
+.progress{height:16px;border-radius:999px;background:rgba(0,0,0,.45);overflow:hidden;border:2px solid var(--border);margin-top:8px}
+.progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold2),var(--gold));box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);transition:width 1s cubic-bezier(.2,1,.3,1);width:0}
+
+/* JOKEN COIN */
+.jk{display:inline-grid;place-items:center;width:1.3em;height:1.3em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a0,#ffc21a 55%,#d98a00);border:.12em solid #8a5200;color:#5a3200;font-family:'Lilita One',cursive;font-size:.85em;line-height:1;font-style:normal;font-weight:400;text-shadow:0 1px 0 rgba(255,255,255,.5);vertical-align:-.22em;box-shadow:inset 0 -.12em 0 rgba(0,0,0,.2)}
+
+/* SPIRITUALS */
+.daystrip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.daybtn{padding:8px 2px;border-radius:14px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:2px solid #28448f;box-shadow:0 4px 0 var(--border);text-align:center;font-weight:900;transition:.15s}
+.daybtn .wd{font-size:9.5px;color:var(--muted);letter-spacing:.5px}
+.daybtn .dn{font-family:'Lilita One';font-size:20px;line-height:1.1}
+.daybtn .dots{display:flex;gap:2px;justify-content:center;margin-top:4px}
+.daybtn .dots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45)}
+.daybtn .dots i.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.daybtn.sel{border-color:var(--gold);background:linear-gradient(180deg,#243e8a,#182d66);transform:translateY(-3px)}
+.daybtn.sel .dn{color:var(--gold)}
+.sprow{display:flex;align-items:center;gap:12px;width:100%;text-align:right;padding:12px;margin-top:10px;border-radius:16px;background:rgba(0,0,0,.28);border:2px solid transparent;transition:.15s}
+.sprow:active{transform:scale(.97)}
+.sprow .em{font-size:32px;width:40px;text-align:center;flex-shrink:0}
+.sprow .tx{flex:1;min-width:0}
+.sprow .tx b{display:block;font-size:16px;font-weight:900}
+.sprow .tx span{font-size:11.5px;font-weight:700;color:var(--muted)}
+.sprow .box{width:38px;height:38px;border-radius:12px;border:3px solid #3a5fc4;background:#0c1a44;display:grid;place-items:center;font-family:'Lilita One';font-size:22px;flex-shrink:0;transition:.2s cubic-bezier(.2,1.6,.4,1)}
+.sprow.on{border-color:var(--green);background:rgba(91,211,91,.14)}
+.sprow.on .box{background:linear-gradient(180deg,var(--green),var(--green2));border-color:var(--green);transform:scale(1.1)}
+.sprow.e3.on{border-color:var(--gold);background:rgba(255,204,51,.14)}
+.sprow.e3.on .box{background:linear-gradient(180deg,var(--gold),var(--gold2));border-color:var(--gold);color:#4a2a00}
+.spstat{display:flex;align-items:center;gap:10px;margin-top:10px;font-weight:900;font-size:13px}
+.spstat .lb{width:138px;flex-shrink:0;white-space:nowrap}
+.spstat .progress{flex:1;margin-top:0;height:14px}
+.spstat .ct{width:44px;text-align:left;color:var(--gold);flex-shrink:0}
+
+/* ARENA */
+.arena-path{display:flex;flex-direction:column;gap:14px;padding:6px 0}
+.arena{padding:16px;display:flex;align-items:center;gap:14px;transition:.3s;background:linear-gradient(135deg,var(--c1),var(--c2));border-color:rgba(255,255,255,.35)}
+.arena .em{font-size:44px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
+.arena h3{font-size:20px}.arena .req{font-weight:900;font-size:13px;opacity:.9}
+.arena.locked{filter:grayscale(1) brightness(.45);border-color:#28448f}.arena.locked .em{animation:none}
+.arena.current{transform:scale(1.03);box-shadow:0 6px 0 var(--border),0 0 30px rgba(255,204,51,.55);border-color:var(--gold)}
+.arena .tag{margin-right:auto;font-family:'Cairo';font-weight:900;font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(0,0,0,.35);text-align:center}
+.arena.current .tag{background:var(--gold);color:#4a2a00}
+
+/* STREAKS & MY PROGRESS */
+.bigct{font-family:'Lilita One';font-size:52px;color:var(--gold);text-align:center;line-height:1.1;margin-top:6px;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.bigct small{font-size:26px;color:#fff}
+.stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.sttile{padding:10px 2px;border-radius:14px;background:rgba(0,0,0,.28);text-align:center;border:2px solid transparent;min-width:0}
+.sttile.on{border-color:var(--gold2);background:rgba(255,154,31,.14)}
+.sttile .em{font-size:24px}
+.sttile b{display:block;font-family:'Lilita One';font-size:18px;font-weight:400;color:var(--gold);white-space:nowrap}
+.sttile span{display:block;font-size:10px;font-weight:900;color:var(--muted);line-height:1.15;margin-top:2px}
+.hrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}
+.hrow:last-child{border:none}
+.hrow .grow{flex:1;min-width:0}
+.hrow b{display:block;font-size:14px;font-weight:900;overflow-wrap:anywhere}
+.hrow .grow span{font-size:11px;font-weight:800;color:var(--muted)}
+.hrow .amt{font-family:'Lilita One';font-size:17px;color:var(--green);flex-shrink:0}
+.hrow .amt.neg{color:var(--red)}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(5,10,30,.8);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{position:relative;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#1c3378,#0b1536);border:3px solid #3354b0;border-bottom:none;transform:translateY(60px);transition:transform .35s cubic-bezier(.2,1.2,.3,1);text-align:right}
+.overlay.show .modal{transform:none}
+@media(min-width:600px){.overlay{align-items:center}.modal{border-radius:26px;border-bottom:3px solid #3354b0}}
+.modal .x{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:10px;background:var(--red);box-shadow:0 3px 0 #7a1010;font-family:'Lilita One';font-size:18px;z-index:5}
+.detail{text-align:center}
+.detail .big{width:140px;height:140px;border-radius:50%;margin:0 auto 12px;overflow:hidden;border:4px solid var(--gold);box-shadow:0 8px 0 var(--gold3);background:var(--bg3);position:relative}
+.detail .big .init{font-size:64px}
+.detail h2{font-size:26px}
+.stats{display:flex;gap:10px;justify-content:center;margin:12px 0}
+.stat{flex:1;padding:10px;border-radius:14px;background:rgba(0,0,0,.3)}
+.stat b{display:block;font-family:'Lilita One';font-size:20px;color:var(--gold)}.stat span{font-size:10px;font-weight:900;color:var(--muted)}
+
+/* LOGIN */
+#login{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(800px 500px at 50% 0%,var(--bg3),var(--bg1) 70%)}
+#login .box{width:100%;max-width:390px;text-align:center}
+#login .crest-img{width:115px;height:115px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);box-shadow:0 10px 0 var(--gold3),0 20px 40px rgba(0,0,0,.5);margin:0 auto 14px;display:block;animation:bob 3s ease-in-out infinite}
+#login h1{font-size:28px;color:var(--gold);line-height:1.2}
+#login p{color:var(--muted);font-weight:800;margin:8px 0 16px;font-size:13.5px}
+input.inp,select.inp{width:100%;padding:14px;border-radius:14px;border:3px solid #3354b0;background:#091438;color:#fff;font-family:'Cairo','Nunito';font-weight:900;font-size:15px;text-align:center;outline:none;margin-bottom:12px}
+input.inp:focus,select.inp:focus{border-color:var(--gold)}
+.err{color:var(--red);font-weight:900;min-height:18px;font-size:13px;margin-bottom:8px}
+.empty{text-align:center;color:var(--muted);font-weight:800;padding:35px 10px}.empty .em{font-size:46px;margin-bottom:8px}
+
+#toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-30px);z-index:200;padding:12px 20px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:16px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00;box-shadow:0 5px 0 var(--gold3),0 10px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.bad{background:linear-gradient(180deg,var(--red),var(--red2));color:#fff;box-shadow:0 5px 0 #7a1010}
+.confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:300;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.7}}
+
+/* NOTIFICATION & PWA PROMPT BANNER */
+.notify-banner{background:linear-gradient(135deg,#1b3d8f,#10245a);border:2px solid var(--gold);border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.notify-banner .txt{font-size:12px;font-weight:800;line-height:1.3;color:#e1ebff}
+.notify-banner .btn{padding:8px 12px;font-size:13px;border-radius:10px;flex-shrink:0}
+
+/* EVENTS / QUIZ / SHOP */
+.news h3{font-size:19px;margin-bottom:6px;color:var(--gold)}
+.news p{font-weight:600;font-size:13.5px;line-height:1.45;color:#dbe6ff;white-space:pre-line}
+.vote{display:flex;gap:8px;margin-top:12px}.vote .btn{flex:1;font-size:14px;padding:10px}
+.vbar{display:flex;height:12px;border-radius:999px;overflow:hidden;margin-top:10px;background:rgba(0,0,0,.35)}
+.vbar i{display:block;height:100%;transition:width .6s}.vbar .g{background:var(--green)}.vbar .n{background:var(--red)}
+.vcount{display:flex;justify-content:space-between;font-size:11.5px;font-weight:900;margin-top:4px;color:var(--muted)}
+.chal{display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:12px}.chal:active{transform:scale(.97)}
+.chal .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(160deg,var(--purple),var(--purple2));box-shadow:0 4px 0 #4a1a8a;flex-shrink:0}
+.chal h3{font-size:17.5px}.chal p{color:var(--muted);font-size:12px;font-weight:700;margin-top:2px}
+.chal.done .ic{background:linear-gradient(160deg,var(--green),var(--green2));box-shadow:0 4px 0 #1b6b1b}
+.gift{text-align:center;padding:14px 10px;cursor:pointer}
+.gift .em{font-size:44px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+.gift .ph{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;border:3px solid #28448f;box-shadow:0 4px 0 var(--border)}
+.gift .nm{font-family:'Cairo';font-weight:900;font-size:15px;margin:8px 0 6px}
+.gift .qty{font-size:11px;font-weight:900;color:var(--muted);margin-top:6px}
+.q-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.q-text{font-family:'Cairo';font-weight:900;font-size:20px;line-height:1.3;margin-bottom:16px}
+.opt{display:block;width:100%;text-align:right;padding:13px;margin-bottom:10px;border-radius:14px;font-weight:800;font-size:14.5px;background:linear-gradient(180deg,#243e8a,#182d66);box-shadow:0 4px 0 var(--border);transition:.15s}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--border)}
+.opt.right{background:linear-gradient(180deg,var(--green),var(--green2));box-shadow:0 4px 0 #1b6b1b}
+.opt.wrong{background:linear-gradient(180deg,var(--red),var(--red2));box-shadow:0 4px 0 #7a1010;animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.result{text-align:center;padding:10px 0}
+.result .em{font-size:70px}
+.result h2{font-size:28px;color:var(--gold);margin:8px 0}
+.result .earn{font-family:'Lilita One';font-size:38px;color:#fff;text-shadow:0 0 20px var(--gold)}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="box">
+    <img src="images/logo.png" class="crest-img" alt="St. John the Beloved Class">
+    <h1>أسرة القديس يوحنا الحبيب</h1>
+    <p>اختر اسمك أو اكتب رقم كود الطالب للدخول للمسابقة ⚔️</p>
+    
+    <select class="inp" id="loginSelect" onchange="if(this.value)$('loginId').value=this.value">
+      <option value="">-- اختر اسم الطالب من القائمة --</option>
+    </select>
+    
+    <input class="inp" id="loginId" placeholder="كود الطالب (Student ID)" autocomplete="off">
+    <div class="err" id="loginErr"></div>
+    <button class="btn gold wide" onclick="doLogin()">دخول للميدان ⚔️</button>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" class="crest-img" alt="Logo">
+      <div>
+        <h1>يوحنا الحبيب</h1>
+        <small>ST. JOHN CLASS</small>
+      </div>
+    </div>
+    <div class="mechip" id="mechip" onclick="openStudent(me.id)">
+      <div class="av"><img id="meImg" alt=""></div>
+      <div>
+        <div class="nm" id="meName">—</div>
+        <div class="kr"><span id="meJokens">0</span> <i class="jk">J</i></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. RANK BOARD -->
+    <section class="page active" id="p-rank">
+      <div id="pwaBanner" class="notify-banner" style="display:none">
+        <div class="txt">📲 <b>تثبيت تطبيق الأسرة</b> على شاشة هاتفك لسهولة المتابعة اليومية!</div>
+        <button class="btn gold" onclick="installPWA()">تثبيت ➕</button>
+      </div>
+      
+      <div id="notifBanner" class="notify-banner">
+        <div class="txt">🔔 <b>فَعّل الإشعارات:</b> لتصلك تذكيرات صلاة باكر والنوتة الروحية وأعياد الميلاد!</div>
+        <button class="btn green" onclick="enablePushNotifications()">تفعيل 🔔</button>
+      </div>
+
+      <div class="page-title">
+        <h2>لوحة <span>الفرسان</span></h2>
+        <span class="sub" id="rankCount"></span>
+      </div>
+      <div class="grid" id="rankGrid"></div>
+    </section>
+
+    <!-- 2. BADGES & UPCOMING PROGRESS -->
+    <section class="page" id="p-badges">
+      <div class="page-title">
+        <h2>الأوسمة <span>والرتب</span></h2>
+        <span class="pill gold" id="badgeCoins">0 <i class="jk">J</i></span>
+      </div>
+
+      <!-- UPCOMING BADGE PROGRESS CARD -->
+      <div class="card" style="margin-bottom:16px;border-color:var(--gold);background:radial-gradient(ellipse at top,#22439a,#101e48)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <img id="upBadgeImg" src="images/badge_seer.svg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.4)">
+          <div style="flex:1;min-width:0">
+            <div class="sub">الوسام القادم في انتظارك 🎖️</div>
+            <h3 id="upBadgeName" style="font-size:18px;color:var(--gold)">يوحنا الرائي</h3>
+            <div id="upBadgeSub" style="font-size:12px;font-weight:800;color:#c2d3ff">الهدف: 150 نقطة</div>
+          </div>
+        </div>
+        <div class="progress" style="margin-top:12px"><i id="upBadgeBar"></i></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <span id="upBadgePct" style="font-size:12px;font-weight:900;color:var(--gold)">0%</span>
+          <span id="upBadgeRemain" class="sub">باقي 150 نقطة</span>
+        </div>
+        <button id="upBadgeBtn" class="btn gold wide" style="margin-top:12px;display:none" onclick="openBadgeBuyModal(nextBadgeObj.id)">فتح وشراء الوسام الآن 🎖️🎉</button>
+      </div>
+
+      <div class="sub" style="margin:10px 0 8px">اضغط على أي وسام لعرض نافذة الشراء والتفاصيل:</div>
+      <div class="bgrid" id="badgeGrid"></div>
+    </section>
+
+    <!-- 3. ARENA PATH -->
+    <section class="page" id="p-arena">
+      <div class="page-title"><h2>طريق <span>الميدان</span></h2></div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div class="sub">المستوى الحالي</div><h3 id="curArenaName" style="font-size:20px;color:var(--gold)">—</h3></div>
+          <div class="pill gold" id="curEarned">0 <i class="jk">J</i></div>
+        </div>
+        <div class="progress"><i id="arenaBar"></i></div>
+        <div class="sub" id="arenaNext" style="margin-top:6px;text-align:left"></div>
+      </div>
+      <div class="arena-path" id="arenaPath"></div>
+    </section>
+
+    <!-- 4. SPIRITUALS (NOTA RO7YA) -->
+    <section class="page" id="p-spirit">
+      <div class="page-title"><h2>النوتة <span>الروحية</span></h2><span class="sub" id="spToday"></span></div>
+      <div class="daystrip" id="spDays"></div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub" id="spDayLbl"></div>
+        <div id="spChecks"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub" id="spMonthLbl"></div>
+        <div id="spE3traf"></div>
+      </div>
+      <div class="card">
+        <div class="sub">إحصائية هذا الشهر 🙏</div>
+        <div id="spStats"></div>
+      </div>
+    </section>
+
+    <!-- 5. MY PROGRESS & HISTORY -->
+    <section class="page" id="p-me">
+      <div class="page-title"><h2>سجلي <span>ونقاطي</span></h2></div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub">⛪ حضور القداسات</div>
+        <div id="meOdas"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub">🔥 شعلة حضور الاجتماعات والأنشطة</div>
+        <div class="stgrid" id="meAttStreak"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub">🙏 شعلة النوتة الروحية — أيام متتالية</div>
+        <div class="stgrid" id="meSpStreak"></div>
+      </div>
+      <div class="card">
+        <div class="sub">📜 سجل النقاط التفصيلي (History)</div>
+        <div id="meHist"></div>
+      </div>
+    </section>
+
+    <!-- 6. PSALM REQUESTS -->
+    <section class="page" id="p-psalm">
+      <div class="page-title"><h2>تسميع <span>مزمور 📜</span></h2><span class="sub">+10 <i class="jk">J</i> عند الاعتماد</span></div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="sub" style="margin-bottom:10px">حفظت مزمور جديد؟ اكتب اسم المزمور لإرساله لأستاذك:</div>
+        <input class="inp" id="psText" placeholder="اكتب المزمور (مثال: مزمور 23 الرب راعي)" maxlength="80" autocomplete="off">
+        <button class="btn gold wide" onclick="sendPsalm()">إرسال الطلب 📜</button>
+      </div>
+      <div id="psList" style="display:flex;flex-direction:column;gap:12px"></div>
+    </section>
+
+    <!-- 7. EVENTS & BIRTHDAYS -->
+    <section class="page" id="p-news">
+      <div class="page-title"><h2>المناسبات <span>والأحداث</span></h2></div>
+      <div id="bdayMonthCard" class="card" style="margin-bottom:14px;border-color:#ff6bb5;display:none">
+        <h3 style="font-size:18px;color:#ff8ecd;margin-bottom:6px">🎂 أعياد ميلاد هذا الشهر! 🎉</h3>
+        <div id="bdayMonthList" style="font-size:13.5px;font-weight:800;line-height:1.6"></div>
+      </div>
+      <div id="newsList" style="display:flex;flex-direction:column;gap:12px"></div>
+    </section>
+
+    <!-- 8. CHALLENGES -->
+    <section class="page" id="p-chal">
+      <div class="page-title"><h2>التحديات <span>والمسابقات</span></h2><span class="sub">اكسب 5 / 7 / 10 <i class="jk">J</i></span></div>
+      <div id="chalList"></div>
+    </section>
+
+    <!-- 9. SHOP -->
+    <section class="page" id="p-shop">
+      <div class="page-title"><h2>متجر <span>الهدايا</span></h2><span class="pill gold" id="shopBal">0 <i class="jk">J</i></span></div>
+      <div class="grid" id="shopGrid"></div>
+    </section>
+  </main>
+
+  <nav id="nav">
+    <button data-p="rank" class="on"><span class="ic">🏆</span>الترتيب</button>
+    <button data-p="badges"><span class="ic">🎖️</span>الأوسمة</button>
+    <button data-p="spirit"><span class="ic">🙏</span>النوتة</button>
+    <button data-p="me"><span class="ic">🔥</span>سجلي</button>
+    <button data-p="arena"><span class="ic">🏟️</span>الميدان</button>
+    <button data-p="psalm"><span class="ic">📜</span>مزمور</button>
+    <button data-p="news"><span class="ic">📅</span>المناسبات</button>
+    <button data-p="chal"><span class="ic">⚔️</span>التحدي</button>
+    <button data-p="shop"><span class="ic">🎁</span>المتجر</button>
+  </nav>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   1. FIREBASE CONFIG — Loaded from firebase-config.js
+   ============================================================ */
+const defaultFirebaseConfig = {
+  apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
+  authDomain: "st-john-the-beloved.firebaseapp.com",
+  projectId: "st-john-the-beloved",
+  storageBucket: "st-john-the-beloved.firebasestorage.app",
+  messagingSenderId: "716900964750",
+  appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
+  measurementId: "G-PTHE3NCBNK"
+};
+
+const activeConfig = (typeof firebaseConfig !== 'undefined' && firebaseConfig && firebaseConfig.apiKey)
+  ? firebaseConfig
+  : defaultFirebaseConfig;
+
+firebase.initializeApp(activeConfig);
+const db = firebase.firestore();
+const FV = firebase.firestore.FieldValue;
+const ROOT = db.collection("james").doc("app");
+const col = name => ROOT.collection(name);
+
+/* ============================================================
+   2. ROSTER OF 33 STUDENTS & BIRTHDAYS
+   ============================================================ */
+const INITIAL_STUDENTS = [
+  { name: "Adam Ragy", birthday: "2015-05-14" },
+  { name: "Armia Bishoy", birthday: "2014-10-12" },
+  { name: "Patrick Hany", birthday: "2014-11-11" },
+  { name: "Benuel Mina", birthday: "2014-10-27" },
+  { name: "Georgino Ehab", birthday: "2014-07-18" },
+  { name: "Jonathan Romany", birthday: "2015-10-06" },
+  { name: "Jonathan Kirollos", birthday: "2015-02-03" },
+  { name: "Jonathan Walid", birthday: "2014-05-14" },
+  { name: "Daniel Mina", birthday: "2014-12-22" },
+  { name: "David Mina", birthday: "2014-06-14" },
+  { name: "Ramy Bassem", birthday: "2014-10-20" },
+  { name: "Randy Amir", birthday: "2015-05-18" },
+  { name: "Steven Sherif", birthday: "2015-05-05" },
+  { name: "Karas Sameh", birthday: "2014-02-17" },
+  { name: "Karim Hany", birthday: "2015-06-28" },
+  { name: "Kirollos Wael", birthday: "2014-08-30" },
+  { name: "Matthew Sherif", birthday: "2014-08-09" },
+  { name: "Matthew Eid", birthday: "2012-03-15" },
+  { name: "Martin Michael", birthday: "2015-12-19" },
+  { name: "Mark Ramy", birthday: "2014-12-08" },
+  { name: "Mark Awad", birthday: "2014-06-10" },
+  { name: "Mina Beshara", birthday: "2014-02-24" },
+  { name: "John Samer", birthday: "2015-11-10" },
+  { name: "Mina Yasser", birthday: "2014-12-14" },
+  { name: "John Sherif", birthday: "2015-11-09" },
+  { name: "Sebastian Pola", birthday: "" },
+  { name: "Patrick Raymon", birthday: "2015-08-22" },
+  { name: "David Aziz", birthday: "2015-05-20" },
+  { name: "Andrew Elia", birthday: "2013-03-11" },
+  { name: "Philopater Michel", birthday: "2014-12-31" },
+  { name: "David Sherif", birthday: "" },
+  { name: "Adham Karim", birthday: "2015-12-10" },
+  { name: "Mina Youssef", birthday: "" }
+];
+
+const slug = n => n.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+
+/* Populate login select */
+const lsel = $("loginSelect");
+INITIAL_STUDENTS.forEach(s => {
+  const opt = document.createElement("option");
+  opt.value = slug(s.name);
+  opt.textContent = `${s.name} ${s.birthday ? `(🎂 ${s.birthday.slice(8,10)}/${s.birthday.slice(5,7)})` : ""}`;
+  lsel.appendChild(opt);
+});
+
+/* ============================================================
+   3. GAME CONSTANTS & 4 BADGES
+   ============================================================ */
+const IMG_DIR = "images/";
+const COIN = '<i class="jk">J</i>';
+
+const BADGES = [
+  {
+    id: "john_seer",
+    level: 1,
+    name: "يوحنا الرائي",
+    nameEn: "John the Seer",
+    cost: 150,
+    em: "🦅",
+    img: "images/badge_seer.svg",
+    desc: "الوسام الأول — يوحنا الرائي كاشف أسرار الرؤيا ومجد السماء (يتطلب 150 نقطة)"
+  },
+  {
+    id: "john_apostle",
+    level: 2,
+    name: "يوحنا الرسولي",
+    nameEn: "John the Apostle",
+    cost: 200,
+    em: "📜",
+    img: "images/badge_apostle.svg",
+    desc: "الوسام الثاني — يوحنا الرسولي الشاهد الأمين والمكرز بالكلمة (يتطلب 200 نقطة)"
+  },
+  {
+    id: "john_evangelist",
+    level: 3,
+    name: "يوحنا الإنجيلي",
+    nameEn: "John the Evangelist",
+    cost: 400,
+    em: "✨",
+    img: "images/badge_evangelist.svg",
+    desc: "الوسام الثالث — يوحنا الإنجيلي اللاهوتي ناطق الإلهيات (يتطلب 400 نقطة)"
+  },
+  {
+    id: "john_beloved",
+    level: 4,
+    name: "يوحنا الحبيب",
+    nameEn: "John the Beloved",
+    cost: 550,
+    em: "👑",
+    img: "images/badge_beloved.svg",
+    desc: "الوسام الرابع والأعلى — يوحنا الحبيب المتكئ على صدر الرب يسوع (يتطلب 550 نقطة)"
+  }
+];
+
+const ARENAS = [
+  {name:"Starter Camp",   min:0,   max:25,  em:"🏕️", c1:"#5bd35b", c2:"#2f9f2f"},
+  {name:"Faith Fortress", min:26,  max:50,  em:"🏰", c1:"#c9855a", c2:"#7a4322"},
+  {name:"Strength Summit",min:51,  max:90,  em:"💪", c1:"#ff9a5b", c2:"#c2531a"},
+  {name:"Wisdom Grove",   min:91,  max:140, em:"🌳", c1:"#37d6a0", c2:"#127f5a"},
+  {name:"Voice Tower",    min:141, max:180, em:"📣", c1:"#3aa0ff", c2:"#1b5fc0"},
+  {name:"Patience Pass",  min:181, max:220, em:"⏳", c1:"#9a8cff", c2:"#5540c9"},
+  {name:"Prayer Peaks",   min:221, max:260, em:"🏔️", c1:"#ff6bb5", c2:"#b8237a"},
+  {name:"Crown of Life",  min:261, max:300, em:"👑", c1:"#ffe066", c2:"#c47a00"},
+];
+
+const SPIRIT = [
+  {k:"mp",    em:"🌅", name:"صلاة باكر",     sub:"ابدأ يومك مع الرب يسوع"},
+  {k:"np",    em:"🌙", name:"صلاة النوم",     sub:"شكر وتوبة قبل أن تنام"},
+  {k:"bible", em:"📖", name:"قراءة الإنجيل", sub:"كلمة ربنا نور لسبيلك"},
+  {k:"som",   em:"🌾", name:"الصوم",          sub:"الأربعاء والجمعة", days:[3,5]},
+];
+
+const kdate = k => new Date(+k.slice(0,4), +k.slice(5,7)-1, +k.slice(8,10));
+const spFor = k => { const wd = kdate(k).getDay(); return SPIRIT.filter(x => !x.days || x.days.includes(wd)); };
+let spirit = { days:{}, e3traf:{} }, spDay = null;
+const dkey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const mkey = d => dkey(d).slice(0,7);
+
+const isBdayMonth = s => !!s.birthday && +String(s.birthday).slice(5,7) === (new Date().getMonth()+1);
+const isBdayToday = s => {
+  if(!s.birthday) return false;
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,"0");
+  const dd = String(now.getDate()).padStart(2,"0");
+  return s.birthday.endsWith(`-${mm}-${dd}`);
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const imgOf = s => `<div class="init">${esc((s.name||"?")[0].toUpperCase())}</div><img src="${IMG_DIR}${encodeURIComponent(s.name)}.png" alt="" onerror="this.style.display='none'">`;
+const arenaOf = e => { let a=ARENAS[0]; for(const x of ARENAS) if(e>=x.min) a=x; return a; };
+const nextArena = e => ARENAS.find(x => x.min>e) || null;
+
+function toast(m, bad){
+  const t = $("toast"); t.textContent = m; t.className = bad ? "show bad" : "show";
+  clearTimeout(t._t); t._t = setTimeout(() => t.className = "", 2400);
+}
+
+function confetti(){
+  const cs = ["#ffcc33","#3aa0ff","#5bd35b","#ff5a5a","#b46bff","#fff"];
+  for(let i=0; i<75; i++){
+    const d = document.createElement("div");
+    d.className = "confetti";
+    d.style.left = Math.random()*100 + "vw";
+    d.style.background = cs[i % cs.length];
+    d.style.animationDuration = (1.5 + Math.random()*1.5) + "s";
+    d.style.animationDelay = (Math.random()*.4) + "s";
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 3500);
+  }
+}
+
+function openModal(h){
+  $("modal").innerHTML = `<button class="x" onclick="closeModal()">✕</button>` + h;
+  $("overlay").classList.add("show");
+}
+function closeModal(){ $("overlay").classList.remove("show"); }
+
+/* ============================================================
+   4. LOGIN & STATE
+   ============================================================ */
+let me = null, students = [], news = [], challenges = [], shop = [];
+let att = {}, hist = [], myPsalms = [], nextBadgeObj = BADGES[0];
+
+async function doLogin(){
+  let id = $("loginId").value.trim();
+  if(!id) return;
+  id = slug(id);
+  $("loginErr").textContent = "";
+  try {
+    let snap = await col("students").doc(id).get();
+    if(!snap.exists){
+      // Check if matches any of the initial student names
+      const match = INITIAL_STUDENTS.find(s => slug(s.name) === id);
+      if(match){
+        await col("students").doc(id).set({
+          name: match.name,
+          birthday: match.birthday,
+          coins: 0,
+          earned: 0,
+          badges: [],
+          done: {},
+          purchases: [],
+          createdAt: Date.now()
+        });
+        snap = await col("students").doc(id).get();
+      } else {
+        $("loginErr").textContent = "كود الطالب غير موجود، اختر اسمك من القائمة!";
+        return;
+      }
+    }
+    localStorage.setItem("stjohn_id", id);
+    startApp(id);
+  } catch(e) {
+    $("loginErr").textContent = "خطأ في الاتصال بقاعدة البيانات.";
+    console.error(e);
+  }
+}
+
+$("loginId").addEventListener("keydown", e => { if(e.key === "Enter") doLogin(); });
+const savedId = localStorage.getItem("stjohn_id") || localStorage.getItem("james_id");
+if(savedId){ $("loginId").value = savedId; doLogin(); }
+
+/* ============================================================
+   5. REALTIME FIREBASE LISTENERS
+   ============================================================ */
+function startApp(id){
+  $("login").style.display = "none";
+
+  col("students").onSnapshot(s => {
+    students = s.docs.map(d => ({id: d.id, ...d.data()}));
+    students.forEach(x => {
+      x.earned = x.earned || 0;       // Lifetime accumulated score for leaderboard order
+      x.coins = x.coins || 0;         // Current active score for upcoming badge / shop
+      x.badges = x.badges || [];
+      x.done = x.done || {};
+    });
+
+    // 1. Order by accumulated score
+    students.sort((a,b) => (b.earned - a.earned) || a.name.localeCompare(b.name));
+    students.forEach((x,i) => {
+      x.rank = i && students[i-1].earned === x.earned ? students[i-1].rank : i+1;
+    });
+
+    me = students.find(x => x.id === id);
+    if(!me){
+      localStorage.removeItem("stjohn_id");
+      location.reload();
+      return;
+    }
+
+    computeNextBadge();
+    renderMe();
+    renderRank();
+    renderBadges();
+    renderArena();
+    renderMeStats();
+    renderShop();
+    renderChal();
+    renderNews();
+  });
+
+  col("spirituals").doc(id).onSnapshot(d => {
+    const x = d.data() || {};
+    spirit = { days: x.days || {}, e3traf: x.e3traf || {} };
+    renderSpirit();
+    renderMeStats();
+  });
+
+  col("events").orderBy("createdAt","desc").onSnapshot(s => {
+    news = s.docs.map(d => ({id: d.id, ...d.data()}));
+    renderNews();
+  });
+
+  col("challenges").orderBy("createdAt","desc").onSnapshot(s => {
+    challenges = s.docs.map(d => ({id: d.id, ...d.data()}));
+    renderChal();
+  });
+
+  col("shop").orderBy("cost").onSnapshot(s => {
+    shop = s.docs.map(d => ({id: d.id, ...d.data()}));
+    renderShop();
+  });
+
+  col("attendance").onSnapshot(s => {
+    att = {}; s.docs.forEach(d => att[d.id] = d.data() || {});
+    renderMeStats();
+  });
+
+  col("history").where("sid","==",id).onSnapshot(s => {
+    hist = s.docs.map(d => d.data()).sort((a,b) => (b.at||0) - (a.at||0));
+    renderMeStats();
+  });
+
+  col("psalms").where("sid","==",id).onSnapshot(s => {
+    myPsalms = s.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => (b.at||0) - (a.at||0));
+    renderPsalm();
+  });
+
+  // Setup Push Notifications check
+  initPushNotifications();
+}
+
+/* ============================================================
+   6. BADGE LOGIC & UPCOMING PROGRESS
+   ============================================================ */
+function computeNextBadge(){
+  if(!me) return;
+  const myBadges = new Set(me.badges || []);
+  nextBadgeObj = BADGES.find(b => !myBadges.has(b.id)) || null;
+
+  if(!nextBadgeObj){
+    // All 4 badges earned!
+    $("upBadgeName").textContent = "مبارك! حصلت على كل الأوسمة 👑";
+    $("upBadgeSub").textContent = "وصلت لأعلى رتبة في أسرة يوحنا الحبيب!";
+    $("upBadgeImg").src = BADGES[3].img;
+    $("upBadgeBar").style.width = "100%";
+    $("upBadgePct").textContent = "100%";
+    $("upBadgeRemain").textContent = "أعلى مستوى 👑";
+    $("upBadgeBtn").style.display = "none";
+    return;
+  }
+
+  $("upBadgeName").textContent = nextBadgeObj.name;
+  $("upBadgeSub").textContent = `الهدف: ${nextBadgeObj.cost} نقطة — ${nextBadgeObj.desc}`;
+  $("upBadgeImg").src = nextBadgeObj.img;
+
+  const cur = me.coins || 0;
+  const target = nextBadgeObj.cost;
+  const pct = Math.min(100, Math.round((cur / target) * 100));
+
+  $("upBadgeBar").style.width = pct + "%";
+  $("upBadgePct").textContent = pct + "%";
+
+  if(cur >= target){
+    $("upBadgeRemain").textContent = "جاهز للشراء الآن! 🎉";
+    $("upBadgeBtn").style.display = "block";
+    $("upBadgeBtn").textContent = `شراء وسام ${nextBadgeObj.name} (${target} J) 🎉`;
+  } else {
+    $("upBadgeRemain").textContent = `باقي ${target - cur} نقطة`;
+    $("upBadgeBtn").style.display = "none";
+  }
+}
+
+function openBadgeBuyModal(badgeId){
+  const b = BADGES.find(x => x.id === badgeId);
+  if(!b || !me) return;
+  const isOwned = (me.badges || []).includes(b.id);
+  const cur = me.coins || 0;
+  const isNext = nextBadgeObj && nextBadgeObj.id === b.id;
+  const canBuy = isNext && cur >= b.cost && !isOwned;
+
+  let actionHtml = '';
+  if(isOwned){
+    actionHtml = `<div class="pill gold" style="font-size:15px;padding:8px 16px;margin-top:14px">✅ الوسام بحوزتك ومسجل باسمك</div>`;
+  } else if(canBuy){
+    actionHtml = `
+      <div style="margin-top:14px">
+        <p class="sub" style="margin-bottom:10px;color:var(--gold)">لديك ${cur} نقطة، وسيتم إعادة تعيين/خصم النقاط للوسام القادم مع الحفاظ على ترتيبك في لوحة المتصدرين!</p>
+        <button class="btn gold wide" onclick="confirmBuyBadge('${b.id}')">تأكيد شراء الوسام الآن (${b.cost} J) 🎖️</button>
+      </div>`;
+  } else if(isNext){
+    actionHtml = `
+      <div style="margin-top:14px">
+        <div class="progress"><i style="width:${Math.min(100,(cur/b.cost)*100)}%"></i></div>
+        <div class="sub" style="margin-top:6px;text-align:center">معك ${cur} من أصل ${b.cost} نقطة (متبقي ${b.cost - cur} J)</div>
+      </div>`;
+  } else {
+    actionHtml = `<div class="sub" style="margin-top:14px;color:#ff8a8a">يجب الحصول على الأوسمة بالترتيب أولاً 🔒</div>`;
+  }
+
+  openModal(`
+    <div class="detail">
+      <img src="${b.img}" style="width:120px;height:120px;border-radius:50%;margin:0 auto 12px;border:3px solid var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.5);object-fit:cover">
+      <h2>${esc(b.name)}</h2>
+      <div class="pill gold" style="margin:6px 0">${b.cost} ${COIN}</div>
+      <p style="font-weight:700;font-size:14px;color:#d8e4ff;line-height:1.5;margin:10px 0">${esc(b.desc)}</p>
+      ${actionHtml}
+    </div>
+  `);
+}
+
+async function confirmBuyBadge(badgeId){
+  const b = BADGES.find(x => x.id === badgeId);
+  if(!b || !me) return;
+  const ref = col("students").doc(me.id);
+
+  try {
+    await db.runTransaction(async t => {
+      const doc = await t.get(ref);
+      const data = doc.data() || {};
+      const currentCoins = data.coins || 0;
+      const currentBadges = data.badges || [];
+
+      if(currentBadges.includes(b.id)) throw new Error("الوسام بحوزتك بالفعل!");
+      if(currentCoins < b.cost) throw new Error("نقاطك لا تكفي لشراء هذا الوسام!");
+
+      // Reset / deduct badge cycle score
+      const newCoins = Math.max(0, currentCoins - b.cost);
+
+      t.update(ref, {
+        coins: newCoins,
+        badges: FV.arrayUnion(b.id)
+      });
+
+      // Record in history
+      t.set(col("history").doc(), {
+        sid: me.id,
+        amt: -b.cost,
+        reason: `شراء وسام: ${b.name} 🎖️`,
+        at: Date.now()
+      });
+    });
+
+    closeModal();
+    confetti();
+    toast(`مبروك! حصلت على وسام ${b.name} 🎉`);
+  } catch(e) {
+    toast(e.message || "حدث خطأ أثناء الشراء", true);
+  }
+}
+
+/* ============================================================
+   7. RENDERERS
+   ============================================================ */
+function renderMe(){
+  $("meName").textContent = me.name;
+  $("meJokens").textContent = me.coins;
+  $("meImg").src = IMG_DIR + encodeURIComponent(me.name) + ".png";
+  $("shopBal").innerHTML = me.coins + " " + COIN;
+  $("badgeCoins").innerHTML = me.coins + " " + COIN;
+}
+
+/* LEADERBOARD (Ordered by accumulated earned score, but NOT displaying exact accumulated score!) */
+function renderRank(){
+  $("rankCount").textContent = students.length + " بطل";
+  
+  $("rankGrid").innerHTML = students.map((s,i) => {
+    const sBadges = new Set(s.badges || []);
+    // Badge mini icons for each of the 4 badges
+    const badgeIconsHtml = BADGES.map(b => `
+      <div class="b-mini-ic ${sBadges.has(b.id) ? "on" : ""}" title="${esc(b.name)}">${b.em}</div>
+    `).join("");
+
+    return `
+    <div class="card scard ${s.id === me.id ? "me" : ""} ${isBdayMonth(s) ? "bday" : ""}" style="animation-delay:${Math.min(i*35,400)}ms" onclick="openStudent('${esc(s.id)}')">
+      <div class="rk ${s.rank <= 3 ? "top r" + s.rank : ""}">${s.rank <= 3 ? ["🥇","🥈","🥉"][s.rank-1] + " " : ""}#${s.rank}</div>
+      <div class="img">
+        ${imgOf(s)}
+        ${isBdayMonth(s) ? `<div class="cake" title="عيد ميلاده هذا الشهر!">🎂</div>` : ""}
+      </div>
+      <div class="info">
+        <div class="nm">${esc(s.name)}</div>
+        <div class="ar">${arenaOf(s.earned).em} ${esc(arenaOf(s.earned).name)}</div>
+        
+        <!-- Badges earned strip -->
+        <div class="b-strip">${badgeIconsHtml}</div>
+
+        <!-- Showing current active balance, NOT accumulated lifetime score! -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <span class="pill gold" style="font-size:11px">${s.coins || 0} ${COIN}</span>
+          <span style="font-size:10px;font-weight:900;color:var(--muted)">${(s.badges||[]).length} أوسمة</span>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openStudent(id){
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  const a = arenaOf(s.earned);
+  const sBadges = new Set(s.badges || []);
+
+  // Fetch score history for this student
+  col("history").where("sid","==",id).get().then(snap => {
+    const sHist = snap.docs.map(d => d.data()).sort((a,b) => (b.at||0) - (a.at||0));
+    
+    const histHtml = sHist.length ? sHist.slice(0,25).map(h => `
+      <div class="hrow">
+        <div class="grow">
+          <b>${esc(h.reason || "نقاط")}</b>
+          <span>${new Date(h.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
+        </div>
+        <span class="amt ${h.amt<0?"neg":""}">${h.amt>0?"+":""}${h.amt} ${COIN}</span>
+      </div>
+    `).join("") : `<div class="empty" style="padding:12px">لا يوجد سجل نقاط حتى الآن</div>`;
+
+    openModal(`
+      <div class="detail">
+        <div class="big">${imgOf(s)}</div>
+        <h2>${esc(s.name)} ${isBdayMonth(s)?"🎂":""}</h2>
+        <div class="sub">المركز #${s.rank} • ${a.em} ${esc(a.name)} ${isBdayToday(s)?"🎉 عيد ميلاده اليوم!":isBdayMonth(s)?"• عيد ميلاده هذا الشهر!":""}</div>
+        
+        <div class="stats">
+          <div class="stat"><b>${s.coins || 0}</b><span>الرصيد الحالي ${COIN}</span></div>
+          <div class="stat"><b>${(s.badges || []).length} / 4</b><span>الأوسمة</span></div>
+          <div class="stat"><b>${Object.keys(s.done || {}).length}</b><span>تحديات</span></div>
+        </div>
+
+        <h3 style="font-size:17px;margin:14px 0 8px;text-align:right">الأوسمة والرتب:</h3>
+        <div class="bgrid" style="grid-template-columns:repeat(4,1fr);gap:6px">
+          ${BADGES.map(b => `
+            <div class="badge-item ${sBadges.has(b.id) ? "owned" : "locked"}" style="padding:8px 4px" onclick="openBadgeBuyModal('${b.id}')">
+              <img src="${b.img}" style="width:48px;height:48px;border-radius:50%;margin:0 auto 4px;object-fit:cover">
+              <div style="font-size:11px;font-weight:900">${esc(b.name)}</div>
+            </div>
+          `).join("")}
+        </div>
+
+        <h3 style="font-size:17px;margin:16px 0 8px;text-align:right">سجل النقاط المكتسبة (History):</h3>
+        <div class="card" style="max-height:220px;overflow-y:auto;padding:8px 12px;background:rgba(0,0,0,.3)">
+          ${histHtml}
+        </div>
+      </div>
+    `);
+  }).catch(() => {
+    toast("تعذر تحميل السجل", true);
+  });
+}
+
+function renderBadges(){
+  if(!me) return;
+  const mine = new Set(me.badges || []);
+  const cur = me.coins || 0;
+
+  $("badgeGrid").innerHTML = BADGES.map((b,i) => {
+    const isOwned = mine.has(b.id);
+    const isNext = nextBadgeObj && nextBadgeObj.id === b.id;
+    const isReady = isNext && cur >= b.cost;
+    const isLocked = !isOwned && !isNext;
+
+    return `
+      <div class="badge-item ${isOwned ? "owned" : isReady ? "ready" : isLocked ? "locked" : ""}" style="animation-delay:${i*40}ms" onclick="openBadgeBuyModal('${b.id}')">
+        <img class="b-preview" src="${b.img}" alt="${esc(b.name)}">
+        <div class="bname">${esc(b.name)}</div>
+        <div class="bcost">${b.cost} ${COIN}</div>
+        <div class="bstat">
+          ${isOwned ? "✅ ممتلك" : isReady ? "🎉 جاهز للشراء!" : isLocked ? "🔒 مقفل" : "⏳ قيد التقدم"}
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function renderArena(){
+  const a = arenaOf(me.earned), n = nextArena(me.earned);
+  $("curArenaName").textContent = a.em + " " + a.name;
+  $("curEarned").innerHTML = me.earned + " " + COIN;
+  const pct = n ? Math.min(100, ((me.earned - a.min)/(n.min - a.min))*100) : 100;
+  requestAnimationFrame(() => $("arenaBar").style.width = pct + "%");
+  $("arenaNext").innerHTML = n ? `باقي ${n.min - me.earned} نقطة للوصول إلى ${n.name}` : "وصلت للقمة وميدان تاج الحياة! 👑";
+  
+  $("arenaPath").innerHTML = [...ARENAS].reverse().map((x,i) => {
+    const reached = me.earned >= x.min, cur = x === a;
+    return `
+      <div class="card arena ${reached ? "" : "locked"} ${cur ? "current" : ""}" style="--c1:${x.c1};--c2:${x.c2};animation-delay:${i*45}ms">
+        <div class="em">${reached ? x.em : "🔒"}</div>
+        <div><h3>${esc(x.name)}</h3><div class="req">${x.min} – ${x.max} ${COIN}</div></div>
+        <div class="tag">${cur ? "موقعك الحالي" : reached ? "مفتوح" : "مقفل"}</div>
+      </div>`;
+  }).join("");
+}
+
+/* ============================================================
+   8. SPIRITUALS (NOTA RO7YA)
+   ============================================================ */
+function renderSpirit(){
+  if(!me) return;
+  const now = new Date(), today = dkey(now);
+  if(!spDay || spDay > today) spDay = today;
+  const days = Array.from({length:7}, (_,i) => {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()-6+i);
+    return d;
+  });
+  if(spDay < dkey(days[0])) spDay = today;
+
+  $("spToday").textContent = now.toLocaleDateString("ar-EG", {weekday:"long", day:"numeric", month:"short"});
+  $("spDays").innerHTML = days.map(d => {
+    const k = dkey(d), v = spirit.days[k] || {};
+    return `
+      <button class="daybtn ${k === spDay ? "sel" : ""}" onclick="pickSpDay('${k}')">
+        <div class="wd">${k === today ? "اليوم" : d.toLocaleDateString("ar-EG",{weekday:"short"})}</div>
+        <div class="dn">${d.getDate()}</div>
+        <div class="dots">${spFor(k).map(x => `<i class="${v[x.k] ? "on" : ""}"></i>`).join("")}</div>
+      </button>`;
+  }).join("");
+
+  const sel = days.find(d => dkey(d) === spDay) || now, v = spirit.days[spDay] || {};
+  $("spDayLbl").textContent = (spDay === today ? "اليوم — " : "") + sel.toLocaleDateString("ar-EG", {weekday:"long", day:"numeric", month:"long"});
+  
+  $("spChecks").innerHTML = spFor(spDay).map(x => `
+    <button class="sprow ${v[x.k] ? "on" : ""}" onclick="toggleSpirit('${x.k}')">
+      <span class="em">${x.em}</span>
+      <span class="tx"><b>${x.name}</b><span>${x.sub}</span></span>
+      <span class="box">${v[x.k] ? "✓" : ""}</span>
+    </button>`).join("");
+
+  const mk = mkey(now), e3 = spirit.e3traf[mk] === true;
+  $("spMonthLbl").textContent = "هذا الشهر — " + now.toLocaleDateString("ar-EG", {month:"long", year:"numeric"});
+  $("spE3traf").innerHTML = `
+    <button class="sprow e3 ${e3 ? "on" : ""}" onclick="toggleE3traf()">
+      <span class="em">✝️</span>
+      <span class="tx"><b>جلسة الاعتراف</b><span>${e3 ? "تم الاعتراف هذا الشهر — باركك الرب!" : "اضغط هنا عند الجلوس مع أب اعترافك هذا الشهر"}</span></span>
+      <span class="box">${e3 ? "✓" : ""}</span>
+    </button>`;
+
+  const n = now.getDate();
+  $("spStats").innerHTML = SPIRIT.map(x => {
+    let c = 0, t = 0;
+    for(let i=1; i<=n; i++){
+      const k = `${mk}-${String(i).padStart(2,"0")}`;
+      if(x.days && !x.days.includes(kdate(k).getDay())) continue;
+      t++; if((spirit.days[k] || {})[x.k]) c++;
+    }
+    return `
+      <div class="spstat">
+        <span class="lb">${x.em} ${x.name}${x.days ? " (أربع وجمعة)" : ""}</span>
+        <div class="progress"><i style="width:${t ? (c/t)*100 : 0}%"></i></div>
+        <span class="ct">${c}/${t}</span>
+      </div>`;
+  }).join("");
+}
+
+function pickSpDay(k){ spDay = k; renderSpirit(); }
+
+async function toggleSpirit(k){
+  const cur = spirit.days[spDay] || {}, val = !cur[k];
+  const allDone = val && spFor(spDay).every(x => x.k === k || cur[x.k]);
+  try {
+    await col("spirituals").doc(me.id).set({
+      days: { [spDay]: { [k]: val } },
+      ts: { [spDay]: { [k]: val ? Date.now() : FV.delete() } }
+    }, { merge: true });
+    if(allDone){ confetti(); toast("عظيم جداً! أكملت النوتة الروحية اليوم 🙏🎉"); }
+  } catch(e) { toast("تعذر الحفظ، تأكد من الاتصال بالإنترنت", true); }
+}
+
+async function toggleE3traf(){
+  const mk = mkey(new Date()), val = spirit.e3traf[mk] !== true;
+  try {
+    await col("spirituals").doc(me.id).set({
+      e3traf: { [mk]: val },
+      e3ts: { [mk]: val ? Date.now() : FV.delete() }
+    }, { merge: true });
+    if(val){ confetti(); toast("اعتراف مبارك! ربنا يثبتك ✝️"); }
+  } catch(e) { toast("تعذر الحفظ", true); }
+}
+
+/* ============================================================
+   9. MY STATS & HISTORY
+   ============================================================ */
+const FRIDAYS = Array.from({length:52}, (_,i) => {
+  const d = new Date(2026,10,20); d.setDate(d.getDate() + i*7); return dkey(d);
+});
+const CATS = [
+  {k:"odas",em:"⛪",name:"القداس"},{k:"madares",em:"📚",name:"الفصل"},{k:"asheya",em:"🌙",name:"العشية"},{k:"dars",em:"📖",name:"درس الكتاب"}
+];
+
+const attHas = (k,c,id) => ((att[k] || {})[c] || {})[id] === true;
+const takenWeeks = c => {
+  const t = dkey(new Date());
+  return FRIDAYS.filter(k => k <= t && Object.values((att[k]||{})[c]||{}).some(v=>v===true));
+};
+
+function attStreak(c){
+  const w = takenWeeks(c); let n = 0;
+  for(let i=w.length-1; i>=0 && attHas(w[i],c,me.id); i--) n++;
+  return n;
+}
+
+function spStreak(x){
+  const d = new Date(); let n = 0;
+  for(let i=0; i<400; i++){
+    if(!x.days || x.days.includes(d.getDay())){
+      if((spirit.days[dkey(d)]||{})[x.k]) n++; else if(i>0) break;
+    }
+    d.setDate(d.getDate()-1);
+  }
+  return n;
+}
+
+const stTile = (em,name,n) => `
+  <div class="sttile ${n?"on":""}">
+    <div class="em">${em}</div>
+    <b>${n?"🔥 ":""}${n}</b>
+    <span>${name}</span>
+  </div>`;
+
+function renderMeStats(){
+  if(!me) return;
+  const w = takenWeeks("odas"), n = w.filter(k => attHas(k,"odas",me.id)).length;
+  $("meOdas").innerHTML = w.length
+    ? `<div class="bigct">${n} <small>/ ${w.length}</small></div>
+       <div class="sub" style="text-align:center">حضرت ${n} قداس من أصل ${w.length} أسبوع</div>
+       <div class="progress"><i style="width:${(n/w.length)*100}%"></i></div>`
+    : `<div class="empty" style="padding:16px">لم يبدأ تسجيل الحضور بعد</div>`;
+
+  $("meAttStreak").innerHTML = CATS.map(c => stTile(c.em, c.name, attStreak(c.k))).join("");
+  $("meSpStreak").innerHTML = SPIRIT.map(x => stTile(x.em, x.name, spStreak(x))).join("");
+  
+  $("meHist").innerHTML = hist.length
+    ? hist.slice(0,50).map(h => `
+        <div class="hrow">
+          <div class="grow">
+            <b>${esc(h.reason || "نقاط")}</b>
+            <span>${new Date(h.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
+          </div>
+          <span class="amt ${h.amt<0?"neg":""}">${h.amt>0?"+":""}${h.amt} ${COIN}</span>
+        </div>
+      `).join("")
+    : `<div class="empty" style="padding:16px">لا يوجد سجل نقاط حتى الآن</div>`;
+}
+
+/* ============================================================
+   10. PSALMS
+   ============================================================ */
+async function sendPsalm(){
+  const text = $("psText").value.trim();
+  if(!text){ toast("اكتب اسم أو رقم المزمور الذي حفظته", true); return; }
+  if(myPsalms.some(p => p.status !== "rejected" && String(p.text).toLowerCase() === text.toLowerCase())){
+    toast("لقد أرسلت هذا المزمور مسبقاً!", true); return;
+  }
+  try {
+    await col("psalms").add({
+      sid: me.id,
+      name: me.name,
+      text,
+      status: "pending",
+      at: Date.now()
+    });
+    $("psText").value = "";
+    toast("تم إرسال الطلب لأستاذك للمراجعة 📜");
+  } catch(e) { toast("تعذر الإرسال", true); }
+}
+
+function renderPsalm(){
+  const st = {
+    pending: `<span class="pill">⏳ قيد المراجعة</span>`,
+    approved: `<span class="pill gold">✅ معتمد (+10 ${COIN})</span>`,
+    rejected: `<span class="pill red">❌ حاول مرة أخرى</span>`
+  };
+  $("psList").innerHTML = myPsalms.length
+    ? myPsalms.map(p => `
+        <div class="card" style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:28px">📜</div>
+          <div style="flex:1;min-width:0">
+            <h3 style="font-size:16px">${esc(p.text)}</h3>
+            <div class="sub">${new Date(p.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short"})}</div>
+          </div>
+          ${st[p.status] || ""}
+        </div>
+      `).join("")
+    : `<div class="empty"><div class="em">📜</div>لم ترسل طلبات تسميع مزامير بعد</div>`;
+}
+
+/* ============================================================
+   11. EVENTS & BIRTHDAYS
+   ============================================================ */
+function renderNews(){
+  if(!me) return;
+  
+  // Check Birthdays this month across all students
+  const bdaysThisMonth = students.filter(s => isBdayMonth(s));
+  if(bdaysThisMonth.length > 0){
+    $("bdayMonthCard").style.display = "block";
+    $("bdayMonthList").innerHTML = bdaysThisMonth.map(s => `
+      <div>🎂 <b>${esc(s.name)}</b> — ${s.birthday ? `${+s.birthday.slice(8,10)} ${new Date(2026, +s.birthday.slice(5,7)-1, 1).toLocaleDateString("ar-EG",{month:"long"})}` : ""} ${isBdayToday(s)?"🥳 (عيد ميلاده اليوم!)":""}</div>
+    `).join("");
+  } else {
+    $("bdayMonthCard").style.display = "none";
+  }
+
+  if(!news.length){
+    $("newsList").innerHTML = `<div class="empty"><div class="em">📭</div>لا توجد أحداث ومناسبات حالياً</div>`;
+    return;
+  }
+
+  $("newsList").innerHTML = news.map((n,i) => {
+    const v = n.votes || {}, mine = v[me.id];
+    const g = Object.values(v).filter(x => x === true).length;
+    const no = Object.values(v).filter(x => x === false).length;
+    const tot = g + no || 1;
+    return `
+      <div class="card news" style="animation-delay:${i*50}ms">
+        <h3>${esc(n.title)}</h3>
+        <p>${esc(n.text)}</p>
+        <div class="vote">
+          <button class="btn green ${mine === true ? "chosen" : ""}" onclick="vote('${n.id}',true)">✅ سأحضر</button>
+          <button class="btn red ${mine === false ? "chosen" : ""}" onclick="vote('${n.id}',false)">❌ أعتذر</button>
+        </div>
+        <div class="vbar"><i class="g" style="width:${(g/tot)*100}%"></i><i class="n" style="width:${(no/tot)*100}%"></i></div>
+        <div class="vcount"><span>${g} حاضر</span><span>${no} معتذر</span></div>
+      </div>`;
+  }).join("");
+}
+
+async function vote(id,val){
+  await col("events").doc(id).set({votes:{[me.id]:val}},{merge:true});
+  toast(val ? "في انتظارك بكل فرح! 🎉" : "ربنا معك 🙂");
+}
+
+/* ============================================================
+   12. CHALLENGES & QUIZ
+   ============================================================ */
+let quiz = null;
+function startChallenge(id){
+  const c = challenges.find(x => x.id === id); if(!c) return;
+  if(me.done[c.id]){ toast(`أكملت هذا التحدي مسبقاً (+${me.done[c.id]} J)`); return; }
+  const qs = c.questions || [];
+  if(!qs.length){ toast("لا توجد أسئلة في هذا التحدي بعد", true); return; }
+  quiz = { c, i: 0, correct: 0, locked: false };
+  openModal(`
+    <h2 style="font-size:22px;color:var(--gold)">${esc(c.title)}</h2>
+    <p class="sub" style="margin:6px 0 16px">${esc(c.desc)}</p>
+    <div class="card" style="margin-bottom:14px;text-align:center">
+      <div class="sub">مكافآت التحدي</div>
+      <div style="display:flex;justify-content:space-around;margin-top:8px;font-weight:900;font-size:15px">
+        <span>&lt;60% → 5 ${COIN}</span><span>60%+ → 7 ${COIN}</span><span>90%+ → 10 ${COIN}</span>
+      </div>
+    </div>
+    <button class="btn gold wide" onclick="showQ()">بدء التحدي ⚔️</button>
+  `);
+}
+
+function showQ(){
+  const q = quiz.c.questions[quiz.i]; quiz.locked = false;
+  openModal(`
+    <div class="q-top">
+      <span class="pill">السؤال ${quiz.i+1} من ${quiz.c.questions.length}</span>
+      <span class="pill gold">${quiz.correct} صح ✓</span>
+    </div>
+    <div class="q-text">${esc(q.q)}</div>
+    ${q.options.map((o,i) => `
+      <button class="opt" id="opt${i}" onclick="answer(${i})">${i+1}. ${esc(o)}</button>
+    `).join("")}
+  `);
+}
+
+function answer(i){
+  if(quiz.locked) return; quiz.locked = true;
+  const q = quiz.c.questions[quiz.i];
+  if(i === q.answer){ quiz.correct++; $("opt"+i).classList.add("right"); }
+  else { $("opt"+i).classList.add("wrong"); $("opt"+q.answer).classList.add("right"); }
+  setTimeout(() => {
+    quiz.i++;
+    if(quiz.i < quiz.c.questions.length) showQ();
+    else finishQuiz();
+  }, 900);
+}
+
+async function finishQuiz(){
+  const n = quiz.c.questions.length, pct = (quiz.correct/n)*100;
+  const pts = pct >= 90 ? 10 : pct >= 60 ? 7 : 5;
+  const ref = col("students").doc(me.id);
+
+  try {
+    await db.runTransaction(async t => {
+      const d = (await t.get(ref)).data() || {};
+      if((d.done||{})[quiz.c.id]) throw new Error("done");
+      t.update(ref, {
+        coins: (d.coins||0) + pts,
+        earned: (d.earned||0) + pts,
+        [`done.${quiz.c.id}`]: pts
+      });
+      t.set(col("history").doc(), {
+        sid: me.id,
+        amt: pts,
+        reason: "تحدي: " + quiz.c.title,
+        at: Date.now()
+      });
+    });
+
+    confetti();
+    openModal(`
+      <div class="result">
+        <div class="em">${pct>=90?"🏆":pct>=60?"🎉":"💪"}</div>
+        <h2>${pct>=90?"ممتاز جداً!":pct>=60?"عمل رائع!":"أحسنت المحاولة!"}</h2>
+        <div class="sub">أجبت ${quiz.correct} من أصل ${n} بشكل صحيح</div>
+        <div class="earn">+${pts} ${COIN}</div>
+        <button class="btn gold wide" style="margin-top:16px" onclick="closeModal()">استلام النقاط</button>
+      </div>
+    `);
+  } catch(e) {
+    toast("تم إنهاء التحدي مسبقاً!", true);
+    closeModal();
+  }
+}
+
+function renderChal(){
+  if(!me) return;
+  if(!challenges.length){
+    $("chalList").innerHTML = `<div class="empty"><div class="em">⚔️</div>لا توجد تحديات حالياً</div>`;
+    return;
+  }
+  $("chalList").innerHTML = challenges.map((c,i) => {
+    const done = me.done[c.id];
+    return `
+      <div class="card chal ${done ? "done" : ""}" style="animation-delay:${i*50}ms" onclick="startChallenge('${c.id}')">
+        <div class="ic">${done ? "✅" : "⚔️"}</div>
+        <div style="flex:1;min-width:0"><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p></div>
+        <div>${done ? `<span class="pill gold">+${done} ${COIN}</span>` : `<span class="pill">${(c.questions||[]).length} أسئلة</span>`}</div>
+      </div>`;
+  }).join("");
+}
+
+/* ============================================================
+   13. SHOP
+   ============================================================ */
+function renderShop(){
+  if(!me) return;
+  if(!shop.length){
+    $("shopGrid").innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="em">🎁</div>المتجر خالي حالياً</div>`;
+    return;
+  }
+  $("shopGrid").innerHTML = shop.map((g,i) => `
+    <div class="card gift ${g.qty<=0 ? "out" : ""}" style="animation-delay:${i*45}ms" onclick="buy('${g.id}')">
+      ${g.photo ? `<img class="ph" src="${g.photo}" alt="">` : `<div class="em">${esc(g.emoji||"🎁")}</div>`}
+      <div class="nm">${esc(g.name)}</div>
+      <span class="pill gold">${g.cost} ${COIN}</span>
+      <div class="qty">متبقي: ${g.qty}</div>
+    </div>`).join("");
+}
+
+function buy(id){
+  const g = shop.find(x => x.id === id); if(!g || g.qty<=0) return;
+  if(me.coins < g.cost){ toast(`ينقصك ${g.cost - me.coins} نقطة لشراء الهدية`, true); return; }
+  openModal(`
+    <div class="result">
+      ${g.photo ? `<img src="${g.photo}" style="width:130px;height:130px;object-fit:cover;border-radius:20px;margin:0 auto;border:3px solid var(--gold)">` : `<div class="em">${esc(g.emoji||"🎁")}</div>`}
+      <h2 style="font-size:24px">${esc(g.name)}</h2>
+      <p class="sub">شراء الهدية مقابل <span style="color:var(--gold);font-weight:900">${g.cost} ${COIN}</span>؟ رصيدك الحالي ${me.coins} ${COIN}</p>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn gray" style="flex:1" onclick="closeModal()">إلغاء</button>
+        <button class="btn gold" style="flex:1" onclick="confirmBuy('${g.id}')">شراء 🛒</button>
+      </div>
+    </div>
+  `);
+}
+
+async function confirmBuy(id){
+  const sref = col("students").doc(me.id), gref = col("shop").doc(id);
+  try {
+    await db.runTransaction(async t => {
+      const [s,g] = await Promise.all([t.get(sref), t.get(gref)]);
+      const sd = s.data() || {}, gd = g.data() || {};
+      if(gd.qty <= 0) throw new Error("نفذت الكمية!");
+      if((sd.coins||0) < gd.cost) throw new Error("الرصيد لا يكفي!");
+
+      t.update(sref, {
+        coins: sd.coins - gd.cost,
+        purchases: FV.arrayUnion({ item: gd.name, cost: gd.cost, at: Date.now() })
+      });
+      t.update(gref, { qty: gd.qty - 1 });
+      t.set(col("history").doc(), {
+        sid: me.id,
+        amt: -gd.cost,
+        reason: "شراء هدية: " + gd.name,
+        at: Date.now()
+      });
+    });
+
+    confetti(); closeModal(); toast("تم الشراء بنجاح! اطلب هديتك من أستاذك 🎁");
+  } catch(e) { toast(e.message || "حدث خطأ", true); closeModal(); }
+}
+
+/* ============================================================
+   14. PUSH NOTIFICATIONS & PWA INSTALL LOGIC
+   ============================================================ */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $("pwaBanner").style.display = "flex";
+});
+
+function installPWA(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if(choice.outcome === 'accepted') $("pwaBanner").style.display = "none";
+      deferredPrompt = null;
+    });
+  } else {
+    openModal(`
+      <div class="detail">
+        <h2>تثبيت التطبيق على الموبايل 📲</h2>
+        <p class="sub" style="margin:12px 0 16px;text-align:right;line-height:1.6">
+          • <b>على أجهزة آيفون (iOS):</b> اضغط على زر المشاركة (Share ⎋) في المتصفح، ثم اختر <b>إضافة إلى الشاشة الرئيسية (Add to Home Screen ➕)</b>.<br><br>
+          • <b>على أجهزة أندرويد (Android):</b> اضغط على الثلاث نقاط أعلى المتصفح واختر <b>تثبيت التطبيق (Install App)</b>.
+        </p>
+        <button class="btn gold wide" onclick="closeModal()">حسناً فهمت ✅</button>
+      </div>
+    `);
+  }
+}
+
+async function initPushNotifications(){
+  if(!('Notification' in window) || !('serviceWorker' in navigator)) return;
+  if(Notification.permission === 'granted'){
+    $("notifBanner").style.display = "none";
+    registerFCMToken();
+  } else if(Notification.permission === 'denied'){
+    $("notifBanner").style.display = "none";
+  }
+
+  // Register service worker
+  try {
+    const reg = await navigator.serviceWorker.register('sw.js');
+    console.log('SW registered:', reg);
+  } catch(e) { console.log('SW registration note:', e); }
+
+  // Daily client-side reminder check
+  checkDailyReminders();
+}
+
+async function enablePushNotifications(){
+  if(!('Notification' in window)){ toast("المتصفح لا يدعم الإشعارات", true); return; }
+  try {
+    const perm = await Notification.requestPermission();
+    if(perm === 'granted'){
+      toast("تم تفعيل الإشعارات بنجاح! 🔔");
+      $("notifBanner").style.display = "none";
+      registerFCMToken();
+    } else {
+      toast("لم يتم السماح بالإشعارات", true);
+    }
+  } catch(e) { toast("حدث خطأ", true); }
+}
+
+async function registerFCMToken(){
+  try {
+    const messaging = firebase.messaging();
+    const token = await messaging.getToken({
+      vapidKey: "BPd9hD9y_sample_or_default_vapid" // Optional VAPID key
+    }).catch(() => null);
+
+    if(token && me){
+      await col("fcm_tokens").doc(token).set({
+        sid: me.id,
+        name: me.name,
+        role: "student",
+        updatedAt: Date.now()
+      }, { merge: true });
+    }
+  } catch(e) { /* background token handling */ }
+}
+
+function checkDailyReminders(){
+  if(Notification.permission !== 'granted') return;
+  const now = new Date();
+  const hour = now.getHours();
+  const todayKey = dkey(now);
+  
+  // Morning spiritual reminder check (around 8-11 AM)
+  const morningSent = localStorage.getItem("rem_morning_" + todayKey);
+  if(hour >= 8 && hour < 12 && !morningSent){
+    localStorage.setItem("rem_morning_" + todayKey, "1");
+    new Notification("🌅 صباح الخير مع المسيح — أسرة يوحنا الحبيب", {
+      body: "ابدأ يومك ببركة صلاة باكر وتدقيق النوتة الروحية اليوم 🙏",
+      icon: "images/logo.png"
+    });
+  }
+
+  // Evening spiritual reminder check (around 8-11 PM)
+  const eveningSent = localStorage.getItem("rem_evening_" + todayKey);
+  if(hour >= 20 && !eveningSent){
+    localStorage.setItem("rem_evening_" + todayKey, "1");
+    new Notification("🌙 سلام ونعمة — أسرة يوحنا الحبيب", {
+      body: "اختم يومك بصلاة النوم وشكر ربنا في النوتة الروحية ✨",
+      icon: "images/logo.png"
+    });
+  }
+}
+
+/* ============================================================
+   15. NAV
+   ============================================================ */
+$("nav").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "p-" + b.dataset.p));
+  if(b.dataset.p === "badges") renderBadges();
+  if(b.dataset.p === "arena") renderArena();
+  if(b.dataset.p === "spirit") renderSpirit();
+  if(b.dataset.p === "me") renderMeStats();
+  if(b.dataset.p === "news") renderNews();
+});
+</script>
+</body>
+</html>

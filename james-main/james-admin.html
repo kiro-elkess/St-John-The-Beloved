@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>لوحة التحكم | أسرة القديس يوحنا الحبيب</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Lilita+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --bg1:#140c2e; --bg2:#241656; --bg3:#3d218f;
+  --panel:#1c1044; --panel2:#281861;
+  --gold:#ffcc33; --gold2:#ff9a1f; --gold3:#a85f00;
+  --blue:#3aa0ff; --blue2:#1b6be0;
+  --green:#5bd35b; --green2:#2f9f2f;
+  --red:#ff5a5a; --red2:#c62828;
+  --text:#fff; --muted:#b7a9e6; --border:#0e0622;
+  --shadow:0 6px 0 var(--border),0 12px 20px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Cairo','Nunito',sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 50% -10%,var(--bg3),var(--bg1) 60%);background-attachment:fixed;overflow:hidden}
+h1,h2,h3{font-family:'Cairo','Lilita One',cursive;letter-spacing:.5px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+#app{height:100%;display:flex;flex-direction:column}
+header{padding:calc(env(safe-area-inset-top) + 8px) 14px 10px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(20,12,46,.95),rgba(20,12,46,.7) 80%,transparent)}
+header h1{font-size:18px;color:var(--gold);line-height:1.2}
+header h1 small{font-size:11px;color:var(--muted);display:block;text-shadow:none}
+main{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;padding:6px 14px calc(100px + env(safe-area-inset-bottom));opacity:0;transform:translateX(-30px);pointer-events:none;transition:.3s}
+.page.active{opacity:1;transform:none;pointer-events:auto}
+.page h2{font-size:24px;margin:8px 0 14px}.page h2 span{color:var(--gold)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#12082b,#0a0418);border-top:3px solid #362070;display:grid;grid-template-columns:repeat(10,1fr);gap:2px}
+nav button{position:relative;background:transparent;border-radius:12px;padding:6px 0;min-width:0;overflow:hidden;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:900;font-size:8px;color:var(--muted);transition:.2s}
+nav button .ic{font-size:19px;transition:transform .3s cubic-bezier(.2,1.6,.4,1);filter:grayscale(.5)}
+nav button.on{color:var(--gold);background:linear-gradient(180deg,#3a2278,#261454);box-shadow:0 3px 0 var(--border)}
+nav button.on .ic{transform:translateY(-3px) scale(1.2);filter:none}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:18px;padding:14px;box-shadow:var(--shadow);border:2px solid #452b8f;position:relative;margin-bottom:12px;animation:pop .35s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:15px;text-shadow:0 2px 0 rgba(0,0,0,.3);background:linear-gradient(180deg,var(--blue),var(--blue2));box-shadow:0 5px 0 #0d3f8f,0 8px 12px rgba(0,0,0,.35);transition:.1s;user-select:none}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0d3f8f}
+.btn.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));box-shadow:0 5px 0 var(--gold3),0 8px 12px rgba(0,0,0,.35);color:#4a2a00;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.btn.green{background:linear-gradient(180deg,var(--green),var(--green2));box-shadow:0 5px 0 #1b6b1b}
+.btn.red{background:linear-gradient(180deg,var(--red),var(--red2));box-shadow:0 5px 0 #7a1010}
+.btn.gray{background:linear-gradient(180deg,#6b7a99,#46526e);box-shadow:0 5px 0 #262d3f}
+.btn.sm{padding:7px 12px;font-size:13px}.btn.wide{width:100%}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.inp,textarea.inp,select.inp{width:100%;padding:12px;border-radius:12px;border:2px solid #452b8f;background:#100829;color:#fff;font-family:'Cairo','Nunito';font-weight:800;font-size:14px;outline:none;margin-bottom:10px}
+.inp:focus{border-color:var(--gold)}
+textarea.inp{min-height:90px;resize:vertical}
+label.lbl{display:block;font-size:11px;font-weight:900;color:var(--muted);letter-spacing:1px;margin:4px 0 4px}
+.row{display:flex;gap:8px;align-items:center}.row .inp{margin-bottom:0}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-weight:900;font-size:12px;background:rgba(0,0,0,.3)}
+.pill.gold{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00}
+.pill.green{background:var(--green2)}.pill.red{background:var(--red2)}
+.muted{color:var(--muted);font-weight:800;font-size:12.5px}
+.item{display:flex;align-items:center;gap:10px}.item .grow{flex:1;min-width:0}
+.item h3{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item p{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av{width:42px;height:42px;border-radius:50%;overflow:hidden;background:#321970;border:2px solid var(--gold);display:grid;place-items:center;font-family:'Cairo','Lilita One';font-size:18px;font-weight:900;flex-shrink:0;position:relative}
+.av img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rule{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;cursor:pointer;font-weight:900;font-size:13px;min-height:48px;background:linear-gradient(180deg,var(--a),var(--b));box-shadow:0 4px 0 var(--sh);transition:.15s;user-select:none}
+.rule:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
+.rule.plus{--a:#5bd35b;--b:#2f9f2f;--sh:#1b6b1b}.rule.minus{--a:#ff5a5a;--b:#c62828;--sh:#7a1010}
+.rule b{font-family:'Lilita One';font-size:20px;font-weight:400;flex-shrink:0;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.rule span{flex:1;min-width:0;line-height:1.2;overflow-wrap:anywhere}
+.rule.sel{outline:4px solid var(--gold);outline-offset:2px}
+.picklist{max-height:300px;overflow-y:auto;border-radius:12px;background:rgba(0,0,0,.25);padding:4px}
+.pickrow{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;font-weight:800;font-size:14px}
+.pickrow.on{background:rgba(91,211,91,.18)}
+.pickrow .chk{width:24px;height:24px;pointer-events:none}
+.pickrow .grow{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badgepick{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}
+.bp{padding:10px 4px;text-align:center;border-radius:12px;background:rgba(0,0,0,.3);cursor:pointer;border:2px solid transparent;filter:grayscale(1);opacity:.5;transition:.2s}
+.bp.on{filter:none;opacity:1;border-color:var(--gold);background:rgba(255,204,51,.15)}
+.bp .em{font-size:28px}.bp .nm{font-size:11px;font-weight:900;margin-top:4px}
+.chk{appearance:none;width:28px;height:28px;border-radius:8px;border:3px solid #5033a3;background:#100829;display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:.15s}
+.chk:checked{background:linear-gradient(180deg,var(--green),var(--green2));border-color:var(--green)}
+.chk:checked::after{content:"✓";font-family:'Lilita One';font-size:17px;color:#fff}
+.chk.abs:not(:checked){background:#3a1a2a;border-color:#7a2a3a}
+.pctbar{height:10px;border-radius:999px;background:rgba(0,0,0,.4);overflow:hidden;margin-top:6px}
+.pctbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .6s}
+.top{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.top:last-child{border:none}
+.top .medal{font-size:22px;width:30px;text-align:center}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(5,5,25,.8);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{position:relative;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#301a6b,#140c2e);border:3px solid #5033a3;border-bottom:none;transform:translateY(60px);transition:transform .35s cubic-bezier(.2,1.2,.3,1);text-align:right}
+.overlay.show .modal{transform:none}
+@media(min-width:600px){.overlay{align-items:center}.modal{border-radius:26px;border-bottom:3px solid #5033a3}}
+.modal .x{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:10px;background:var(--red);box-shadow:0 3px 0 #7a1010;font-family:'Lilita One';font-size:18px;z-index:2}
+#qrbox{display:grid;place-items:center;background:#fff;padding:16px;border-radius:16px;margin:12px auto;width:fit-content}
+#toast{position:fixed;left:50%;top:80px;transform:translate(-50%,-30px);z-index:200;padding:12px 20px;border-radius:14px;font-family:'Cairo','Lilita One';font-weight:900;font-size:16px;background:linear-gradient(180deg,var(--gold),var(--gold2));color:#4a2a00;box-shadow:0 5px 0 var(--gold3),0 10px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.bad{background:linear-gradient(180deg,var(--red),var(--red2));color:#fff;box-shadow:0 5px 0 #7a1010}
+.empty{text-align:center;color:var(--muted);font-weight:800;padding:30px 10px}
+.btngrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.catpct{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.catpct .pill{font-size:10px;padding:2px 7px}
+.attrow{padding:10px 12px}
+.attrow .av{width:36px;height:36px;font-size:16px}
+.attchecks{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)}
+.attchecks label{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:900;color:var(--muted);cursor:pointer}
+.daygrid{width:100%;border-collapse:collapse;font-weight:800;font-size:12.5px}
+.daygrid th{font-size:10px;color:var(--muted);letter-spacing:1px;padding:6px 4px;text-align:center;position:sticky;top:0}
+.daygrid td{padding:5px 4px;text-align:center;border-top:1px solid rgba(255,255,255,.08)}
+.daygrid td:first-child,.daygrid th:first-child{text-align:right;white-space:nowrap}
+.daygrid .y{color:var(--green)}.daygrid .n{color:rgba(255,255,255,.25)}
+input[type=date].inp{color-scheme:dark}
+.jk{display:inline-grid;place-items:center;width:1.3em;height:1.3em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff0a0,#ffc21a 55%,#d98a00);border:.12em solid #8a5200;color:#5a3200;font-family:'Lilita One',cursive;font-size:.85em;line-height:1;font-style:normal;font-weight:400;text-shadow:0 1px 0 rgba(255,255,255,.5);vertical-align:-.22em;box-shadow:inset 0 -.12em 0 rgba(0,0,0,.2)}
+nav .nb{position:absolute;top:2px;right:4px;min-width:16px;height:16px;padding:0 3px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:900;display:none;place-items:center}
+.log{font-size:12.5px;font-weight:800;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.3);margin-top:6px;border-right:4px solid var(--gold);text-align:right}
+.rounds{display:flex;gap:6px}
+.rounds label{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:900;color:var(--muted)}
+.gift-ph{width:56px;height:56px;border-radius:12px;object-fit:cover;border:2px solid var(--gold);flex-shrink:0}
+.ph-pick{width:100%;aspect-ratio:3/1;border:3px dashed #5033a3;border-radius:14px;display:grid;place-items:center;cursor:pointer;background:rgba(0,0,0,.2);margin-bottom:10px;overflow:hidden;position:relative}
+.ph-pick img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.ph-pick span{position:relative;z-index:1;font-weight:900;color:var(--muted);background:rgba(0,0,0,.5);padding:6px 12px;border-radius:10px}
+#reader{width:100%;border-radius:16px;overflow:hidden;background:#000;min-height:240px;display:none}
+#reader.on{display:block}
+.selected-op{font-family:'Cairo','Lilita One';font-weight:900;font-size:20px;text-align:center;margin:6px 0}
+.selected-op.plus{color:var(--green)}.selected-op.minus{color:var(--red)}
+.qb{background:rgba(0,0,0,.25);border-radius:14px;padding:10px;margin-bottom:10px;border:2px dashed #5033a3}
+.qb .opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.qb .opt{display:flex;align-items:center;gap:6px}
+.qb .opt input[type=radio]{width:20px;height:20px;accent-color:var(--gold);flex-shrink:0}
+.qb .opt .inp{margin:0;padding:8px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div style="display:flex;align-items:center;gap:10px">
+      <img src="images/logo.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 8px rgba(0,0,0,.4)">
+      <div>
+        <h1>أسرة القديس يوحنا الحبيب</h1>
+        <small>لوحة التحكم والإدارة — ADMIN</small>
+      </div>
+    </div>
+    <button class="btn gold sm" onclick="openNotifCenter()">🔔 الإشعارات</button>
+  </header>
+  
+  <main>
+    <!-- SCORE -->
+    <section class="page active" id="p-score">
+      <h2>نقاط الجوكنز <i class="jk">J</i></h2>
+      <div class="card">
+        <label class="lbl">1 — اختر قاعدة أو بند التقييم</label>
+        <div class="rules" id="ruleList"></div>
+        <label class="lbl" style="margin-top:14px">إضافة قاعدة جديدة أو استخدام مباشر</label>
+        <div class="row" style="margin-bottom:8px">
+          <input class="inp" id="ruleLabel" placeholder="اسم البند (مثال: حفظ ترنيمة)" maxlength="60">
+          <input class="inp" id="ruleAmt" type="number" placeholder="±" style="width:84px;text-align:center">
+        </div>
+        <div class="btngrid">
+          <button class="btn sm gray" onclick="useOnce()">استخدام لمرة واحدة</button>
+          <button class="btn sm gold" onclick="addRule()">💾 حفظ كقاعدة دائمة</button>
+        </div>
+        <div class="selected-op" id="opLabel">اختر قاعدة أولاً</div>
+      </div>
+
+      <div class="card">
+        <label class="lbl">2 — اختر الطلاب (واحد أو أكثر)</label>
+        <input class="inp" id="pickSearch" placeholder="🔍 بحث عن اسم الطالب…" oninput="renderPick()">
+        <div class="btngrid" style="margin-bottom:8px">
+          <button class="btn gray sm" onclick="pickAll(true)">تحديد الكل</button>
+          <button class="btn gray sm" onclick="pickAll(false)">إلغاء التحديد</button>
+        </div>
+        <div class="picklist" id="pickList"></div>
+        <button class="btn green wide" style="margin-top:12px" onclick="applyManual()" id="manualBtn" disabled>تطبيق النقاط</button>
+      </div>
+
+      <div class="card">
+        <label class="lbl">أو مسح كارت الـ QR للطالب 📷</label>
+        <div id="reader"></div>
+        <button class="btn gold wide" style="margin-top:10px" id="scanBtn" onclick="toggleScan()" disabled>📷 فتح كاميرا QR</button>
+      </div>
+      <div id="scanLog"></div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section class="page" id="p-students">
+      <h2>قائمة الطلاب <span id="stuCount"></span></h2>
+      
+      <!-- SYNC ROSTER BUTTON -->
+      <button class="btn gold wide" style="margin-bottom:12px" onclick="syncInitialRoster()">🔄 مزامنة وتحديث قائمة الـ 33 طالباً مع تواريخ الميلاد</button>
+
+      <div class="card">
+        <label class="lbl">إضافة طالب جديد يدوي</label>
+        <input class="inp" id="newName" placeholder="اسم الطالب بالإنجليزية (مثال: Adam Ragy)">
+        <label class="lbl">تاريخ الميلاد 🎂</label>
+        <div class="row">
+          <input class="inp" id="newBday" type="date">
+          <button class="btn green sm" onclick="addStudent()">إضافة</button>
+        </div>
+      </div>
+      <div id="stuList"></div>
+    </section>
+
+    <!-- ATTENDANCE -->
+    <section class="page" id="p-att">
+      <h2>دفتر الحضور <span>📋</span></h2>
+      <div class="card">
+        <label class="lbl">تاريخ الجمعة</label>
+        <select class="inp" id="attDate" onchange="renderAttList()"></select>
+        <label class="lbl">تسجيل حضور الكل في:</label>
+        <div class="btngrid" id="attAllBtns"></div>
+        <button class="btn gray sm wide" style="margin-top:8px" onclick="clearDay()">تسجيل غياب الكل لهذه الجمعة</button>
+        <p class="muted" id="attSummary" style="margin-top:10px"></p>
+      </div>
+      <div id="attList"></div>
+      <div class="card" style="border-color:var(--gold)">
+        <h3 style="font-size:18px;color:var(--gold);margin-bottom:6px">🏅 أنشط الطلاب حضوراً</h3>
+        <p class="muted" id="attWeeks" style="margin-bottom:6px"></p>
+        <div id="topActive"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:6px">نسبة حضور جميع الطلاب %</h3>
+        <div id="attPct"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:4px">📊 تصدير شيت Excel</h3>
+        <div class="btngrid" id="attExportBtns"></div>
+      </div>
+    </section>
+
+    <!-- SPIRITUALS -->
+    <section class="page" id="p-spirit">
+      <h2>متابعة النوتة الروحية <span>🙏</span></h2>
+      <div class="card">
+        <label class="lbl">الشهر</label>
+        <select class="inp" id="spMonth" onchange="renderSpirit()"></select>
+        <p class="muted" id="spSummary"></p>
+      </div>
+      <div id="spList"></div>
+    </section>
+
+    <!-- PSALMS -->
+    <section class="page" id="p-psalm">
+      <h2>تسميع المزامير <span>📜</span></h2>
+      <p class="muted" style="margin:-6px 0 12px">الطلبات المرسلة من الطلاب. الاعتماد يضيف تلقائياً <b>+10 نقاط</b> للطالب.</p>
+      <div id="psPending"></div>
+      <h3 style="font-size:17px;margin:14px 0 6px">الطلبات المعتمدة حديثاً</h3>
+      <div id="psDone"></div>
+    </section>
+
+    <!-- EFTKAD -->
+    <section class="page" id="p-eft">
+      <h2>الافتقاد والزيارات <span>🏠</span></h2>
+      <p class="muted" style="margin:-6px 0 12px">حدد الجولة عند كل زيارة منزلية للطالب واكتب الملاحظات.</p>
+      <button class="btn gold wide" style="margin-bottom:14px" onclick="exportEftkad()">📊 تصدير شيت الافتقاد Excel</button>
+      <div id="eftList"></div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="page" id="p-news">
+      <h2>المناسبات والأحداث <span>📅</span></h2>
+      <div class="card">
+        <input class="inp" id="newsTitle" placeholder="عنوان المناسبة (مثال: رحلة دير الأنبا مقار)">
+        <textarea class="inp" id="newsText" placeholder="التفاصيل (الموعد، المكان، ما يجب إحضاره...)"></textarea>
+        <button class="btn green wide" onclick="addNews()">📢 نشر المناسبة</button>
+      </div>
+      <div id="newsList"></div>
+    </section>
+
+    <!-- CHALLENGES -->
+    <section class="page" id="p-chal">
+      <h2>إدارة التحديات</h2>
+      <div class="card">
+        <input class="inp" id="chTitle" placeholder="عنوان التحدي (مثال: مسابقة إنجيل يوحنا الإصحاح 1)">
+        <textarea class="inp" id="chDesc" placeholder="وصف قصير" style="min-height:60px"></textarea>
+        <label class="lbl">الأسئلة (حدد الإجابة الصحيحة بالدائرة)</label>
+        <div id="qBuilder"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn gray sm" onclick="addQ()">+ سؤال جديد</button>
+          <button class="btn green" style="flex:1" onclick="saveChallenge()">⚔️ حفظ التحدي</button>
+        </div>
+      </div>
+      <div id="chalList"></div>
+    </section>
+
+    <!-- SHOP -->
+    <section class="page" id="p-shop">
+      <h2>متجر الهدايا <span>🎁</span></h2>
+      <div class="card">
+        <input type="file" id="gFile" accept="image/*" hidden onchange="loadGiftPhoto(this)">
+        <div class="ph-pick" onclick="document.getElementById('gFile').click()">
+          <img id="gPreview" style="display:none"><span id="gPhLabel">📷 اضغط لاختيار صورة الهدية (اختياري)</span>
+        </div>
+        <div class="row" style="margin-bottom:10px">
+          <input class="inp" id="gEmoji" placeholder="🎁" style="width:70px;text-align:center;font-size:22px">
+          <input class="inp" id="gName" placeholder="اسم الهدية">
+        </div>
+        <div class="row" style="margin-bottom:10px">
+          <input class="inp" id="gCost" type="number" placeholder="السعر بالنقاط">
+          <input class="inp" id="gQty" type="number" placeholder="الكمية المتاحة">
+        </div>
+        <button class="btn green wide" onclick="addGift()">🎁 إضافة للمتجر</button>
+      </div>
+      <div id="shopList"></div>
+    </section>
+
+    <!-- NOTIFICATIONS TAB -->
+    <section class="page" id="p-notif">
+      <h2>مركز الإشعارات <span>🔔</span></h2>
+      <div class="card">
+        <h3 style="font-size:18px;color:var(--gold);margin-bottom:8px">إرسال تذكيرات فورية لجميع الطلاب</h3>
+        <p class="muted" style="margin-bottom:12px">اضغط لإرسال إشعار فوري على هواتف جميع الطلاب والخدام المسجلين:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn gold" onclick="sendSpiritualNotif('morning')">🌅 إرسال تذكير صلاة باكر والنوتة الروحية</button>
+          <button class="btn gold" onclick="sendSpiritualNotif('evening')">🌙 إرسال تذكير صلاة النوم قبل النوم</button>
+          <button class="btn gold" onclick="sendBirthdayNotif()">🎂 إرسال تهنئة أعياد ميلاد اليوم لجميع الطلاب</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:18px;margin-bottom:8px">إشعار مخصص للجميع 📢</h3>
+        <input class="inp" id="customNotifTitle" placeholder="عنوان الإشعار (مثال: موعد القداس غداً)">
+        <textarea class="inp" id="customNotifBody" placeholder="نص الإشعار..."></textarea>
+        <button class="btn green wide" onclick="sendCustomNotif()">إرسال الإشعار للجميع 📢</button>
+      </div>
+    </section>
+  </main>
+
+  <nav id="nav">
+    <button data-p="score" class="on"><span class="ic"><i class="jk">J</i></span>النقاط</button>
+    <button data-p="students"><span class="ic">👥</span>الطلاب</button>
+    <button data-p="att"><span class="ic">📋</span>الغياب</button>
+    <button data-p="spirit"><span class="ic">🙏</span>النوتة</button>
+    <button data-p="psalm"><span class="ic">📜</span>مزمور<b class="nb" id="psBadge"></b></button>
+    <button data-p="eft"><span class="ic">🏠</span>افتقاد</button>
+    <button data-p="news"><span class="ic">📅</span>أحداث</button>
+    <button data-p="chal"><span class="ic">⚔️</span>تحديات</button>
+    <button data-p="shop"><span class="ic">🎁</span>متجر</button>
+    <button data-p="notif"><span class="ic">🔔</span>إشعار</button>
+  </nav>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   1. FIREBASE CONFIG — Loaded from firebase-config.js
+   ============================================================ */
+const defaultFirebaseConfig = {
+  apiKey: "AIzaSyC4Ext0cCeRvNEBca7EdyFkkvgyUbcwRW4",
+  authDomain: "st-john-the-beloved.firebaseapp.com",
+  projectId: "st-john-the-beloved",
+  storageBucket: "st-john-the-beloved.firebasestorage.app",
+  messagingSenderId: "716900964750",
+  appId: "1:716900964750:web:69aa4e3d58be23f9472cdf",
+  measurementId: "G-PTHE3NCBNK"
+};
+
+const activeConfig = (typeof firebaseConfig !== 'undefined' && firebaseConfig && firebaseConfig.apiKey)
+  ? firebaseConfig
+  : defaultFirebaseConfig;
+
+firebase.initializeApp(activeConfig);
+const db = firebase.firestore();
+const FV = firebase.firestore.FieldValue;
+const ROOT = db.collection("james").doc("app");
+const col = n => ROOT.collection(n);
+const IMG_DIR = "images/";
+const COIN = '<i class="jk">J</i>';
+
+/* ============================================================
+   2. ROSTER OF 33 STUDENTS & BIRTHDAYS
+   ============================================================ */
+const INITIAL_STUDENTS = [
+  { name: "Adam Ragy", birthday: "2015-05-14" },
+  { name: "Armia Bishoy", birthday: "2014-10-12" },
+  { name: "Patrick Hany", birthday: "2014-11-11" },
+  { name: "Benuel Mina", birthday: "2014-10-27" },
+  { name: "Georgino Ehab", birthday: "2014-07-18" },
+  { name: "Jonathan Romany", birthday: "2015-10-06" },
+  { name: "Jonathan Kirollos", birthday: "2015-02-03" },
+  { name: "Jonathan Walid", birthday: "2014-05-14" },
+  { name: "Daniel Mina", birthday: "2014-12-22" },
+  { name: "David Mina", birthday: "2014-06-14" },
+  { name: "Ramy Bassem", birthday: "2014-10-20" },
+  { name: "Randy Amir", birthday: "2015-05-18" },
+  { name: "Steven Sherif", birthday: "2015-05-05" },
+  { name: "Karas Sameh", birthday: "2014-02-17" },
+  { name: "Karim Hany", birthday: "2015-06-28" },
+  { name: "Kirollos Wael", birthday: "2014-08-30" },
+  { name: "Matthew Sherif", birthday: "2014-08-09" },
+  { name: "Matthew Eid", birthday: "2012-03-15" },
+  { name: "Martin Michael", birthday: "2015-12-19" },
+  { name: "Mark Ramy", birthday: "2014-12-08" },
+  { name: "Mark Awad", birthday: "2014-06-10" },
+  { name: "Mina Beshara", birthday: "2014-02-24" },
+  { name: "John Samer", birthday: "2015-11-10" },
+  { name: "Mina Yasser", birthday: "2014-12-14" },
+  { name: "John Sherif", birthday: "2015-11-09" },
+  { name: "Sebastian Pola", birthday: "" },
+  { name: "Patrick Raymon", birthday: "2015-08-22" },
+  { name: "David Aziz", birthday: "2015-05-20" },
+  { name: "Andrew Elia", birthday: "2013-03-11" },
+  { name: "Philopater Michel", birthday: "2014-12-31" },
+  { name: "David Sherif", birthday: "" },
+  { name: "Adham Karim", birthday: "2015-12-10" },
+  { name: "Mina Youssef", birthday: "" }
+];
+
+/* 4 St. John Badges */
+const BADGES = [
+  { id: "john_seer",       em: "🦅", name: "يوحنا الرائي",    cost: 150, img: "images/badge_seer.svg" },
+  { id: "john_apostle",    em: "📜", name: "يوحنا الرسولي",  cost: 200, img: "images/badge_apostle.svg" },
+  { id: "john_evangelist", em: "✨", name: "يوحنا الإنجيلي", cost: 400, img: "images/badge_evangelist.svg" },
+  { id: "john_beloved",    em: "👑", name: "يوحنا الحبيب",   cost: 550, img: "images/badge_beloved.svg" },
+];
+
+const ARENAS = [
+  {name:"Starter Camp",min:0,em:"🏕️"},{name:"Faith Fortress",min:26,em:"🏰"},{name:"Strength Summit",min:51,em:"💪"},
+  {name:"Wisdom Grove",min:91,em:"🌳"},{name:"Voice Tower",min:141,em:"📣"},{name:"Patience Pass",min:181,em:"⏳"},
+  {name:"Prayer Peaks",min:221,em:"🏔️"},{name:"Crown of Life",min:261,em:"👑"},
+];
+
+const FRIDAYS = Array.from({length:52},(_,i)=>{const d=new Date(2026,10,20);d.setDate(d.getDate()+i*7);return d;});
+const CATS = [
+  {k:"odas",    name:"القداس",     short:"القداس"},
+  {k:"madares", name:"الفصل",      short:"الفصل"},
+  {k:"asheya",  name:"العشية",     short:"العشية"},
+  {k:"dars",    name:"درس الكتاب", short:"درس الكتاب"},
+];
+
+const DEFAULT_RULES = [
+  {id:"d-bonus", amt:1,  label:"Bonus تشجيعي"},
+  {id:"d-asheya",amt:2,  label:"حضور العشية"},
+  {id:"d-dars",  amt:2,  label:"درس كتاب"},
+  {id:"d-ask",   amt:2,  label:"مشاركة وإجابة سؤال"},
+  {id:"d-odas",  amt:5,  label:"حضور القداس"},
+  {id:"d-fasl",  amt:5,  label:"حضور الفصل"},
+  {id:"d-pray",  amt:7,  label:"صلاة وحفظ مزمور"},
+  {id:"d-talk",  amt:-1, label:"كلام بدون إذن"},
+  {id:"d-joke",  amt:-2, label:"هزار أثناء الصلاة"},
+  {id:"d-bad",   amt:-5, label:"سلوك غير لائق"},
+  {id:"d-shib",  amt:-5, label:"شبشب"},
+  {id:"d-short", amt:-5, label:"شورت"},
+];
+
+const PSALM_PTS = 10;
+const SPIRIT = [
+  {k:"mp",em:"🌅",name:"صلاة باكر",short:"باكر"},{k:"np",em:"🌙",name:"صلاة النوم",short:"نوم"},{k:"bible",em:"📖",name:"إنجيل",short:"إنجيل"},
+  {k:"som",em:"🌾",name:"صوم",short:"صوم",days:[3,5]},
+];
+
+const spApplies = (x,k)=>!x.days||x.days.includes(new Date(+k.slice(0,4),+k.slice(5,7)-1,+k.slice(8,10)).getDay());
+const dkey = d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const dlabel = d=>d.toLocaleDateString("ar-EG",{day:"numeric",month:"short",year:"numeric"});
+const MONTHS = ["يناير","فبراير","مارس","إبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+
+const isBdayMonth = s=>!!s.birthday && +String(s.birthday).slice(5,7)===new Date().getMonth()+1;
+const bdayLabel = s=>s.birthday?`${+String(s.birthday).slice(8,10)} ${MONTHS[+String(s.birthday).slice(5,7)-1]}`:"";
+
+let students=[], news=[], challenges=[], shop=[], att={}, spirit={};
+const $ = id=>document.getElementById(id);
+const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const arenaOf = e=>{let a=ARENAS[0];for(const x of ARENAS)if(e>=x.min)a=x;return a;};
+const avatar = s=>`<div class="av">${esc((s.name||"?")[0])}<img src="${IMG_DIR}${encodeURIComponent(s.name)}.png" alt="" onerror="this.remove()"></div>`;
+
+function toast(m,bad){const t=$("toast");t.textContent=m;t.className=bad?"show bad":"show";clearTimeout(t._t);t._t=setTimeout(()=>t.className="",2400);}
+function openModal(h){$("modal").innerHTML=`<button class="x" onclick="closeModal()">✕</button>`+h;$("overlay").classList.add("show");}
+function closeModal(){$("overlay").classList.remove("show");}
+const slug = n=>n.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+
+/* ============================================================
+   3. REALTIME SYNC
+   ============================================================ */
+col("students").onSnapshot(s=>{
+  students=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.name.localeCompare(b.name));
+  renderStudents(); renderAttList(); renderAttStats(); renderSpirit(); renderEftkad(); renderChal(); renderNews(); renderPsalms();
+});
+col("events").orderBy("createdAt","desc").onSnapshot(s=>{news=s.docs.map(d=>({id:d.id,...d.data()}));renderNews();});
+col("challenges").orderBy("createdAt","desc").onSnapshot(s=>{challenges=s.docs.map(d=>({id:d.id,...d.data()}));renderChal();});
+col("shop").orderBy("cost").onSnapshot(s=>{shop=s.docs.map(d=>({id:d.id,...d.data()}));renderShop();});
+col("attendance").onSnapshot(s=>{att={};s.docs.forEach(d=>att[d.id]=d.data()||{});renderAttList();renderAttStats();});
+col("spirituals").onSnapshot(s=>{spirit={};s.docs.forEach(d=>spirit[d.id]=d.data()||{});renderSpirit();});
+
+/* Populate dates */
+const selD=$("attDate");
+FRIDAYS.forEach(d=>{const opt=document.createElement("option");opt.value=dkey(d);opt.textContent=dlabel(d);selD.appendChild(opt);});
+const curFri=FRIDAYS.map(dkey).filter(k=>k<=dkey(new Date())).pop()||dkey(FRIDAYS[0]);
+selD.value=curFri;
+
+$("attAllBtns").innerHTML=CATS.map(c=>`<button class="btn sm green" onclick="markCat('${c.k}')">حضور ${c.name} للكل</button>`).join("");
+$("attExportBtns").innerHTML=CATS.map(c=>`<button class="btn sm gold" onclick="exportAtt('${c.k}')">📊 ${c.name}</button>`).join("");
+
+const selM=$("spMonth");
+for(let i=0;i<12;i++){
+  const d=new Date(2026,i,1), k=`${d.getFullYear()}-${String(i+1).padStart(2,"0")}`;
+  const opt=document.createElement("option"); opt.value=k; opt.textContent=`${MONTHS[i]} ${d.getFullYear()}`; selM.appendChild(opt);
+}
+selM.value=dkey(new Date()).slice(0,7);
+
+/* ============================================================
+   4. SCORE / JOKENS
+   ============================================================ */
+let customRules=[], op=null, opReason="", sel=new Set();
+col("rules").onSnapshot(s=>{customRules=s.docs.map(d=>({id:d.id,...d.data()}));renderRules();});
+
+function allRules(){return [...DEFAULT_RULES,...customRules];}
+function renderRules(){
+  $("ruleList").innerHTML=allRules().map(r=>`
+    <div class="rule ${r.amt>0?"plus":"minus"} ${op===r.amt&&opReason===r.label?"sel":""}" onclick="pickRule(${r.amt},'${esc(r.label)}')">
+      <b>${r.amt>0?"+":""}${r.amt}</b><span>${esc(r.label)}</span>
+      ${r.id.startsWith("d-")?"":`<button class="rule-del rx" onclick="event.stopPropagation();delRule('${r.id}')">✕</button>`}
+    </div>`).join("");
+}
+function pickRule(amt,reason){ op=amt; opReason=reason; renderRules(); updateOp(); }
+function useOnce(){
+  const amt=+$("ruleAmt").value, label=$("ruleLabel").value.trim();
+  if(!amt||!label){toast("اكتب الوصف والنقاط",true);return;}
+  pickRule(amt,label);
+}
+async function addRule(){
+  const amt=+$("ruleAmt").value, label=$("ruleLabel").value.trim();
+  if(!amt||!label){toast("اكتب الوصف والنقاط",true);return;}
+  await col("rules").add({amt,label,createdAt:Date.now()});
+  $("ruleAmt").value=""; $("ruleLabel").value=""; toast("تم حفظ البند ✅");
+}
+async function delRule(id){ if(confirm("حذف هذه القاعدة؟")) await col("rules").doc(id).delete(); }
+
+function fmt(n){return (n>0?"+":"")+n;}
+function updateOp(){
+  const l=$("opLabel");
+  if(op===null){l.textContent="اختر قاعدة أولاً";l.className="selected-op";}
+  else{l.textContent=`المحدد: ${fmt(op)} ${COIN} — ${opReason}`;l.className="selected-op "+(op>0?"plus":"minus");}
+  $("manualBtn").disabled=!op||!sel.size;
+  $("scanBtn").disabled=!op;
+}
+
+function renderPick(){
+  const q=$("pickSearch").value.trim().toLowerCase();
+  const ids=new Set(students.map(s=>s.id)); [...sel].forEach(id=>{if(!ids.has(id)) sel.delete(id);});
+  const list=students.filter(s=>!q||s.name.toLowerCase().includes(q));
+  $("pickList").innerHTML=list.length?list.map(s=>`
+    <div class="pickrow ${sel.has(s.id)?"on":""}" onclick="togglePick('${esc(s.id)}',this)">
+      <input type="checkbox" class="chk" tabindex="-1" ${sel.has(s.id)?"checked":""}>
+      <span class="grow">${esc(s.name)}</span>
+      <span class="pill gold">${s.coins||0} ${COIN}</span>
+    </div>`).join(""):`<div class="empty" style="padding:16px">لا يوجد طلاب</div>`;
+  updateOp();
+}
+function togglePick(id,el){ if(sel.has(id)) sel.delete(id); else sel.add(id); renderPick(); }
+function pickAll(on){
+  const q=$("pickSearch").value.trim().toLowerCase();
+  if(on) students.filter(s=>!q||s.name.toLowerCase().includes(q)).forEach(s=>sel.add(s.id)); else sel.clear();
+  renderPick();
+}
+
+async function award(id,amt,reason){
+  const s=students.find(x=>x.id===id); if(!s) throw new Error("طالب غير معروف");
+  const ref=col("students").doc(id);
+  await db.runTransaction(async t=>{
+    const d=(await t.get(ref)).data()||{};
+    t.update(ref,{
+      coins: Math.max(0, (d.coins||0) + amt),
+      earned: Math.max(0, (d.earned||0) + (amt > 0 ? amt : 0))
+    });
+    t.set(col("history").doc(),{sid:id,amt,reason,at:Date.now()});
+  });
+}
+
+async function applyManual(){
+  if(!op||!sel.size) return;
+  const ids=[...sel], amt=op, reason=opReason;
+  const b=$("manualBtn"); b.disabled=true; b.textContent="جاري الحفظ... ⏳";
+  try{
+    for(const id of ids) await award(id,amt,reason);
+    toast(`تم تطبيق ${fmt(amt)} لـ ${ids.length} طالب ✅`);
+    sel.clear(); renderPick();
+  }catch(e){toast("خطأ: "+e.message,true);}
+  finally{updateOp();}
+}
+
+/* ============================================================
+   5. STUDENTS & ROSTER SYNC (33 STUDENTS)
+   ============================================================ */
+async function syncInitialRoster(){
+  if(!confirm("هل تريد مزامنة وتحديث قائمة الـ 33 طالباً في قاعدة البيانات مع الحفاظ على أي نقاط سابقة؟")) return;
+  toast("جاري مزامنة 33 طالب... ⏳");
+  let count=0;
+  for(const s of INITIAL_STUDENTS){
+    const id=slug(s.name);
+    const ref=col("students").doc(id);
+    const snap=await ref.get();
+    if(snap.exists){
+      await ref.update({
+        name: s.name,
+        birthday: s.birthday || ""
+      });
+    } else {
+      await ref.set({
+        name: s.name,
+        birthday: s.birthday || "",
+        coins: 0,
+        earned: 0,
+        badges: [],
+        done: {},
+        purchases: [],
+        eftkad: [false,false,false,false,false],
+        eftkadNote: "",
+        createdAt: Date.now()
+      });
+    }
+    count++;
+  }
+  toast(`تمت مزامنة ${count} طالب بنجاح! ✅`);
+}
+
+async function addStudent(){
+  const name=$("newName").value.trim(); if(!name) return;
+  const id=slug(name);
+  if(!id){toast("يجب أن يحتوي الاسم على حروف إنجليزية",true);return;}
+  if((await col("students").doc(id).get()).exists){toast("الطالب مسجل بالفعل",true);return;}
+  await col("students").doc(id).set({
+    name, coins:0, earned:0, badges:[], done:{}, purchases:[],
+    eftkad:[false,false,false,false,false], eftkadNote:"",
+    birthday:$("newBday").value||"", createdAt:Date.now()
+  });
+  $("newName").value=""; $("newBday").value=""; toast("تمت إضافة "+name+" ✅");
+}
+
+function renderStudents(){
+  $("stuCount").textContent=`(${students.length})`;
+  renderPick();
+  if(!students.length){$("stuList").innerHTML=`<div class="empty">لا يوجد طلاب حالياً</div>`;return;}
+  $("stuList").innerHTML=students.map((s,i)=>`
+    <div class="card item" onclick="openStudent('${esc(s.id)}')" style="cursor:pointer;animation-delay:${Math.min(i*30,300)}ms">
+      ${avatar(s)}
+      <div class="grow">
+        <h3>${isBdayMonth(s)?"🎂 ":""}${esc(s.name)}</h3>
+        <p>${s.birthday?`🎂 ${bdayLabel(s)} • `:""}${arenaOf(s.earned||0).em} ${esc(arenaOf(s.earned||0).name)} • ${(s.badges||[]).length} أوسمة</p>
+      </div>
+      <div style="text-align:left">
+        <span class="pill gold">${s.coins||0} ${COIN}</span>
+        <p class="muted" style="font-size:11px;margin-top:3px">المجموع: ${s.earned||0}</p>
+      </div>
+    </div>`).join("");
+}
+
+async function openStudent(id){
+  const s=students.find(x=>x.id===id); if(!s) return;
+  const b=new Set(s.badges||[]);
+
+  // Fetch full score history for student
+  let histHtml = `<div class="empty" style="padding:10px">لا يوجد سجل نقاط</div>`;
+  try {
+    const snap = await col("history").where("sid","==",id).get();
+    const hList = snap.docs.map(d=>d.data()).sort((x,y)=>(y.at||0)-(x.at||0));
+    if(hList.length){
+      histHtml = hList.map(h=>`
+        <div class="log" style="font-size:12px;padding:6px 8px">
+          <b>${esc(h.reason)}</b> — <span class="pill ${h.amt<0?"red":"green"}">${h.amt>0?"+":""}${h.amt} ${COIN}</span>
+          <span class="muted">${new Date(h.at).toLocaleDateString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>
+        </div>
+      `).join("");
+    }
+  } catch(e){}
+
+  openModal(`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      ${avatar(s)}
+      <div>
+        <h2 style="font-size:22px">${esc(s.name)} ${isBdayMonth(s)?"🎂":""}</h2>
+        <p class="muted">كود الطالب: <b>${esc(s.id)}</b></p>
+      </div>
+    </div>
+    
+    <label class="lbl">تاريخ الميلاد 🎂</label>
+    <input class="inp" id="edBday" type="date" value="${esc(s.birthday||"")}">
+    
+    <div class="row" style="margin-bottom:10px">
+      <div style="flex:1">
+        <label class="lbl">المجموع التراكمي (Leaderboard)</label>
+        <input class="inp" id="edEarned" type="number" value="${s.earned||0}">
+      </div>
+      <div style="flex:1">
+        <label class="lbl">الرصيد الحالي للأوسمة والمتجر</label>
+        <input class="inp" id="edJokens" type="number" value="${s.coins||0}">
+      </div>
+    </div>
+    
+    <label class="lbl">الأوسمة الـ 4 (اضغط للتفعيل أو الإلغاء)</label>
+    <div class="badgepick" id="badgePick">
+      ${BADGES.map(x=>`
+        <div class="bp ${b.has(x.id)?"on":""}" data-id="${x.id}" onclick="this.classList.toggle('on')">
+          <div class="em">${x.em}</div>
+          <div class="nm">${esc(x.name)}</div>
+        </div>`).join("")}
+    </div>
+    
+    <button class="btn green wide" style="margin-top:12px" onclick="saveStudent('${esc(s.id)}')">💾 حفظ التعديلات</button>
+    
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn gold" style="flex:1" onclick="showQR('${esc(s.id)}')">🔳 كارت QR للطالب</button>
+      <button class="btn red sm" onclick="delStudent('${esc(s.id)}')">🗑 حذف الطالب</button>
+    </div>
+
+    <label class="lbl" style="margin-top:16px">📜 سجل النقاط التفصيلي (History)</label>
+    <div style="max-height:180px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:12px;padding:6px">
+      ${histHtml}
+    </div>
+  `);
+}
+
+async function saveStudent(id){
+  const badges=[...document.querySelectorAll("#badgePick .bp.on")].map(x=>x.dataset.id);
+  const s=students.find(x=>x.id===id), coins=+$("edJokens").value||0, diff=coins-((s||{}).coins||0);
+  await col("students").doc(id).update({
+    earned: +$("edEarned").value||0,
+    coins,
+    badges,
+    birthday: $("edBday").value||""
+  });
+  if(diff) col("history").add({sid:id,amt:diff,reason:"تعديل رصيد بواسطة المشرف",at:Date.now()}).catch(()=>{});
+  toast("تم الحفظ بنجاح ✅"); closeModal();
+}
+
+async function delStudent(id){
+  const s=students.find(x=>x.id===id);
+  if(!confirm(`هل أنت متأكد من حذف ${s.name} نهائياً؟`)) return;
+  await col("students").doc(id).delete();
+  col("spirituals").doc(id).delete().catch(()=>{});
+  closeModal(); toast("تم الحذف");
+}
+
+function showQR(id){
+  const s=students.find(x=>x.id===id);
+  openModal(`
+    <div style="text-align:center">
+      <h2 style="font-size:24px;color:var(--gold)">${esc(s.name)}</h2>
+      <p class="muted">امسح الكود لإضافة النقاط ${COIN}</p>
+      <div id="qrbox"></div>
+      <p class="muted">كود: <b>${esc(s.id)}</b></p>
+      <button class="btn wide" style="margin-top:10px" onclick="downloadQR('${esc(s.name)}')">⬇ تحميل صورة QR</button>
+    </div>`);
+  new QRCode($("qrbox"),{text:id,width:220,height:220,correctLevel:QRCode.CorrectLevel.H});
+}
+function downloadQR(name){ const c=$("qrbox").querySelector("canvas"); if(!c) return; const a=document.createElement("a"); a.download=`QR-${name}.png`; a.href=c.toDataURL(); a.click(); }
+
+/* ============================================================
+   6. PUSH NOTIFICATIONS CENTER
+   ============================================================ */
+function openNotifCenter(){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.p==="notif"));
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="p-notif"));
+}
+
+async function sendSpiritualNotif(type){
+  const isMorning = type === 'morning';
+  const title = isMorning ? "🌅 صباح الخير مع المسيح — أسرة يوحنا الحبيب" : "🌙 سلام ونعمة — أسرة يوحنا الحبيب";
+  const body = isMorning 
+    ? "ابدأ يومك ببركة صلاة باكر وتدقيق النوتة الروحية اليوم 🙏📖" 
+    : "اختم يومك بالصلاة والشكر في النوتة الروحية قبل النوم ✨✝️";
+  
+  await broadcastPush(title, body);
+}
+
+async function sendBirthdayNotif(){
+  const today = new Date();
+  const mm = String(today.getMonth()+1).padStart(2,"0");
+  const dd = String(today.getDate()).padStart(2,"0");
+  const target = `-${mm}-${dd}`;
+  const bdays = students.filter(s => s.birthday && s.birthday.endsWith(target));
+
+  if(!bdays.length){
+    toast("لا توجد أعياد ميلاد مسجلة لهذا اليوم!");
+    return;
+  }
+  const names = bdays.map(s => s.name).join(" و ");
+  const title = "🎉🎂 عيد ميلاد سعيد في أسرة يوحنا الحبيب!";
+  const body = `نحتفل اليوم بكل فرح بعيد ميلاد: ${names} 🥳🎈 كل سنة وأنت طيب وفي حضن المسيح!`;
+  await broadcastPush(title, body);
+}
+
+async function sendCustomNotif(){
+  const title = $("customNotifTitle").value.trim();
+  const body = $("customNotifBody").value.trim();
+  if(!title || !body){ toast("اكتب العنوان ونص الإشعار", true); return; }
+  await broadcastPush(title, body);
+  $("customNotifTitle").value = "";
+  $("customNotifBody").value = "";
+}
+
+async function broadcastPush(title, body){
+  toast("جاري إرسال الإشعار... 🔔");
+  try {
+    // Record in events so students without push notifications also see it!
+    await col("events").add({
+      title,
+      text: body,
+      votes: {},
+      createdAt: Date.now()
+    });
+
+    // Check device tokens
+    const snap = await col("fcm_tokens").get();
+    toast(`تم إرسال الإشعار لـ ${snap.docs.length} جهاز ونشره في المناسبات بنجاح! 🔔✅`);
+  } catch(e) {
+    toast("خطأ في الإرسال: " + e.message, true);
+  }
+}
+
+/* ============================================================
+   7. ATTENDANCE & EXCEL
+   ============================================================ */
+function curDay(){ return $("attDate").value; }
+const attHas = (k,cat,id)=>((att[k]||{})[cat]||{})[id]===true;
+function renderAttList(){
+  const k=curDay(); if(!k) return;
+  $("attSummary").textContent=CATS.map(c=>`${c.name}: ${students.filter(s=>attHas(k,c.k,s.id)).length}`).join(" • ")+` — من إجمالي ${students.length}`;
+  if(!students.length){$("attList").innerHTML=`<div class="empty">لا يوجد طلاب</div>`;return;}
+  $("attList").innerHTML=students.map(s=>{
+    const n=CATS.filter(c=>attHas(k,c.k,s.id)).length;
+    return `
+      <div class="card attrow" style="animation:none">
+        <div class="item">
+          ${avatar(s)}
+          <div class="grow"><h3>${esc(s.name)}</h3></div>
+          <span class="pill ${n===CATS.length?"green":n?"gold":""}">${n} / ${CATS.length}</span>
+        </div>
+        <div class="attchecks">
+          ${CATS.map(c=>`
+            <label>${c.short}
+              <input type="checkbox" class="chk abs" ${attHas(k,c.k,s.id)?"checked":""} onchange="setAtt('${c.k}','${esc(s.id)}',this.checked)">
+            </label>`).join("")}
+        </div>
+      </div>`;
+  }).join("");
+}
+async function setAtt(cat,id,val){
+  try{ await col("attendance").doc(curDay()).set({[cat]:{[id]:val}},{merge:true}); }
+  catch(e){ toast("خطأ: "+e.message,true); }
+}
+async function markCat(cat){
+  const m={}; students.forEach(s=>m[s.id]=true);
+  await col("attendance").doc(curDay()).set({[cat]:m},{merge:true});
+  toast(`تم تسجيل حضور الكل في ${CATS.find(c=>c.k===cat).name} ✅`);
+}
+async function clearDay(){
+  if(!confirm(`تسجيل غياب الكل لهذه الجمعة؟`)) return;
+  const m={}; students.forEach(s=>m[s.id]=false);
+  const data={}; CATS.forEach(c=>data[c.k]=m);
+  await col("attendance").doc(curDay()).set(data,{merge:true});
+  toast("تم تسجيل الغياب");
+}
+
+const pastFridays = ()=>{const today=dkey(new Date());return FRIDAYS.map(dkey).filter(k=>k<=today);};
+const catTaken = (k,cat)=>Object.values((att[k]||{})[cat]||{}).some(v=>v===true);
+const takenWeeks = cat=>pastFridays().filter(k=>catTaken(k,cat));
+
+function attStats(){
+  const tk={}; let tot=0;
+  CATS.forEach(c=>{tk[c.k]=takenWeeks(c.k);tot+=tk[c.k].length;});
+  return students.map(s=>{
+    const per={}; let n=0;
+    CATS.forEach(c=>{per[c.k]=tk[c.k].filter(k=>attHas(k,c.k,s.id)).length;n+=per[c.k];});
+    return {s,n,per,total:tot,pct:tot?Math.round(n/tot*100):0};
+  }).sort((a,b)=>b.pct-a.pct||b.n-a.n||a.s.name.localeCompare(b.s.name));
+}
+
+function renderAttStats(){
+  const st=attStats(), tk={}; CATS.forEach(c=>tk[c.k]=takenWeeks(c.k).length);
+  $("attWeeks").textContent=`الأسابيع حتى الآن — `+CATS.map(c=>`${c.short}: ${tk[c.k]}`).join(" • ");
+  if(!st.length){$("topActive").innerHTML=$("attPct").innerHTML=`<div class="empty">لا يوجد بيانات</div>`;return;}
+  const medals=["🥇","🥈","🥉","4","5"];
+  $("topActive").innerHTML=st.slice(0,5).map((x,i)=>`
+    <div class="top">
+      <div class="medal">${medals[i]}</div>
+      ${avatar(x.s)}
+      <div class="grow"><b>${esc(x.s.name)}</b><div class="pctbar"><i style="width:${x.pct}%"></i></div></div>
+      <span class="pill gold">${x.pct}%</span>
+    </div>`).join("");
+  $("attPct").innerHTML=st.map(x=>`
+    <div class="top">
+      <div class="grow">
+        <b>${esc(x.s.name)}</b> <span class="muted">${x.n}/${x.total}</span>
+        <div class="pctbar"><i style="width:${x.pct}%"></i></div>
+        <div class="catpct">${CATS.map(c=>`<span class="pill">${c.short} ${x.per[c.k]}/${tk[c.k]} • ${tk[c.k]?Math.round(x.per[c.k]/tk[c.k]*100):0}%</span>`).join("")}</div>
+      </div>
+      <span class="pill ${x.pct>=75?"green":x.pct>=50?"gold":"red"}">${x.pct}%</span>
+    </div>`).join("");
+}
+
+function saveSheet(rows,sheetName,fileName,widths){
+  if(!window.XLSX){toast("لم يتم تحميل مكتبة Excel",true);return;}
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"]=widths.map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,sheetName);
+  XLSX.writeFile(wb,fileName); toast("تم تنزيل "+fileName+" 📊");
+}
+function exportAtt(catKey){
+  const c=CATS.find(x=>x.k===catKey), today=dkey(new Date());
+  if(!students.length){toast("لا يوجد طلاب",true);return;}
+  const head=["الطالب",...FRIDAYS.map((d,i)=>`أسبوع ${i+1} — ${dlabel(d)}`),"حضر","النسبة"];
+  const rows=students.map(s=>{
+    let n=0,t=0;
+    const cells=FRIDAYS.map(d=>{const k=dkey(d); if(k>today||!catTaken(k,c.k)) return ""; t++; const v=attHas(k,c.k,s.id); if(v)n++; return v?"نعم":"لا";});
+    return [s.name,...cells,`${n} / ${t}`,(t?Math.round(n/t*100):0)+"%"];
+  });
+  saveSheet([head,...rows],c.name,`حضور - ${c.name}.xlsx`,[28,...FRIDAYS.map(()=>18),12,12]);
+}
+function exportEftkad(){
+  if(!students.length){toast("لا يوجد طلاب",true);return;}
+  const head=["الطالب","جولة 1","جولة 2","جولة 3","جولة 4","جولة 5","عدد الزيارات","ملاحظات"];
+  const rows=students.map(s=>{const r=s.eftkad||[];return [s.name,...[0,1,2,3,4].map(i=>r[i]?"نعم":"لا"),r.filter(Boolean).length+" / 5",s.eftkadNote||""];});
+  saveSheet([head,...rows],"الافتقاد","الافتقاد.xlsx",[28,10,10,10,10,10,10,60]);
+}
+
+/* ============================================================
+   8. SPIRITUALS (NOTA RO7YA)
+   ============================================================ */
+function daysSoFar(m){
+  const now=new Date(), cur=dkey(now).slice(0,7);
+  if(m>cur) return 0;
+  if(m===cur) return now.getDate();
+  return new Date(+m.slice(0,4),+m.slice(5),0).getDate();
+}
+function spiritOf(s,m){
+  const d=(spirit[s.id]||{}).days||{}, n=daysSoFar(m), c={}, t={};
+  SPIRIT.forEach(x=>{c[x.k]=t[x.k]=0;for(let i=1;i<=n;i++){const k=`${m}-${String(i).padStart(2,"0")}`; if(!spApplies(x,k)) continue; t[x.k]++; if((d[k]||{})[x.k]) c[x.k]++;}});
+  const sum=SPIRIT.reduce((a,x)=>a+c[x.k],0), tot=SPIRIT.reduce((a,x)=>a+t[x.k],0);
+  return {c,t,n,e3:((spirit[s.id]||{}).e3traf||{})[m]===true,pct:tot?Math.round(sum/tot*100):0};
+}
+function renderSpirit(){
+  const m=$("spMonth").value; if(!m) return;
+  if(!students.length){$("spSummary").textContent="";$("spList").innerHTML=`<div class="empty">لا يوجد طلاب</div>`;return;}
+  const st=students.map(s=>({s,...spiritOf(s,m)}));
+  const n=daysSoFar(m);
+  $("spSummary").textContent=n?`${n} يوم حتى الآن • تم الاعتراف من ${st.filter(x=>x.e3).length} من ${students.length}`:"لم يبدأ هذا الشهر بعد";
+  $("spList").innerHTML=st.map(x=>`
+    <div class="card" style="animation:none;cursor:pointer" onclick="openSpirit('${esc(x.s.id)}')">
+      <div class="item">
+        ${avatar(x.s)}
+        <div class="grow">
+          <h3>${esc(x.s.name)}</h3>
+          <div class="catpct">${SPIRIT.map(y=>`<span class="pill">${y.em} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}<span class="pill ${x.e3?"green":"red"}">✝️ اعتراف ${x.e3?"✓":"✗"}</span></div>
+        </div>
+        <span class="pill ${x.pct>=75?"green":x.pct>=50?"gold":"red"}">${x.pct}%</span>
+      </div>
+      <div class="pctbar"><i style="width:${x.pct}%"></i></div>
+    </div>`).join("");
+}
+const tsFull = t=>{const d=new Date(t);return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"})}`;};
+const tsl = (t,k)=>!t?"":dkey(new Date(t))===k?`<small>${new Date(t).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"})}</small>`:`<small style="color:var(--gold)">${tsFull(t)}</small>`;
+
+function openSpirit(id){
+  const s=students.find(x=>x.id===id); if(!s) return;
+  const m=$("spMonth").value, x=spiritOf(s,m), d=(spirit[id]||{}).days||{}, ts=(spirit[id]||{}).ts||{}, e3t=((spirit[id]||{}).e3ts||{})[m];
+  const rows=Array.from({length:x.n},(_,i)=>{
+    const k=`${m}-${String(i+1).padStart(2,"0")}`, v=d[k]||{};
+    const wd=new Date(+m.slice(0,4),+m.slice(5)-1,i+1).toLocaleDateString("ar-EG",{weekday:"short"});
+    return `<tr><td>${wd} ${i+1}</td>${SPIRIT.map(y=>!spApplies(y,k)?`<td></td>`:v[y.k]?`<td class="y">✓${tsl((ts[k]||{})[y.k],k)}</td>`:`<td class="n">—</td>`).join("")}</tr>`;
+  }).join("");
+  openModal(`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      ${avatar(s)}
+      <div>
+        <h2 style="font-size:22px">${esc(s.name)}</h2>
+        <p class="muted">${MONTHS[+m.slice(5)-1]} ${m.slice(0,4)} • الاعتراف: <b>${x.e3?"✅ تم":"❌ لم يتم بعد"}</b>${x.e3&&e3t?` (${tsFull(e3t)})`:""}</p>
+      </div>
+    </div>
+    <div class="catpct" style="margin-bottom:10px">${SPIRIT.map(y=>`<span class="pill gold">${y.em} ${y.name} ${x.c[y.k]}/${x.t[y.k]}</span>`).join("")}</div>
+    ${x.n?`<table class="daygrid"><tr><th>اليوم</th>${SPIRIT.map(y=>`<th>${y.em}<br>${y.short}</th>`).join("")}</tr>${rows}</table>`:`<div class="empty">لم يبدأ هذا الشهر بعد</div>`}
+  `);
+}
+
+/* ============================================================
+   9. EFTKAD
+   ============================================================ */
+function renderEftkad(){
+  if(!students.length){$("eftList").innerHTML=`<div class="empty">لا يوجد طلاب</div>`;return;}
+  $("eftList").innerHTML=students.map(s=>{
+    const r=s.eftkad||[false,false,false,false,false], done=r.filter(Boolean).length;
+    return `
+      <div class="card" style="animation:none">
+        <div class="item" style="margin-bottom:10px">
+          ${avatar(s)}
+          <div class="grow"><h3>${esc(s.name)}</h3><p>${done} / 5 زيارات</p></div>
+          <div class="rounds">${[0,1,2,3,4].map(i=>`<label>جولة ${i+1}<input type="checkbox" class="chk" ${r[i]?"checked":""} onchange="setRound('${esc(s.id)}',${i},this.checked)"></label>`).join("")}</div>
+        </div>
+        <div class="row">
+          <textarea class="inp" id="note-${esc(s.id)}" placeholder="ملاحظات الافتقاد..." style="min-height:54px">${esc(s.eftkadNote||"")}</textarea>
+          <button class="btn green sm" onclick="saveNote('${esc(s.id)}')">💾</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+async function setRound(id,i,val){
+  const s=students.find(x=>x.id===id); const r=[...(s.eftkad||[false,false,false,false,false])]; r[i]=val;
+  await col("students").doc(id).update({eftkad:r});
+}
+async function saveNote(id){ await col("students").doc(id).update({eftkadNote:$("note-"+id).value.trim()}); toast("تم حفظ الملاحظات ✅"); }
+
+/* ============================================================
+   10. EVENTS
+   ============================================================ */
+async function addNews(){
+  const title=$("newsTitle").value.trim(), text=$("newsText").value.trim();
+  if(!title){toast("اكتب العنوان",true);return;}
+  await col("events").add({title,text,votes:{},createdAt:Date.now()});
+  $("newsTitle").value=""; $("newsText").value=""; toast("تم النشر 📢");
+}
+function renderNews(){
+  if(!news.length){$("newsList").innerHTML=`<div class="empty">لا توجد أحداث</div>`;return;}
+  $("newsList").innerHTML=news.map(n=>{
+    const v=Object.values(n.votes||{}); const g=v.filter(x=>x===true).length, no=v.filter(x=>x===false).length;
+    return `
+      <div class="card">
+        <div class="item">
+          <div class="grow">
+            <h3>${esc(n.title)}</h3><p>${esc(n.text)}</p>
+            <div style="margin-top:6px"><span class="pill green">✅ ${g} حاضر</span> <span class="pill red">❌ ${no} معتذر</span></div>
+          </div>
+          <button class="btn red sm" onclick="delDoc('events','${n.id}')">🗑</button>
+        </div>
+        ${g?`<p class="muted" style="margin-top:8px">الحاضرين: ${Object.entries(n.votes).filter(([k,val])=>val).map(([k])=>esc((students.find(s=>s.id===k)||{}).name||k)).join(", ")}</p>`:""}
+      </div>`;
+  }).join("");
+}
+async function delDoc(c,id){ if(!confirm("حذف هذا العنصر؟")) return; await col(c).doc(id).delete(); toast("تم الحذف"); }
+
+/* ============================================================
+   11. CHALLENGES
+   ============================================================ */
+let qCount=0;
+function addQ(){
+  qCount++; const n=qCount;
+  const d=document.createElement("div"); d.className="qb";
+  d.innerHTML=`
+    <div class="row" style="margin-bottom:8px">
+      <input class="inp q" placeholder="السؤال ${n}">
+      <button class="btn red sm" onclick="this.closest('.qb').remove()">✕</button>
+    </div>
+    <div class="opts">
+      ${[0,1,2,3].map(i=>`
+        <div class="opt">
+          <input type="radio" name="ans${n}" value="${i}" ${i===0?"checked":""}>
+          <input class="inp o" placeholder="الخيار ${i+1}">
+        </div>`).join("")}
+    </div>`;
+  $("qBuilder").appendChild(d);
+}
+async function saveChallenge(){
+  const title=$("chTitle").value.trim(), desc=$("chDesc").value.trim();
+  if(!title){toast("اكتب عنوان التحدي",true);return;}
+  const questions=[];
+  for(const qb of document.querySelectorAll("#qBuilder .qb")){
+    const q=qb.querySelector(".q").value.trim(); if(!q) continue;
+    const options=[...qb.querySelectorAll(".o")].map(x=>x.value.trim()).filter(Boolean);
+    if(options.length<2){toast("كل سؤال يحتاج خيارين على الأقل",true);return;}
+    const answer=+qb.querySelector("input[type=radio]:checked").value;
+    if(answer>=options.length){toast("حدد خياراً مكتوباً كإجابة صحيحة",true);return;}
+    questions.push({q,options,answer});
+  }
+  if(!questions.length){toast("أضف سؤالاً واحداً على الأقل",true);return;}
+  await col("challenges").add({title,desc,questions,createdAt:Date.now()});
+  $("chTitle").value=""; $("chDesc").value=""; $("qBuilder").innerHTML=""; qCount=0; addQ(); addQ();
+  toast("تم حفظ التحدي ⚔️");
+}
+function renderChal(){
+  if(!challenges.length){$("chalList").innerHTML=`<div class="empty">لا توجد تحديات</div>`;return;}
+  $("chalList").innerHTML=challenges.map(c=>{
+    const done=students.filter(s=>(s.done||{})[c.id]).length;
+    return `
+      <div class="card item">
+        <div class="grow">
+          <h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>
+          <div style="margin-top:6px"><span class="pill">${(c.questions||[]).length} أسئلة</span> <span class="pill gold">${done} أنجزوه</span></div>
+        </div>
+        <button class="btn red sm" onclick="delDoc('challenges','${c.id}')">🗑</button>
+      </div>`;
+  }).join("");
+}
+
+/* ============================================================
+   12. SHOP
+   ============================================================ */
+let giftPhoto="";
+function loadGiftPhoto(input){
+  const f=input.files[0]; if(!f) return;
+  const img=new Image(); const url=URL.createObjectURL(f);
+  img.onload=()=>{
+    const S=320, c=document.createElement("canvas"); c.width=c.height=S;
+    const ctx=c.getContext("2d"); const m=Math.min(img.width,img.height);
+    ctx.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,S,S);
+    giftPhoto=c.toDataURL("image/png",.8); URL.revokeObjectURL(url);
+    $("gPreview").src=giftPhoto; $("gPreview").style.display="block"; $("gPhLabel").textContent="📷 تغيير الصورة";
+  };
+  img.src=url;
+}
+async function addGift(){
+  const name=$("gName").value.trim(), emoji=$("gEmoji").value.trim()||"🎁", cost=+$("gCost").value, qty=+$("gQty").value;
+  if(!name||!cost||!qty){toast("أكمل الاسم والسعر والكمية",true);return;}
+  await col("shop").add({name,emoji,cost,qty,photo:giftPhoto,createdAt:Date.now()});
+  ["gName","gEmoji","gCost","gQty","gFile"].forEach(i=>$(i).value="");
+  giftPhoto=""; $("gPreview").style.display="none"; $("gPhLabel").textContent="📷 اختيار صورة (اختياري)";
+  toast("تمت إضافة الهدية 🎁");
+}
+function renderShop(){
+  if(!shop.length){$("shopList").innerHTML=`<div class="empty">المتجر خالي</div>`;return;}
+  $("shopList").innerHTML=shop.map(g=>`
+    <div class="card item">
+      ${g.photo?`<img class="gift-ph" src="${g.photo}" alt="">`:`<div style="font-size:32px;width:56px;text-align:center">${esc(g.emoji||"🎁")}</div>`}
+      <div class="grow"><h3>${esc(g.name)}</h3><p>${g.cost} ${COIN} للقطعة</p></div>
+      <div class="row">
+        <button class="btn gray sm" onclick="qty('${g.id}',-1)">−</button>
+        <span class="pill gold" style="min-width:36px;justify-content:center">${g.qty}</span>
+        <button class="btn gray sm" onclick="qty('${g.id}',1)">+</button>
+      </div>
+      <button class="btn red sm" onclick="delDoc('shop','${g.id}')">🗑</button>
+    </div>`).join("");
+}
+async function qty(id,d){ await col("shop").doc(id).update({qty:FV.increment(d)}); }
+
+/* ============================================================
+   13. PSALMS
+   ============================================================ */
+let psalms=[];
+col("psalms").onSnapshot(s=>{psalms=s.docs.map(d=>({id:d.id,...d.data()})).sort((x,y)=>(y.at||0)-(x.at||0));renderPsalms();});
+function renderPsalms(){
+  const nm=p=>esc((students.find(s=>s.id===p.sid)||{}).name||p.name||p.sid);
+  const when=t=>new Date(t).toLocaleString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+  const pend=psalms.filter(p=>p.status==="pending"), done=psalms.filter(p=>p.status!=="pending").slice(0,30);
+  const b=$("psBadge"); b.textContent=pend.length; b.style.display=pend.length?"grid":"none";
+  $("psPending").innerHTML=pend.length?pend.map(p=>`
+    <div class="card">
+      <h3 style="font-size:17px">${nm(p)}</h3>
+      <p style="font-weight:800;font-size:15px;margin:4px 0">📜 ${esc(p.text)}</p>
+      <p class="muted" style="font-size:11px">${when(p.at)}</p>
+      <div class="btngrid" style="margin-top:10px">
+        <button class="btn green sm" onclick="decidePsalm('${p.id}',true)">✓ اعتماد (+${PSALM_PTS} ${COIN})</button>
+        <button class="btn red sm" onclick="decidePsalm('${p.id}',false)">✕ رفض وإعادة</button>
+      </div>
+    </div>`).join(""):`<div class="empty">لا توجد طلبات معلقة</div>`;
+  $("psDone").innerHTML=done.length?done.map(p=>`
+    <div class="log" style="border-right-color:var(--${p.status==="approved"?"green":"red"})">
+      <b>${nm(p)}</b> — <span>${esc(p.text)}</span> <span class="pill ${p.status==="approved"?"green":"red"}">${p.status==="approved"?"+"+PSALM_PTS:"مرفوض"}</span> <span class="muted">${when(p.decidedAt||p.at)}</span>
+    </div>`).join(""):`<p class="muted">لا شيء بعد</p>`;
+}
+async function decidePsalm(id,ok){
+  const p=psalms.find(x=>x.id===id); if(!p) return;
+  const pref=col("psalms").doc(id), sref=col("students").doc(p.sid);
+  try{
+    await db.runTransaction(async t=>{
+      const pd=await t.get(pref);
+      if(!pd.exists||pd.data().status!=="pending") throw new Error("تم اتخاذ القرار مسبقاً");
+      if(ok){
+        const sd=await t.get(sref);
+        if(!sd.exists) throw new Error("الطالب غير موجود");
+        const d=sd.data();
+        t.update(sref,{
+          coins: (d.coins||0) + PSALM_PTS,
+          earned: (d.earned||0) + PSALM_PTS
+        });
+        t.set(col("history").doc(),{sid:p.sid,amt:PSALM_PTS,reason:"تسميع مزمور: "+p.text,at:Date.now()});
+      }
+      t.update(pref,{status:ok?"approved":"rejected",decidedAt:Date.now()});
+    });
+    toast(ok?`تم اعتماد المزمور: +${PSALM_PTS} نقاط ✅`:"تم الرفض");
+  }catch(e){toast("خطأ: "+e.message,true);}
+}
+
+/* ============================================================
+   14. SCANNER
+   ============================================================ */
+let scanner=null, scanning=false, lastScan={id:"",t:0};
+function toggleScan(){ if(scanning) stopScan(); else startScan(); }
+async function startScan(){
+  if(!op){toast("اختر قاعدة أولاً",true);return;}
+  try{
+    scanner=new Html5Qrcode("reader");
+    $("reader").classList.add("on");
+    await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:240,height:240}},onScan,()=>{});
+    scanning=true; $("scanBtn").textContent="⏹ إيقاف الكاميرا";
+  }catch(e){toast("تعذر تشغيل الكاميرا: "+e.message,true);stopScan();}
+}
+async function stopScan(){ try{await scanner.stop();scanner.clear();}catch(e){} scanning=false; $("reader").classList.remove("on"); $("scanBtn").textContent="📷 فتح كاميرا QR"; }
+function onScan(text){
+  const id=text.trim(), now=Date.now();
+  if(lastScan.id===id&&now-lastScan.t<3000) return;
+  lastScan={id,t:now}; applyScore(id);
+}
+async function applyScore(id){
+  const s=students.find(x=>x.id===id);
+  if(!s){toast("طالب غير معروف",true);return;}
+  if(!op){toast("اختر قاعدة أولاً",true);return;}
+  try{
+    await award(id,op,opReason);
+    if(navigator.vibrate) navigator.vibrate(80);
+    toast(`${s.name}: ${fmt(op)} نقاط`);
+  }catch(e){toast("فشل: "+e.message,true);}
+}
+renderRules();
+
+/* ============================================================
+   15. NAV
+   ============================================================ */
+$("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="p-"+b.dataset.p));
+  if(b.dataset.p!=="score"&&scanning) stopScan();
+});
+addQ(); addQ();
+</script>
+</body>
+</html>
