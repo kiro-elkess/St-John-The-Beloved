@@ -49,6 +49,9 @@ header{position:sticky;top:0;z-index:20;padding:calc(env(safe-area-inset-top) + 
 .mechip .av img{width:100%;height:100%;object-fit:cover}
 .mechip .nm{font-weight:900;font-size:13px;line-height:1.1;max-width:95px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mechip .kr{font-weight:900;color:var(--gold);font-size:12px}
+.notif-bell{position:relative;width:40px;height:40px;border-radius:50%;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1.5px solid #28448f;box-shadow:0 4px 0 var(--border);display:grid;place-items:center;font-size:18px;cursor:pointer;flex-shrink:0;transition:transform .15s}
+.notif-bell:active{transform:translateY(3px);box-shadow:0 1px 0 var(--border)}
+.bell-badge{position:absolute;top:-3px;right:-3px;background:var(--red);color:#fff;font-family:'Lilita One',cursive;font-size:10px;min-width:18px;height:18px;line-height:18px;border-radius:999px;text-align:center;padding:0 3px;border:2px solid #0f1e4a;box-shadow:0 2px 4px rgba(0,0,0,.4);font-weight:900}
 main{flex:1;overflow:hidden;position:relative}
 .page{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 14px calc(100px + env(safe-area-inset-bottom));opacity:0;transform:translateX(40px) scale(.98);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,.9,.3,1.2)}
 .page.active{opacity:1;transform:none;pointer-events:auto}
@@ -261,9 +264,15 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
       <img src="images/logo.png" class="crest-img" alt="Logo">
       <div><h1>ST. JOHN</h1><small>BELOVED CLASS</small></div>
     </div>
-    <div class="mechip" id="mechip" onclick="openStudent(me.id)">
-      <div class="av"><img id="meImg" alt=""></div>
-      <div><div class="nm" id="meName">—</div><div class="kr"><span id="meJokens">0</span> <i class="jk">J</i></div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="notifBell" class="notif-bell" onclick="openNotifModal()" title="Prayer Reminders & Alerts">
+        <span>🔔</span>
+        <span id="notifBadge" class="bell-badge" style="display:none">0</span>
+      </button>
+      <div class="mechip" id="mechip" onclick="openStudent(me.id)">
+        <div class="av"><img id="meImg" alt=""></div>
+        <div><div class="nm" id="meName">—</div><div class="kr"><span id="meJokens">0</span> <i class="jk">J</i></div></div>
+      </div>
     </div>
   </header>
 
@@ -374,13 +383,9 @@ input.inp:focus,select.inp:focus{border-color:var(--gold)}
       <div id="psList" style="display:flex;flex-direction:column;gap:12px"></div>
     </section>
 
-    <!-- 7. EVENTS & BIRTHDAYS -->
+    <!-- 7. EVENTS -->
     <section class="page" id="p-news">
-      <div class="page-title"><h2>Events & <span>Birthdays</span></h2></div>
-      <div id="bdayMonthCard" class="card" style="margin-bottom:14px;border-color:#ff6bb5;display:none">
-        <h3 style="font-size:18px;color:#ff8ecd;margin-bottom:6px">🎂 Birthdays This Month! 🎉</h3>
-        <div id="bdayMonthList" style="font-size:13.5px;font-weight:800;line-height:1.6"></div>
-      </div>
+      <div class="page-title"><h2>Class <span>Events 📅</span></h2></div>
       <div id="newsList" style="display:flex;flex-direction:column;gap:12px"></div>
     </section>
 
@@ -745,6 +750,14 @@ function startApp(id){
     renderPsalm();
   });
 
+  // Listen to prayer alerts and reminders sent by teachers
+  col("notifications").orderBy("createdAt", "desc").limit(30).onSnapshot(snap => {
+    classNotifs = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(n => n.type !== "birthday");
+    updateNotifBadge();
+  });
+
   initPushNotifications();
 }
 
@@ -886,12 +899,13 @@ function renderRank(){
       <div class="b-mini-ic ${sBadges.has(b.id) ? "on" : ""}" title="${esc(b.name)} (${esc(b.arabic)})">${b.em}</div>
     `).join("");
 
+    const isMine = s.id === me.id;
     return `
-    <div class="card scard ${s.id === me.id ? "me" : ""} ${isBdayMonth(s) ? "bday" : ""}" style="animation-delay:${Math.min(i*35,400)}ms" onclick="openStudent('${esc(s.id)}')">
+    <div class="card scard ${isMine ? "me" : ""} ${isMine && isBdayMonth(s) ? "bday" : ""}" style="animation-delay:${Math.min(i*35,400)}ms" onclick="openStudent('${esc(s.id)}')">
       <div class="rk ${s.rank <= 3 ? "top r" + s.rank : ""}">${s.rank <= 3 ? ["🥇","🥈","🥉"][s.rank-1] + " " : ""}#${s.rank}</div>
       <div class="img">
         ${imgOf(s)}
-        ${isBdayMonth(s) ? `<div class="cake" title="Birthday this month!">🎂</div>` : ""}
+        ${isMine && isBdayMonth(s) ? `<div class="cake" title="Happy Birthday to you!">🎂</div>` : ""}
       </div>
       <div class="info">
         <div class="nm">${esc(s.name)}</div>
@@ -915,6 +929,8 @@ function openStudent(id){
   if(!s) return;
   const a = arenaOf(s.earned);
   const sBadges = new Set(s.badges || []);
+  const isMine = s.id === me.id;
+  const bdayInfo = isMine && isBdayToday(s) ? "🎉 Happy Birthday to you!" : isMine && isBdayMonth(s) ? "• Your birthday is this month!" : "";
 
   col("history").where("sid","==",id).get().then(snap => {
     const sHist = snap.docs.map(d => d.data()).sort((a,b) => (b.at||0) - (a.at||0));
@@ -932,8 +948,8 @@ function openStudent(id){
     openModal(`
       <div class="detail">
         <div class="big">${imgOf(s)}</div>
-        <h2>${esc(s.name)} ${isBdayMonth(s)?"🎂":""}</h2>
-        <div class="sub">Rank #${s.rank} • ${a.em} ${esc(a.name)} ${isBdayToday(s)?"🎉 Birthday Today!":isBdayMonth(s)?"• Birthday this month!":""}</div>
+        <h2>${esc(s.name)}${isMine && isBdayMonth(s) ? " 🎂" : ""}</h2>
+        <div class="sub">Rank #${s.rank} • ${a.em} ${esc(a.name)} ${bdayInfo}</div>
         
         <div class="stats">
           <div class="stat"><b>${s.coins || 0}</b><span>WALLET ${COIN}</span></div>
@@ -1198,20 +1214,10 @@ function renderPsalm(){
 }
 
 /* ============================================================
-   11. EVENTS & BIRTHDAYS
+   11. EVENTS & ANNOUNCEMENTS
    ============================================================ */
 function renderNews(){
   if(!me) return;
-  
-  const bdaysThisMonth = students.filter(s => isBdayMonth(s));
-  if(bdaysThisMonth.length > 0){
-    $("bdayMonthCard").style.display = "block";
-    $("bdayMonthList").innerHTML = bdaysThisMonth.map(s => `
-      <div>🎂 <b>${esc(s.name)}</b> — ${s.birthday ? `${+s.birthday.slice(8,10)} ${new Date(2026, +s.birthday.slice(5,7)-1, 1).toLocaleDateString("en-GB",{month:"long"})}` : ""} ${isBdayToday(s)?"🥳 (Birthday Today!)":""}</div>
-    `).join("");
-  } else {
-    $("bdayMonthCard").style.display = "none";
-  }
 
   if(!news.length){
     $("newsList").innerHTML = `<div class="empty"><div class="em">📭</div>No events yet</div>`;
@@ -1505,6 +1511,57 @@ function checkDailyReminders(){
       icon: "images/logo.png"
     });
   }
+}
+
+/* ============================================================
+   14b. IN-APP PRAYER ALERTS & NOTIFICATIONS
+   ============================================================ */
+let classNotifs = [];
+let lastReadNotif = parseInt(localStorage.getItem("stjohn_last_read_notif") || "0", 10);
+
+function updateNotifBadge(){
+  const unread = classNotifs.filter(n => (n.createdAt || 0) > lastReadNotif).length;
+  const b = $("notifBadge");
+  if(b){
+    if(unread > 0){
+      b.textContent = unread > 9 ? "9+" : unread;
+      b.style.display = "block";
+    } else {
+      b.style.display = "none";
+    }
+  }
+}
+
+function openNotifModal(){
+  lastReadNotif = Date.now();
+  localStorage.setItem("stjohn_last_read_notif", String(lastReadNotif));
+  updateNotifBadge();
+
+  const list = classNotifs.slice(0, 30);
+  openModal(`
+    <div style="text-align:center;margin-bottom:14px">
+      <h2 style="font-size:24px;color:var(--gold)">Prayer & Spiritual Alerts 🔔</h2>
+      <p class="muted" style="font-size:12px">Reminders sent by Sunday School teachers</p>
+    </div>
+    <div style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
+      ${list.length ? list.map(n => `
+        <div class="card" style="margin:0;padding:12px;border-color:var(--gold);background:rgba(18,34,79,0.95);animation:none">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:22px">${n.type === 'morning' ? '🌅' : n.type === 'evening' ? '🌙' : '📢'}</span>
+            <b style="font-size:15px;color:var(--gold)">${esc(n.title)}</b>
+          </div>
+          <p style="font-size:13.5px;line-height:1.45;color:#e1ebff;margin:4px 0">${esc(n.body)}</p>
+          <div class="muted" style="font-size:10.5px;text-align:right">${new Date(n.createdAt).toLocaleString("en-GB", {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</div>
+        </div>
+      `).join("") : `
+        <div class="empty" style="padding:24px 10px">
+          <div style="font-size:40px;margin-bottom:6px">🕊️</div>
+          <div>No prayer alerts yet</div>
+          <p class="muted" style="font-size:12px;margin-top:4px">Check back when teachers send morning or night prayer reminders!</p>
+        </div>
+      `}
+    </div>
+  `);
 }
 
 /* ============================================================

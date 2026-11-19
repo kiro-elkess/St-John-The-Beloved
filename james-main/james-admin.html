@@ -1178,12 +1178,11 @@
         <h2>Push Reminders <span>🔔</span></h2>
         <div class="card">
           <h3 style="font-size:18px;color:var(--gold);margin-bottom:6px">⚡ Quick Spiritual Reminders</h3>
-          <p class="muted" style="margin-bottom:12px">Send push notifications to all student phones and admin devices.</p>
-          <div class="btngrid" style="margin-bottom:8px">
+          <p class="muted" style="margin-bottom:12px">Send prayer reminders to all student phones and admin devices.</p>
+          <div class="btngrid">
             <button class="btn purple sm" onclick="sendQuickNotif('morning')">🌅 Morning Prayer</button>
             <button class="btn purple sm" onclick="sendQuickNotif('evening')">🌙 Night Prayer</button>
           </div>
-          <button class="btn gold wide sm" onclick="sendBirthdayNotifs()">🎂 Send Today's Birthday Alerts</button>
         </div>
 
         <div class="card">
@@ -1992,31 +1991,7 @@
         type,
         createdAt: Date.now()
       });
-      toast("Sent reminder to all students! 🔔");
-    }
-
-    async function sendBirthdayNotifs() {
-      const today = new Date();
-      const m = String(today.getMonth() + 1).padStart(2, "0");
-      const d = String(today.getDate()).padStart(2, "0");
-      const md = `-${m}-${d}`;
-
-      const bdayStudents = students.filter(s => s.birthday && s.birthday.endsWith(md));
-      if (!bdayStudents.length) {
-        toast("No students have a birthday today (" + d + "/" + m + ") 🎉");
-        return;
-      }
-
-      for (const s of bdayStudents) {
-        await col("notifications").add({
-          title: `🎂 Happy Birthday ${s.name}! 🎉`,
-          body: `Wishing our beloved ${s.name} a blessed and joyful birthday in Christ! 🎈🍰`,
-          type: "birthday",
-          studentId: s.id,
-          createdAt: Date.now()
-        });
-      }
-      toast(`Sent birthday wishes for ${bdayStudents.length} student(s)! 🎂`);
+      toast("Sent prayer reminder to all students! 🔔");
     }
 
     async function broadcastCustomNotif() {
