@@ -57,12 +57,12 @@ james-main/
 - **Spirituals Tracker** — Students log daily Morning Prayer, Night Prayer, Bible Reading, and Fasting (Wednesday & Friday only).
 - **Psalm Submission** — Students submit memorized psalms for teacher approval (+10 Jokens).
 - **Arena** — Joken milestone tiers with animated cards.
-- **Events & Birthdays** — Class announcements, upcoming events, and monthly birthday highlights.
+- **Events** — Class announcements, upcoming events, and RSVP voting (birthdays of other students are kept private).
 - **Challenges** — Quiz-based mini-games for extra Jokens.
 - **Gift Shop** — Redeem Jokens for real gifts *(Currently disabled — code preserved for future re-enabling)*.
 - **Score History** — Full log of every Joken transaction (reason, amount, timestamp).
 - **PWA / Install** — Installable on Android & iOS home screen.
-- **Push Notifications** — Morning/evening prayer reminders and birthday alerts via Firebase Cloud Messaging.
+- **Prayer Alerts & Reminders** — In-app notification bell icon (🔔) in the header with an unread badge and popup window for prayer reminders (Morning Prayer, Night Prayer, and teacher broadcasts) + Web Push Notifications.
 
 ### Admin Panel (`james-admin.html`)
 - **Jokens Tab** — Apply Joken rules (preset or custom) to one or many students at once; scan QR cards to award points.
